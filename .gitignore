@@ -24,4 +24,4 @@ hs_err_pid*
 replay_pid*
 
 # configuração do BD #
-config.properties.txt
+config.properties
