@@ -1,0 +1,4 @@
+// Endereço de ip no Tail
+db.url=jdbc:mysql://100.x.x.x:3307/Kanban
+db.user=SEU_USUARIO_AQUI
+db.password=SUA_SENHA_AQUI
