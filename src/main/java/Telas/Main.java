@@ -40,6 +40,13 @@ public class Main extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         painelColunas = new javax.swing.JPanel();
+        painelAF = new javax.swing.JPanel();
+        painelAFTopo = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        painelAFScroll = new javax.swing.JScrollPane();
+        painelAFNotas = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,12 +80,83 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addContainerGap(154, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         getContentPane().add(painelTopo, java.awt.BorderLayout.PAGE_START);
 
         painelColunas.setLayout(new java.awt.GridLayout());
+
+        painelAF.setLayout(new java.awt.BorderLayout());
+
+        jLabel4.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        jLabel4.setText("A FAZER");
+
+        javax.swing.GroupLayout painelAFTopoLayout = new javax.swing.GroupLayout(painelAFTopo);
+        painelAFTopo.setLayout(painelAFTopoLayout);
+        painelAFTopoLayout.setHorizontalGroup(
+            painelAFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelAFTopoLayout.createSequentialGroup()
+                .addGap(82, 82, 82)
+                .addComponent(jLabel4)
+                .addContainerGap(92, Short.MAX_VALUE))
+        );
+        painelAFTopoLayout.setVerticalGroup(
+            painelAFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAFTopoLayout.createSequentialGroup()
+                .addContainerGap(43, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addGap(37, 37, 37))
+        );
+
+        painelAF.add(painelAFTopo, java.awt.BorderLayout.PAGE_START);
+
+        painelAFScroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        painelAFScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        javax.swing.GroupLayout painelAFNotasLayout = new javax.swing.GroupLayout(painelAFNotas);
+        painelAFNotas.setLayout(painelAFNotasLayout);
+        painelAFNotasLayout.setHorizontalGroup(
+            painelAFNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 271, Short.MAX_VALUE)
+        );
+        painelAFNotasLayout.setVerticalGroup(
+            painelAFNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 514, Short.MAX_VALUE)
+        );
+
+        painelAFScroll.setViewportView(painelAFNotas);
+
+        painelAF.add(painelAFScroll, java.awt.BorderLayout.CENTER);
+
+        painelColunas.add(painelAF);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 279, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 622, Short.MAX_VALUE)
+        );
+
+        painelColunas.add(jPanel2);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 279, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 622, Short.MAX_VALUE)
+        );
+
+        painelColunas.add(jPanel3);
+
         getContentPane().add(painelColunas, java.awt.BorderLayout.CENTER);
 
         pack();
@@ -113,6 +191,13 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel painelAF;
+    private javax.swing.JPanel painelAFNotas;
+    private javax.swing.JScrollPane painelAFScroll;
+    private javax.swing.JPanel painelAFTopo;
     private javax.swing.JPanel painelColunas;
     private javax.swing.JPanel painelTopo;
     // End of variables declaration//GEN-END:variables
