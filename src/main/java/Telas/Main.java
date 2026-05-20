@@ -20,14 +20,11 @@ public class Main extends javax.swing.JFrame {
         // Configurações da janela
         setTitle("Painel Kanban"); // Titulo da aba
         setSize(1000, 750);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null); // Centraliza na tela
         setLayout(new BorderLayout(10, 10)); // Layout principal
-        initComponents();
-        
-        add(painelTopo, BorderLayout.NORTH); // Deixa os três textos no topo 
-        
-        
+        initComponents();  
     }
 
     
@@ -43,10 +40,18 @@ public class Main extends javax.swing.JFrame {
         painelAF = new javax.swing.JPanel();
         painelAFTopo = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
+        painelScrollAF = new javax.swing.JScrollPane();
+        painelNotasAF = new javax.swing.JPanel();
+        painelSF = new javax.swing.JPanel();
+        painelSFTopo = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        painelSFScroll = new javax.swing.JScrollPane();
+        painelSFNotas = new javax.swing.JPanel();
+        painelC = new javax.swing.JPanel();
+        painelCTopo = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        painelCScroll = new javax.swing.JScrollPane();
+        painelCNotas = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -87,7 +92,10 @@ public class Main extends javax.swing.JFrame {
 
         painelColunas.setLayout(new java.awt.GridLayout(1, 0));
 
+        painelAF.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelAF.setLayout(new java.awt.BorderLayout());
+
+        painelAFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel4.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
         jLabel4.setText("A FAZER");
@@ -97,66 +105,114 @@ public class Main extends javax.swing.JFrame {
         painelAFTopoLayout.setHorizontalGroup(
             painelAFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelAFTopoLayout.createSequentialGroup()
-                .addGap(82, 82, 82)
+                .addContainerGap(82, Short.MAX_VALUE)
                 .addComponent(jLabel4)
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
         painelAFTopoLayout.setVerticalGroup(
             painelAFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAFTopoLayout.createSequentialGroup()
                 .addContainerGap(43, Short.MAX_VALUE)
                 .addComponent(jLabel4)
-                .addGap(37, 37, 37))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         painelAF.add(painelAFTopo, java.awt.BorderLayout.PAGE_START);
 
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        painelScrollAF.setBorder(null);
+        painelScrollAF.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        painelScrollAF.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 511, Short.MAX_VALUE)
-        );
+        painelNotasAF.setLayout(new java.awt.GridLayout(0, 1));
+        painelScrollAF.setViewportView(painelNotasAF);
 
-        jScrollPane1.setViewportView(jPanel1);
-
-        painelAF.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        painelAF.add(painelScrollAF, java.awt.BorderLayout.CENTER);
 
         painelColunas.add(painelAF);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
+        painelSF.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        painelSF.setLayout(new java.awt.BorderLayout());
+
+        painelSFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel5.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        jLabel5.setText("SENDO FEITO");
+
+        javax.swing.GroupLayout painelSFTopoLayout = new javax.swing.GroupLayout(painelSFTopo);
+        painelSFTopo.setLayout(painelSFTopoLayout);
+        painelSFTopoLayout.setHorizontalGroup(
+            painelSFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelSFTopoLayout.createSequentialGroup()
+                .addContainerGap(50, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addContainerGap(56, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 622, Short.MAX_VALUE)
+        painelSFTopoLayout.setVerticalGroup(
+            painelSFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelSFTopoLayout.createSequentialGroup()
+                .addContainerGap(42, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
-        painelColunas.add(jPanel2);
+        painelSF.add(painelSFTopo, java.awt.BorderLayout.PAGE_START);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
+        painelSFScroll.setBorder(null);
+
+        painelSFNotas.setLayout(new java.awt.GridLayout(0, 1));
+        painelSFScroll.setViewportView(painelSFNotas);
+
+        painelSF.add(painelSFScroll, java.awt.BorderLayout.CENTER);
+
+        painelColunas.add(painelSF);
+
+        painelC.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        painelC.setLayout(new java.awt.BorderLayout());
+
+        painelCTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel6.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        jLabel6.setText("CONCLUÍDO");
+
+        javax.swing.GroupLayout painelCTopoLayout = new javax.swing.GroupLayout(painelCTopo);
+        painelCTopo.setLayout(painelCTopoLayout);
+        painelCTopoLayout.setHorizontalGroup(
+            painelCTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelCTopoLayout.createSequentialGroup()
+                .addContainerGap(60, Short.MAX_VALUE)
+                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(76, Short.MAX_VALUE))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 622, Short.MAX_VALUE)
+        painelCTopoLayout.setVerticalGroup(
+            painelCTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelCTopoLayout.createSequentialGroup()
+                .addContainerGap(42, Short.MAX_VALUE)
+                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
-        painelColunas.add(jPanel3);
+        painelC.add(painelCTopo, java.awt.BorderLayout.PAGE_START);
+
+        painelCScroll.setBorder(null);
+        painelCScroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        painelCScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        javax.swing.GroupLayout painelCNotasLayout = new javax.swing.GroupLayout(painelCNotas);
+        painelCNotas.setLayout(painelCNotasLayout);
+        painelCNotasLayout.setHorizontalGroup(
+            painelCNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 275, Short.MAX_VALUE)
+        );
+        painelCNotasLayout.setVerticalGroup(
+            painelCNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 505, Short.MAX_VALUE)
+        );
+
+        painelCScroll.setViewportView(painelCNotas);
+
+        painelC.add(painelCScroll, java.awt.BorderLayout.CENTER);
+
+        painelColunas.add(painelC);
 
         getContentPane().add(painelColunas, java.awt.BorderLayout.CENTER);
 
@@ -193,13 +249,21 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel painelAF;
     private javax.swing.JPanel painelAFTopo;
+    private javax.swing.JPanel painelC;
+    private javax.swing.JPanel painelCNotas;
+    private javax.swing.JScrollPane painelCScroll;
+    private javax.swing.JPanel painelCTopo;
     private javax.swing.JPanel painelColunas;
+    private javax.swing.JPanel painelNotasAF;
+    private javax.swing.JPanel painelSF;
+    private javax.swing.JPanel painelSFNotas;
+    private javax.swing.JScrollPane painelSFScroll;
+    private javax.swing.JPanel painelSFTopo;
+    private javax.swing.JScrollPane painelScrollAF;
     private javax.swing.JPanel painelTopo;
     // End of variables declaration//GEN-END:variables
 
