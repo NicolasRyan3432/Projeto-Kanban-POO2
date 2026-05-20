@@ -43,8 +43,8 @@ public class Main extends javax.swing.JFrame {
         painelAF = new javax.swing.JPanel();
         painelAFTopo = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        painelAFScroll = new javax.swing.JScrollPane();
-        painelAFNotas = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
 
@@ -85,7 +85,7 @@ public class Main extends javax.swing.JFrame {
 
         getContentPane().add(painelTopo, java.awt.BorderLayout.PAGE_START);
 
-        painelColunas.setLayout(new java.awt.GridLayout());
+        painelColunas.setLayout(new java.awt.GridLayout(1, 0));
 
         painelAF.setLayout(new java.awt.BorderLayout());
 
@@ -111,23 +111,24 @@ public class Main extends javax.swing.JFrame {
 
         painelAF.add(painelAFTopo, java.awt.BorderLayout.PAGE_START);
 
-        painelAFScroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        painelAFScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        javax.swing.GroupLayout painelAFNotasLayout = new javax.swing.GroupLayout(painelAFNotas);
-        painelAFNotas.setLayout(painelAFNotasLayout);
-        painelAFNotasLayout.setHorizontalGroup(
-            painelAFNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 271, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 279, Short.MAX_VALUE)
         );
-        painelAFNotasLayout.setVerticalGroup(
-            painelAFNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 514, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 511, Short.MAX_VALUE)
         );
 
-        painelAFScroll.setViewportView(painelAFNotas);
+        jScrollPane1.setViewportView(jPanel1);
 
-        painelAF.add(painelAFScroll, java.awt.BorderLayout.CENTER);
+        painelAF.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         painelColunas.add(painelAF);
 
@@ -192,11 +193,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel painelAF;
-    private javax.swing.JPanel painelAFNotas;
-    private javax.swing.JScrollPane painelAFScroll;
     private javax.swing.JPanel painelAFTopo;
     private javax.swing.JPanel painelColunas;
     private javax.swing.JPanel painelTopo;
