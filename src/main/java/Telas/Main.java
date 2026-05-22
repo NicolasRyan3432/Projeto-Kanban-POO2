@@ -4,14 +4,12 @@
  */
 package Telas;
 
+import Modelo.CartaoNota;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-/**
- *
- * @author nicolasryan
- */
+
 public class Main extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Main.class.getName());
@@ -24,7 +22,32 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null); // Centraliza na tela
         setLayout(new BorderLayout(10, 10)); // Layout principal
-        initComponents();  
+        
+        initComponents();  //Inicia os componentes
+        
+        // ContentPane é o conteúdo invisível que o Swing adiciona no jFrame 
+        getContentPane().setBackground(new java.awt.Color(102, 102, 102)); 
+        
+        // Aumenta a quantidade de pixels que a tela desce por rolagem
+        painelAFScroll.getVerticalScrollBar().setUnitIncrement(20);
+        painelSFScroll.getVerticalScrollBar().setUnitIncrement(20);
+        painelCScroll.getVerticalScrollBar().setUnitIncrement(20);
+        
+        // Criando as notas só para teste
+        CartaoNota nota1 = new CartaoNota("Fazer Almoço", "Nícolas", "Hoje, 13:00", "Alta");
+        CartaoNota nota2 = new CartaoNota("Lavar a Louça", "Nícolas", "25/04", "Média");
+        CartaoNota nota3 = new CartaoNota("Arrumar a casa", "Nícolas", "Sábado, às 2", "Baixa");
+        CartaoNota nota4 = new CartaoNota("Nome Grande pra ver o que acontece", "Nícolas", "Sábado, às 2", "Baixa");
+        
+        // Adicionando no painel
+        painelNotasAF.add(nota1);
+        painelNotasAF.add(nota2);
+        painelNotasAF.add(nota3);
+        painelNotasAF.add(nota4);
+        
+        // Atualizando o painel para aparecer as notas
+        painelNotasAF.revalidate();
+        painelNotasAF.repaint();
     }
 
     
@@ -40,7 +63,7 @@ public class Main extends javax.swing.JFrame {
         painelAF = new javax.swing.JPanel();
         painelAFTopo = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        painelScrollAF = new javax.swing.JScrollPane();
+        painelAFScroll = new javax.swing.JScrollPane();
         painelNotasAF = new javax.swing.JPanel();
         painelSF = new javax.swing.JPanel();
         painelSFTopo = new javax.swing.JPanel();
@@ -54,15 +77,24 @@ public class Main extends javax.swing.JFrame {
         painelCNotas = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(102, 102, 102));
         setPreferredSize(new java.awt.Dimension(1250, 950));
 
-        jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        painelTopo.setBackground(new java.awt.Color(102, 102, 102));
+
+        jLabel1.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 22)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(230, 230, 230));
         jLabel1.setText("Seja Bem-Vindo, Nícolas");
 
-        jLabel2.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 17)); // NOI18N
+        jLabel2.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel2.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
+        jLabel2.setForeground(java.awt.Color.lightGray);
         jLabel2.setText("Suas Tarefas: 0");
 
-        jLabel3.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 17)); // NOI18N
+        jLabel3.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel3.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
+        jLabel3.setForeground(java.awt.Color.lightGray);
         jLabel3.setText("Tarefas Totais: 0");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
@@ -75,7 +107,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1))
-                .addContainerGap(593, Short.MAX_VALUE))
+                .addContainerGap(524, Short.MAX_VALUE))
         );
         painelTopoLayout.setVerticalGroup(
             painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -91,16 +123,22 @@ public class Main extends javax.swing.JFrame {
 
         getContentPane().add(painelTopo, java.awt.BorderLayout.PAGE_START);
 
+        painelColunas.setBackground(new java.awt.Color(51, 51, 51));
         painelColunas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         painelColunas.setAlignmentX(0.0F);
         painelColunas.setFocusable(false);
         painelColunas.setLayout(new java.awt.GridLayout(1, 0));
 
+        painelAF.setBackground(new java.awt.Color(51, 51, 51));
         painelAF.setLayout(new java.awt.BorderLayout());
 
+        painelAFTopo.setBackground(new java.awt.Color(51, 51, 51));
         painelAFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        painelAFTopo.setForeground(new java.awt.Color(230, 230, 230));
 
+        jLabel4.setBackground(new java.awt.Color(204, 255, 51));
         jLabel4.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        jLabel4.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("A FAZER");
 
@@ -123,22 +161,29 @@ public class Main extends javax.swing.JFrame {
 
         painelAF.add(painelAFTopo, java.awt.BorderLayout.PAGE_START);
 
-        painelScrollAF.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        painelScrollAF.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        painelScrollAF.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        painelAFScroll.setBackground(new java.awt.Color(51, 51, 51));
+        painelAFScroll.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        painelAFScroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        painelAFScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        painelNotasAF.setLayout(new java.awt.GridLayout(0, 1));
-        painelScrollAF.setViewportView(painelNotasAF);
+        painelNotasAF.setBackground(new java.awt.Color(51, 51, 51));
+        painelNotasAF.setLayout(new java.awt.GridLayout(0, 1, 0, 5));
+        painelAFScroll.setViewportView(painelNotasAF);
 
-        painelAF.add(painelScrollAF, java.awt.BorderLayout.CENTER);
+        painelAF.add(painelAFScroll, java.awt.BorderLayout.CENTER);
 
         painelColunas.add(painelAF);
 
+        painelSF.setBackground(new java.awt.Color(51, 51, 51));
         painelSF.setLayout(new java.awt.BorderLayout());
 
+        painelSFTopo.setBackground(new java.awt.Color(51, 51, 51));
         painelSFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        painelSFTopo.setForeground(new java.awt.Color(230, 230, 230));
 
+        jLabel5.setBackground(new java.awt.Color(255, 102, 102));
         jLabel5.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        jLabel5.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("SENDO FEITO");
         jLabel5.setAlignmentX(0.5F);
@@ -162,10 +207,12 @@ public class Main extends javax.swing.JFrame {
 
         painelSF.add(painelSFTopo, java.awt.BorderLayout.PAGE_START);
 
+        painelSFScroll.setBackground(new java.awt.Color(51, 51, 51));
         painelSFScroll.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelSFScroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         painelSFScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
+        painelSFNotas.setBackground(new java.awt.Color(51, 51, 51));
         painelSFNotas.setLayout(new java.awt.GridLayout(0, 1));
         painelSFScroll.setViewportView(painelSFNotas);
 
@@ -173,11 +220,15 @@ public class Main extends javax.swing.JFrame {
 
         painelColunas.add(painelSF);
 
+        painelC.setBackground(new java.awt.Color(51, 51, 51));
         painelC.setLayout(new java.awt.BorderLayout());
 
+        painelCTopo.setBackground(new java.awt.Color(51, 51, 51));
         painelCTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        painelCTopo.setForeground(new java.awt.Color(230, 230, 230));
 
         jLabel6.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        jLabel6.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("CONCLUÍDO");
 
@@ -200,9 +251,12 @@ public class Main extends javax.swing.JFrame {
 
         painelC.add(painelCTopo, java.awt.BorderLayout.PAGE_START);
 
+        painelCScroll.setBackground(new java.awt.Color(51, 51, 51));
         painelCScroll.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelCScroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         painelCScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+
+        painelCNotas.setBackground(new java.awt.Color(51, 51, 51));
 
         javax.swing.GroupLayout painelCNotasLayout = new javax.swing.GroupLayout(painelCNotas);
         painelCNotas.setLayout(painelCNotasLayout);
@@ -212,7 +266,7 @@ public class Main extends javax.swing.JFrame {
         );
         painelCNotasLayout.setVerticalGroup(
             painelCNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 676, Short.MAX_VALUE)
+            .addGap(0, 832, Short.MAX_VALUE)
         );
 
         painelCScroll.setViewportView(painelCNotas);
@@ -259,6 +313,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel painelAF;
+    private javax.swing.JScrollPane painelAFScroll;
     private javax.swing.JPanel painelAFTopo;
     private javax.swing.JPanel painelC;
     private javax.swing.JPanel painelCNotas;
@@ -270,7 +325,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel painelSFNotas;
     private javax.swing.JScrollPane painelSFScroll;
     private javax.swing.JPanel painelSFTopo;
-    private javax.swing.JScrollPane painelScrollAF;
     private javax.swing.JPanel painelTopo;
     // End of variables declaration//GEN-END:variables
 

@@ -4,13 +4,16 @@
  */
 package Modelo;
 
-/**
- *
- * @author nicolasryan
- */
+
 public class CartaoNota extends javax.swing.JPanel {
     public CartaoNota(String titulo, String autor, String prazo, String prioridade) {
         initComponents();
+        
+        // Se o titulo for maior do que 22, pega e fatia a string em 19 caracteres
+        // e adiciona mais três caracteres (...)
+        if(titulo.length() > 22) {
+            titulo = titulo.substring(0,19) + " ...";
+        }
         
         // Parte onde que a nota recebe os seus valores reais
         txtTitulo.setText(titulo);
@@ -44,23 +47,28 @@ public class CartaoNota extends javax.swing.JPanel {
         txtPrazo = new javax.swing.JLabel();
         txtPrioridade = new javax.swing.JLabel();
 
-        setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102), 2));
+        setBackground(new java.awt.Color(85, 85, 85));
+        setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         txtTitulo.setBackground(new java.awt.Color(0, 0, 0));
         txtTitulo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        txtTitulo.setForeground(new java.awt.Color(230, 230, 230));
         txtTitulo.setText("Fazer Almoço");
 
         txtAutor.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        txtAutor.setForeground(new java.awt.Color(210, 210, 210));
         txtAutor.setText("Autor: Nícolas");
 
         varPrioridade.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        varPrioridade.setForeground(new java.awt.Color(255, 0, 51));
+        varPrioridade.setForeground(new java.awt.Color(209, 30, 51));
         varPrioridade.setText("Alta");
 
         txtPrazo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        txtPrazo.setForeground(new java.awt.Color(210, 210, 210));
         txtPrazo.setText("Prazo: Hoje, até as 13:00");
 
         txtPrioridade.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        txtPrioridade.setForeground(new java.awt.Color(210, 210, 210));
         txtPrioridade.setText("Prioridade:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
