@@ -294,7 +294,7 @@ public class Login extends javax.swing.JFrame {
         else {
             Main tela = new Main(); 
             tela.setVisible(true);
-            
+            this.dispose();
         }
     }
     
