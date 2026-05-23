@@ -25,6 +25,8 @@ public class Main extends javax.swing.JFrame {
         
         initComponents();  //Inicia os componentes
         
+        //jLabel1.setText("Seja Bem-Vindo " + user.nome);
+        
         // ContentPane é o conteúdo invisível que o Swing adiciona no jFrame 
         getContentPane().setBackground(new java.awt.Color(102, 102, 102)); 
         
@@ -40,14 +42,14 @@ public class Main extends javax.swing.JFrame {
         CartaoNota nota4 = new CartaoNota("Nome Grande pra ver o que acontece", "Nícolas", "Sábado, às 2", "Baixa");
         
         // Adicionando no painel
-        painelNotasAF.add(nota1);
-        painelNotasAF.add(nota2);
-        painelNotasAF.add(nota3);
-        painelNotasAF.add(nota4);
+        painelSFNotas.add(nota1);
+        painelAFNotas.add(nota2);
+        painelAFNotas.add(nota3);
+        painelAFNotas.add(nota4);
         
         // Atualizando o painel para aparecer as notas
-        painelNotasAF.revalidate();
-        painelNotasAF.repaint();
+        painelAFNotas.revalidate();
+        painelAFNotas.repaint();
     }
 
     
@@ -64,7 +66,7 @@ public class Main extends javax.swing.JFrame {
         painelAFTopo = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         painelAFScroll = new javax.swing.JScrollPane();
-        painelNotasAF = new javax.swing.JPanel();
+        painelAFNotas = new javax.swing.JPanel();
         painelSF = new javax.swing.JPanel();
         painelSFTopo = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -166,9 +168,9 @@ public class Main extends javax.swing.JFrame {
         painelAFScroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         painelAFScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        painelNotasAF.setBackground(new java.awt.Color(51, 51, 51));
-        painelNotasAF.setLayout(new java.awt.GridLayout(0, 1, 0, 5));
-        painelAFScroll.setViewportView(painelNotasAF);
+        painelAFNotas.setBackground(new java.awt.Color(51, 51, 51));
+        painelAFNotas.setLayout(new java.awt.GridLayout(0, 1, 0, 5));
+        painelAFScroll.setViewportView(painelAFNotas);
 
         painelAF.add(painelAFScroll, java.awt.BorderLayout.CENTER);
 
@@ -313,6 +315,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel painelAF;
+    private javax.swing.JPanel painelAFNotas;
     private javax.swing.JScrollPane painelAFScroll;
     private javax.swing.JPanel painelAFTopo;
     private javax.swing.JPanel painelC;
@@ -320,7 +323,6 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane painelCScroll;
     private javax.swing.JPanel painelCTopo;
     private javax.swing.JPanel painelColunas;
-    private javax.swing.JPanel painelNotasAF;
     private javax.swing.JPanel painelSF;
     private javax.swing.JPanel painelSFNotas;
     private javax.swing.JScrollPane painelSFScroll;

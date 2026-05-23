@@ -82,7 +82,7 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(painelTopo, java.awt.BorderLayout.PAGE_START);
 
         painelLogin.setBackground(new java.awt.Color(102, 102, 102));
-        painelLogin.setPreferredSize(new java.awt.Dimension(850, 455));
+        painelLogin.setPreferredSize(new java.awt.Dimension(850, 500));
 
         txtLogin.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtLogin.setForeground(new java.awt.Color(220, 220, 220));
@@ -185,7 +185,7 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botaoSair)
                     .addComponent(botaoEntrar))
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         getContentPane().add(painelLogin, java.awt.BorderLayout.CENTER);

@@ -16,7 +16,7 @@ public class TestarConexao {
             con.fecharConexao(c, null, null);
             
         } catch (Exception e) {
-            System.out.println("Erro "+ e.getMessage());
+            System.out.println("Erro: "+ e.getMessage());
         }
     }
 }
