@@ -7,7 +7,7 @@ package Telas;
 import Modelo.CartaoNota;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+
 
 
 public class Main extends javax.swing.JFrame {
@@ -25,6 +25,8 @@ public class Main extends javax.swing.JFrame {
         
         initComponents();  //Inicia os componentes
         
+        arrumarCoresMenuPopup();
+
         //jLabel1.setText("Seja Bem-Vindo " + user.nome);
         
         // ContentPane é o conteúdo invisível que o Swing adiciona no jFrame 
@@ -44,6 +46,11 @@ public class Main extends javax.swing.JFrame {
         // Adicionando no painel
         painelSFNotas.add(nota1);
         painelAFNotas.add(nota2);
+        // ISSO DAQUI É PRA QUANDO VIR DO BD AS NOTAS CRIADAS, 
+        // VOU DEIXAR ASSIM PORQUE SENÃO EU TERIA QUE MUDAR O LAYOUT
+        // Isso adiciona um "tijolo invisível" de 5 pixels de altura logo embaixo dela
+        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+
         painelAFNotas.add(nota3);
         painelAFNotas.add(nota4);
         
@@ -57,26 +64,61 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        menuPopup = new javax.swing.JPopupMenu();
+        itemCriarNotas = new javax.swing.JMenuItem();
+        itemGerenciarUser = new javax.swing.JMenuItem();
+        Logout = new javax.swing.JMenuItem();
         painelTopo = new javax.swing.JPanel();
+        txtBoasVindas = new javax.swing.JLabel();
+        txtTarefasUser = new javax.swing.JLabel();
+        txtTarefasTotais = new javax.swing.JLabel();
+        btnMenu = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         painelColunas = new javax.swing.JPanel();
         painelAF = new javax.swing.JPanel();
         painelAFTopo = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        txtAFTopo = new javax.swing.JLabel();
         painelAFScroll = new javax.swing.JScrollPane();
         painelAFNotas = new javax.swing.JPanel();
         painelSF = new javax.swing.JPanel();
         painelSFTopo = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
+        txtSFTopo = new javax.swing.JLabel();
         painelSFScroll = new javax.swing.JScrollPane();
         painelSFNotas = new javax.swing.JPanel();
         painelC = new javax.swing.JPanel();
         painelCTopo = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
+        txtCTopo = new javax.swing.JLabel();
         painelCScroll = new javax.swing.JScrollPane();
         painelCNotas = new javax.swing.JPanel();
+
+        menuPopup.setBackground(new java.awt.Color(0, 0, 0));
+        menuPopup.setForeground(new java.awt.Color(255, 102, 102));
+        menuPopup.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+
+        itemCriarNotas.setBackground(new java.awt.Color(0, 0, 0));
+        itemCriarNotas.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        itemCriarNotas.setForeground(java.awt.Color.lightGray);
+        itemCriarNotas.setText("Criar Notas");
+        itemCriarNotas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        itemCriarNotas.setOpaque(true);
+        menuPopup.add(itemCriarNotas);
+
+        itemGerenciarUser.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        itemGerenciarUser.setForeground(java.awt.Color.lightGray);
+        itemGerenciarUser.setText("Gerenciar Usuários");
+        itemGerenciarUser.setAlignmentY(1.5F);
+        itemGerenciarUser.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        itemGerenciarUser.setMargin(new java.awt.Insets(10, 11, 3, 11));
+        itemGerenciarUser.setOpaque(true);
+        menuPopup.add(itemGerenciarUser);
+
+        Logout.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        Logout.setForeground(java.awt.Color.lightGray);
+        Logout.setText("Logout");
+        Logout.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        Logout.setOpaque(true);
+        menuPopup.add(Logout);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(102, 102, 102));
@@ -84,20 +126,33 @@ public class Main extends javax.swing.JFrame {
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));
 
-        jLabel1.setBackground(new java.awt.Color(204, 204, 204));
-        jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 22)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(230, 230, 230));
-        jLabel1.setText("Seja Bem-Vindo, Nícolas");
+        txtBoasVindas.setBackground(new java.awt.Color(204, 204, 204));
+        txtBoasVindas.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 22)); // NOI18N
+        txtBoasVindas.setForeground(new java.awt.Color(230, 230, 230));
+        txtBoasVindas.setText("Seja Bem-Vindo, Nícolas");
 
-        jLabel2.setBackground(new java.awt.Color(204, 204, 204));
-        jLabel2.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
-        jLabel2.setForeground(java.awt.Color.lightGray);
-        jLabel2.setText("Suas Tarefas: 0");
+        txtTarefasUser.setBackground(new java.awt.Color(204, 204, 204));
+        txtTarefasUser.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
+        txtTarefasUser.setForeground(java.awt.Color.lightGray);
+        txtTarefasUser.setText("Suas Tarefas: 0");
 
-        jLabel3.setBackground(new java.awt.Color(204, 204, 204));
-        jLabel3.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
-        jLabel3.setForeground(java.awt.Color.lightGray);
-        jLabel3.setText("Tarefas Totais: 0");
+        txtTarefasTotais.setBackground(new java.awt.Color(204, 204, 204));
+        txtTarefasTotais.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
+        txtTarefasTotais.setForeground(java.awt.Color.lightGray);
+        txtTarefasTotais.setText("Tarefas Totais: 0");
+
+        btnMenu.setBackground(new java.awt.Color(80, 80, 80));
+        btnMenu.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        btnMenu.setForeground(new java.awt.Color(200, 200, 200));
+        btnMenu.setText("Menu");
+        btnMenu.addActionListener(this::btnMenuActionPerformed);
+
+        jComboBox1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        jLabel1.setForeground(java.awt.Color.lightGray);
+        jLabel1.setText("Filtro:");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
         painelTopo.setLayout(painelTopoLayout);
@@ -106,21 +161,40 @@ public class Main extends javax.swing.JFrame {
             .addGroup(painelTopoLayout.createSequentialGroup()
                 .addGap(58, 58, 58)
                 .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addContainerGap(524, Short.MAX_VALUE))
+                    .addComponent(txtBoasVindas)
+                    .addComponent(txtTarefasTotais)
+                    .addComponent(txtTarefasUser))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 319, Short.MAX_VALUE)
+                .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTopoLayout.createSequentialGroup()
+                        .addComponent(btnMenu)
+                        .addGap(60, 60, 60))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTopoLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         painelTopoLayout.setVerticalGroup(
             painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelTopoLayout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addGap(50, 50, 50)
+                .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBoasVindas)
+                    .addComponent(btnMenu))
+                .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelTopoLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(txtTarefasUser)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtTarefasTotais)
+                        .addContainerGap(25, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTopoLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addContainerGap())))
         );
 
         getContentPane().add(painelTopo, java.awt.BorderLayout.PAGE_START);
@@ -138,11 +212,11 @@ public class Main extends javax.swing.JFrame {
         painelAFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelAFTopo.setForeground(new java.awt.Color(230, 230, 230));
 
-        jLabel4.setBackground(new java.awt.Color(204, 255, 51));
-        jLabel4.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
-        jLabel4.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel4.setText("A FAZER");
+        txtAFTopo.setBackground(new java.awt.Color(204, 255, 51));
+        txtAFTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        txtAFTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
+        txtAFTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtAFTopo.setText("A FAZER");
 
         javax.swing.GroupLayout painelAFTopoLayout = new javax.swing.GroupLayout(painelAFTopo);
         painelAFTopo.setLayout(painelAFTopoLayout);
@@ -150,14 +224,14 @@ public class Main extends javax.swing.JFrame {
             painelAFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAFTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addComponent(txtAFTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                 .addContainerGap())
         );
         painelAFTopoLayout.setVerticalGroup(
             painelAFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAFTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                .addComponent(txtAFTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -169,7 +243,7 @@ public class Main extends javax.swing.JFrame {
         painelAFScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         painelAFNotas.setBackground(new java.awt.Color(51, 51, 51));
-        painelAFNotas.setLayout(new java.awt.GridLayout(0, 1, 0, 5));
+        painelAFNotas.setLayout(new javax.swing.BoxLayout(painelAFNotas, javax.swing.BoxLayout.Y_AXIS));
         painelAFScroll.setViewportView(painelAFNotas);
 
         painelAF.add(painelAFScroll, java.awt.BorderLayout.CENTER);
@@ -183,12 +257,12 @@ public class Main extends javax.swing.JFrame {
         painelSFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelSFTopo.setForeground(new java.awt.Color(230, 230, 230));
 
-        jLabel5.setBackground(new java.awt.Color(255, 102, 102));
-        jLabel5.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
-        jLabel5.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("SENDO FEITO");
-        jLabel5.setAlignmentX(0.5F);
+        txtSFTopo.setBackground(new java.awt.Color(255, 102, 102));
+        txtSFTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        txtSFTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
+        txtSFTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtSFTopo.setText("SENDO FEITO");
+        txtSFTopo.setAlignmentX(0.5F);
 
         javax.swing.GroupLayout painelSFTopoLayout = new javax.swing.GroupLayout(painelSFTopo);
         painelSFTopo.setLayout(painelSFTopoLayout);
@@ -196,14 +270,14 @@ public class Main extends javax.swing.JFrame {
             painelSFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelSFTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addComponent(txtSFTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                 .addContainerGap())
         );
         painelSFTopoLayout.setVerticalGroup(
             painelSFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelSFTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                .addComponent(txtSFTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -215,7 +289,7 @@ public class Main extends javax.swing.JFrame {
         painelSFScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         painelSFNotas.setBackground(new java.awt.Color(51, 51, 51));
-        painelSFNotas.setLayout(new java.awt.GridLayout(0, 1));
+        painelSFNotas.setLayout(new javax.swing.BoxLayout(painelSFNotas, javax.swing.BoxLayout.Y_AXIS));
         painelSFScroll.setViewportView(painelSFNotas);
 
         painelSF.add(painelSFScroll, java.awt.BorderLayout.CENTER);
@@ -229,10 +303,10 @@ public class Main extends javax.swing.JFrame {
         painelCTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelCTopo.setForeground(new java.awt.Color(230, 230, 230));
 
-        jLabel6.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
-        jLabel6.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("CONCLUÍDO");
+        txtCTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        txtCTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
+        txtCTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtCTopo.setText("CONCLUÍDO");
 
         javax.swing.GroupLayout painelCTopoLayout = new javax.swing.GroupLayout(painelCTopo);
         painelCTopo.setLayout(painelCTopoLayout);
@@ -240,14 +314,14 @@ public class Main extends javax.swing.JFrame {
             painelCTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelCTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addComponent(txtCTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                 .addContainerGap())
         );
         painelCTopoLayout.setVerticalGroup(
             painelCTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelCTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addComponent(txtCTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -259,18 +333,7 @@ public class Main extends javax.swing.JFrame {
         painelCScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         painelCNotas.setBackground(new java.awt.Color(51, 51, 51));
-
-        javax.swing.GroupLayout painelCNotasLayout = new javax.swing.GroupLayout(painelCNotas);
-        painelCNotas.setLayout(painelCNotasLayout);
-        painelCNotasLayout.setHorizontalGroup(
-            painelCNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 326, Short.MAX_VALUE)
-        );
-        painelCNotasLayout.setVerticalGroup(
-            painelCNotasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 832, Short.MAX_VALUE)
-        );
-
+        painelCNotas.setLayout(new javax.swing.BoxLayout(painelCNotas, javax.swing.BoxLayout.Y_AXIS));
         painelCScroll.setViewportView(painelCNotas);
 
         painelC.add(painelCScroll, java.awt.BorderLayout.CENTER);
@@ -281,6 +344,22 @@ public class Main extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
+        /* 
+            Ao clicar no botão, o show faz com que o menu popup apareça na tela.
+            O .show() precisa de três parâmetros: o componente de referência (btnMenu), a posição X e a posição Y. 
+            O '0' alinha o menu exatamente na beirada esquerda do botão. 
+            O 'btnMenu.getHeight()' faz o menu abrir exatemente colado na parte de baixo do botão!
+        */ 
+        
+        // Para calcular o tamanho exato para o menu ficar exatamente grudado à direita do botão
+        int x = btnMenu.getWidth() - menuPopup.getPreferredSize().width;
+        // Altura do botão, igual estava antes
+        int y = btnMenu.getHeight();
+        
+        menuPopup.show(btnMenu, x, y);
+    }//GEN-LAST:event_btnMenuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -306,14 +385,39 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Main().setVisible(true));
     }
+    
+    private void arrumarCoresMenuPopup() {
+        // O UIManager serve para trocar a cor do hover padrão (que não tem como trocar pela interface).
+        // Trocamos o azulão padrão por um cinza um pouco mais claro que o fundo
+        javax.swing.UIManager.put("MenuItem.selectionBackground", new java.awt.Color(85, 85, 85)); 
+        javax.swing.UIManager.put("MenuItem.selectionForeground", new java.awt.Color(255, 255, 255)); 
+
+        // Força o fundo do menu a ficar escuro
+        menuPopup.setOpaque(true);
+        menuPopup.setBackground(new java.awt.Color(51, 51, 51));
+
+        // Força todos os botões de dentro a ficarem escuros também usando um laço de repetição
+        for (java.awt.Component item : menuPopup.getComponents()) {
+            if (item instanceof javax.swing.JMenuItem) {
+                javax.swing.JMenuItem menuItem = (javax.swing.JMenuItem) item;
+                menuItem.setOpaque(true);
+                menuItem.setBackground(new java.awt.Color(51, 51, 51)); 
+                menuItem.setForeground(new java.awt.Color(210, 210, 210)); 
+                
+                // Cria uma borda invisivel para dar o espaçamento nas bordas
+                menuItem.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem Logout;
+    private javax.swing.JButton btnMenu;
+    private javax.swing.JMenuItem itemCriarNotas;
+    private javax.swing.JMenuItem itemGerenciarUser;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPopupMenu menuPopup;
     private javax.swing.JPanel painelAF;
     private javax.swing.JPanel painelAFNotas;
     private javax.swing.JScrollPane painelAFScroll;
@@ -328,6 +432,12 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane painelSFScroll;
     private javax.swing.JPanel painelSFTopo;
     private javax.swing.JPanel painelTopo;
+    private javax.swing.JLabel txtAFTopo;
+    private javax.swing.JLabel txtBoasVindas;
+    private javax.swing.JLabel txtCTopo;
+    private javax.swing.JLabel txtSFTopo;
+    private javax.swing.JLabel txtTarefasTotais;
+    private javax.swing.JLabel txtTarefasUser;
     // End of variables declaration//GEN-END:variables
 
     

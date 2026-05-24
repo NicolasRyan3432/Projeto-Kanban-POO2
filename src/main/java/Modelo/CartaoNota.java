@@ -9,6 +9,9 @@ public class CartaoNota extends javax.swing.JPanel {
     public CartaoNota(String titulo, String autor, String prazo, String prioridade) {
         initComponents();
         
+        // Faz com que ocupe todo o espaço disponível na horizontal
+        this.setMaximumSize(new java.awt.Dimension(32767, this.getPreferredSize().height));
+        
         // Se o titulo for maior do que 22, pega e fatia a string em 19 caracteres
         // e adiciona mais três caracteres (...)
         if(titulo.length() > 22) {
@@ -49,6 +52,7 @@ public class CartaoNota extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(85, 85, 85));
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        setMaximumSize(new java.awt.Dimension(393, 208));
 
         txtTitulo.setBackground(new java.awt.Color(0, 0, 0));
         txtTitulo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
@@ -90,7 +94,7 @@ public class CartaoNota extends javax.swing.JPanel {
                                 .addComponent(txtPrioridade)
                                 .addGap(18, 18, 18)
                                 .addComponent(varPrioridade)))
-                        .addGap(0, 86, Short.MAX_VALUE))))
+                        .addGap(0, 93, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
