@@ -6,6 +6,7 @@ package Telas;
 
 import Modelo.CartaoNota;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import javax.swing.JFrame;
 
 
@@ -17,11 +18,11 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         // Configurações da janela
         setTitle("Painel Kanban"); // Titulo da aba
-        setSize(1000, 1000);
-        setResizable(false);
+        this.setMinimumSize(new Dimension(1250, 960)); // Tamanho mínimo da tela (pra não quebrar)
+        setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null); // Centraliza na tela
-        setLayout(new BorderLayout(10, 10)); // Layout principal
+       
         
         initComponents();  //Inicia os componentes
         
@@ -102,6 +103,7 @@ public class Main extends javax.swing.JFrame {
         itemCriarNotas.setText("Criar Notas");
         itemCriarNotas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         itemCriarNotas.setOpaque(true);
+        itemCriarNotas.addActionListener(this::itemCriarNotasActionPerformed);
         menuPopup.add(itemCriarNotas);
 
         itemGerenciarUser.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -152,7 +154,7 @@ public class Main extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         jLabel1.setForeground(java.awt.Color.lightGray);
-        jLabel1.setText("Filtro:");
+        jLabel1.setText("Filtrar por:");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
         painelTopo.setLayout(painelTopoLayout);
@@ -164,7 +166,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(txtBoasVindas)
                     .addComponent(txtTarefasTotais)
                     .addComponent(txtTarefasUser))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 319, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 260, Short.MAX_VALUE)
                 .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTopoLayout.createSequentialGroup()
                         .addComponent(btnMenu)
@@ -224,7 +226,7 @@ public class Main extends javax.swing.JFrame {
             painelAFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelAFTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtAFTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addComponent(txtAFTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
                 .addContainerGap())
         );
         painelAFTopoLayout.setVerticalGroup(
@@ -270,7 +272,7 @@ public class Main extends javax.swing.JFrame {
             painelSFTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelSFTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtSFTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addComponent(txtSFTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
                 .addContainerGap())
         );
         painelSFTopoLayout.setVerticalGroup(
@@ -314,7 +316,7 @@ public class Main extends javax.swing.JFrame {
             painelCTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelCTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtCTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addComponent(txtCTopo, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
                 .addContainerGap())
         );
         painelCTopoLayout.setVerticalGroup(
@@ -360,6 +362,22 @@ public class Main extends javax.swing.JFrame {
         
         menuPopup.show(btnMenu, x, y);
     }//GEN-LAST:event_btnMenuActionPerformed
+
+    private void itemCriarNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCriarNotasActionPerformed
+        // Cria a tela de criação. 
+        // O zero é  o id do usuário que clicou para poder mandar para o DAO o id dele
+        CriarNotas tela = new CriarNotas(this, true, 0);
+        
+        // Coloca ela no centro da tela
+        tela.setLocationRelativeTo(this);
+        
+        // Deixa visível, o Modal aparece na tela e trava a tela principal
+        tela.setVisible(true);
+        
+        /* 
+        --- Vem a parte de chamar as Notas no DAO ---
+        */
+    }//GEN-LAST:event_itemCriarNotasActionPerformed
 
     /**
      * @param args the command line arguments

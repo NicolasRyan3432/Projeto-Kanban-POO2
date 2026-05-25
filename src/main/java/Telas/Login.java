@@ -43,7 +43,8 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
-        setPreferredSize(new java.awt.Dimension(850, 455));
+        setPreferredSize(new java.awt.Dimension(800, 500));
+        setResizable(false);
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));
 
@@ -65,7 +66,7 @@ public class Login extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtComplemento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtTitulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 839, Short.MAX_VALUE))
+                    .addComponent(txtTitulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE))
                 .addContainerGap())
         );
         painelTopoLayout.setVerticalGroup(
@@ -81,7 +82,8 @@ public class Login extends javax.swing.JFrame {
         getContentPane().add(painelTopo, java.awt.BorderLayout.PAGE_START);
 
         painelLogin.setBackground(new java.awt.Color(102, 102, 102));
-        painelLogin.setPreferredSize(new java.awt.Dimension(850, 500));
+        painelLogin.setMinimumSize(new java.awt.Dimension(800, 450));
+        painelLogin.setPreferredSize(new java.awt.Dimension(800, 450));
 
         txtLogin.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtLogin.setForeground(new java.awt.Color(220, 220, 220));
@@ -146,31 +148,30 @@ public class Login extends javax.swing.JFrame {
         painelLogin.setLayout(painelLoginLayout);
         painelLoginLayout.setHorizontalGroup(
             painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelLoginLayout.createSequentialGroup()
+                .addContainerGap(186, Short.MAX_VALUE)
+                .addGroup(painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chkBox, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLoginLayout.createSequentialGroup()
+                        .addComponent(txtLogin)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(campoTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLoginLayout.createSequentialGroup()
+                        .addComponent(txtSenha)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(campoSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(186, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLoginLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(botaoSair)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(botaoEntrar)
-                .addGap(40, 40, 40))
-            .addGroup(painelLoginLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(chkBox)
-                    .addGroup(painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(painelLoginLayout.createSequentialGroup()
-                            .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(campoSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelLoginLayout.createSequentialGroup()
-                            .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(campoTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 245, Short.MAX_VALUE))
+                .addGap(36, 36, 36))
         );
         painelLoginLayout.setVerticalGroup(
             painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelLoginLayout.createSequentialGroup()
-                .addGap(64, 64, 64)
+                .addContainerGap(64, Short.MAX_VALUE)
                 .addGroup(painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtLogin)
                     .addComponent(campoTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -180,11 +181,11 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(txtSenha))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chkBox)
-                .addGap(39, 39, 39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
                 .addGroup(painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botaoSair)
                     .addComponent(botaoEntrar))
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addGap(33, 33, 33))
         );
 
         getContentPane().add(painelLogin, java.awt.BorderLayout.CENTER);

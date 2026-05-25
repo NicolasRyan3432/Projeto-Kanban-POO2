@@ -3,27 +3,26 @@ import java.time.LocalDateTime;
 
 public class Nota {
     private int id;
-    
-    // Id_usuario pra passar direto pro dao sem ter que passar como parâmetro na função
-    private int id_usuario;
-    
+    private int id_usuario; // Id_usuario pra passar direto para o DAO sem ter que passar como parâmetro na função
     private int prioridade;
-    private String titulo;
+    private String nome;
     private String descricao;
+    private String categoria;
     
     // Pra já passar pro banco como DATETIME, sem precisar formatar igual seria se fosse String
     private LocalDateTime data; 
     private LocalDateTime prazo;
 
-    // Construtor vazio pra passar pro dao
+    // Construtor vazio pra passar para o DAO
     public Nota() {}
     
     // Construtor passado na hora de INSERIR os dados, id é AUTOINCREMENT
-    public Nota(int id_usuario, int prioridade, String titulo, String descricao, LocalDateTime data, LocalDateTime prazo) {
+    public Nota(int id_usuario, int prioridade, String nome, String descricao, String categoria, LocalDateTime data, LocalDateTime prazo) {
         this.id_usuario = id_usuario;
         this.prioridade = prioridade;
-        this.titulo = titulo;
+        this.nome = nome;
         this.descricao = descricao;
+        this.categoria = categoria;
         this.data = data;
         this.prazo = prazo;
     }
@@ -52,12 +51,12 @@ public class Nota {
         this.prioridade = prioridade;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getNome() {
+        return nome;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getDescricao() {
@@ -68,6 +67,14 @@ public class Nota {
         this.descricao = descricao;
     }
 
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+    
     public LocalDateTime getData() {
         return data;
     }
