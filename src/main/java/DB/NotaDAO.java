@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.sql.Timestamp;
 
 public class NotaDAO {
     public void criar(Nota nota) throws Exception {
@@ -53,6 +54,73 @@ public class NotaDAO {
         finally {
             // Executa independente se executou o try ou o catch
             conexao.fecharConexao(con, ps, null);
+        }
+    }
+
+    public ArrayList<Nota> listar() throws Exception {
+
+        Connection con = null;
+        Statement ps = null;
+        ResultSet rs = null;
+        Conexao conexao = new Conexao();
+
+        try {
+            con = conexao.abrirConexao();
+            
+            // Pega tudo da tabela notas e junta com a tabela usuarios para pegar o nome
+            String sql = "SELECT n.*, u.nome AS nome_autor "
+                    + "FROM notas n "
+                    + "INNER JOIN usuarios u ON n.id_usuario = u.id";
+           
+            // Cria o statement pra passar o comando pro banco
+            ps = con.createStatement();
+            // Executa os comandos SQL
+            rs = ps.executeQuery(sql);
+
+            ArrayList<Nota> listaNotas = new ArrayList<>();
+
+            // Vai de linha a linha e verifica se tem login igual ao inserido
+            while (rs.next()) {
+                Nota nota = new Nota();
+                nota.setId(rs.getInt("id_nota"));
+                nota.setNome(rs.getString("nome"));
+                nota.setDescricao(rs.getString("descricao"));
+                nota.setCategoria(rs.getString("categoria"));
+                nota.setPrioridade(rs.getInt("prioridade"));
+                
+                // Cria uma variável que vai receber o valor como timestamp do BD
+                Timestamp data = rs.getTimestamp("data_criacao");
+                if(data != null) {
+                    // Converte de volta para LocalDateTime se não for nulo
+                    nota.setData(data.toLocalDateTime());
+                }
+                else {
+                    nota.setData(null);
+                }
+                
+                // Mesma coisa aqui
+                Timestamp prazo = rs.getTimestamp("prazo");
+                if(prazo != null) {
+                    // Converte de volta para LocalDateTime se não for nulo
+                    nota.setPrazo(prazo.toLocalDateTime());
+                }
+                else {
+                    nota.setPrazo(null); 
+                }
+                
+                nota.setId_usuario(rs.getInt("id_usuario"));
+                nota.setNomeAutor(rs.getString("nome_autor"));
+                
+                // Adiciona a nota na nossa lista
+                listaNotas.add(nota);
+            }
+            return listaNotas;
+        } 
+        catch (Exception e) {
+            throw new Exception(e.getMessage());
+        } 
+        finally {
+            conexao.fecharConexao(con, ps, rs);
         }
     }
 }

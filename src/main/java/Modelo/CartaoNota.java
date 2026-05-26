@@ -1,12 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
-package Modelo;
 
+package Modelo;
+import java.awt.Cursor;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
 
 public class CartaoNota extends javax.swing.JPanel {
-    public CartaoNota(String titulo, String autor, String prazo, String prioridade) {
+    private Nota notaAtual;
+    
+    // Construtor recebe uma nota inteira ao invés de pedaços separados da nota.
+    public CartaoNota(Nota n, String prioridade) {
+        // A notaAtual recebe a nota que foi clicada
+        this.notaAtual = n;
+        
         initComponents();
         
         // Faz com que ocupe todo o espaço disponível na horizontal
@@ -14,15 +19,22 @@ public class CartaoNota extends javax.swing.JPanel {
         
         // Se o titulo for maior do que 22, pega e fatia a string em 19 caracteres
         // e adiciona mais três caracteres (...)
-        if(titulo.length() > 22) {
-            titulo = titulo.substring(0,19) + " ...";
+        if(notaAtual.getNome().length() > 22) {
+            notaAtual.setNome(notaAtual.getNome().substring(0,19) + " ...");
         }
         
         // Parte onde que a nota recebe os seus valores reais
-        txtTitulo.setText(titulo);
-        txtAutor.setText("Autor: " + autor);
-        txtPrazo.setText("Prazo: " + prazo);
+        txtTitulo.setText(notaAtual.getNome());
+        txtAutor.setText("Autor: " + notaAtual.getNomeAutor());
         
+        if(notaAtual.getPrazo() != null) {
+            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            
+            txtPrazo.setText("Prazo: " + notaAtual.getPrazo().format(formatador));
+        }
+        else {
+            txtPrazo.setText("Prazo: Indefinido");
+        }
         /*  
             Aqui separei em dois labels, um é do texto "Prioridade" 
             e o outro que é realmente a prioridade que vem do banco
@@ -53,6 +65,11 @@ public class CartaoNota extends javax.swing.JPanel {
         setBackground(new java.awt.Color(85, 85, 85));
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setMaximumSize(new java.awt.Dimension(393, 208));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         txtTitulo.setBackground(new java.awt.Color(0, 0, 0));
         txtTitulo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
@@ -112,6 +129,21 @@ public class CartaoNota extends javax.swing.JPanel {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // Verifica se foi um clique DUPLO
+        if(evt.getClickCount() == 2) {
+            // Muda o cursor para o de "carregando" para dar um feedback visual
+            this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+            
+            // Parte que vai chamar a nova tela com as informações da nota atual
+            // Por enquanto vai ser um jOptionPane só pra ver se funcionou
+            JOptionPane.showMessageDialog(this, "Deu certo fudido!!! Nome da nota: " + notaAtual.getNome());
+            
+            // Volta o cursor ao normal
+            this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+    }//GEN-LAST:event_formMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

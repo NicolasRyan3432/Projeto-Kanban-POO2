@@ -3,6 +3,7 @@ package Telas;
 
 import DB.NotaDAO;
 import Modelo.Nota;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +23,7 @@ public class CriarNotas extends javax.swing.JDialog {
         initComponents();
         
         arrumarCampoPrazo();
-        arrumarcomboBox();
+        arrumarComboBox();
     }
     
     @SuppressWarnings("unchecked")
@@ -392,16 +393,20 @@ public class CriarNotas extends javax.swing.JDialog {
                 try {
                     // Formata com o padrão brasileiro, já que o DTF por padrão é o padrão Americano de datas.
                     // O Trocamos o yyyy para uuuu que é para o Java ser estritamente rigoroso com o padrão gregoriano.
-                    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm").withResolverStyle(ResolverStyle.STRICT);
+                    // Tirei a obrigatoriedade de ter que por hora
+                    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
 
-                    // Pega e transforma o texto em LocalDateTime usando o formatador
-                    LocalDateTime data = LocalDateTime.parse(dataDigitada, formatador);
+                    // Pega e transforma o texto em LocalDate (sem hora aqui) usando o formatador
+                    LocalDate dataPura = LocalDate.parse(dataDigitada, formatador);
+                    
+                    // Converte para o LocalDateTime com a hora pro final do dia
+                    LocalDateTime dataComHora = dataPura.atTime(23, 59, 59);
                     
                     // Insere a data dentro da Nota
-                    nota.setPrazo(data);
+                    nota.setPrazo(dataComHora);
                 }
                 catch(DateTimeParseException ex) {
-                    JOptionPane.showMessageDialog(this, "Data ou hora inválida!!", "Erro!!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Data inválida!!", "Erro!!", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
@@ -429,7 +434,7 @@ public class CriarNotas extends javax.swing.JDialog {
     private void arrumarCampoPrazo() {  
         try {
             // O '#' obriga o usuário a digitar apenas números
-            MaskFormatter mascaraData = new MaskFormatter("##/##/#### ##:##");
+            MaskFormatter mascaraData = new MaskFormatter("##/##/####");
 
             // Coloca um underline onde o usuário ainda não digitou (fica visualmente bem claro)
             mascaraData.setPlaceholderCharacter('_'); 
@@ -444,7 +449,7 @@ public class CriarNotas extends javax.swing.JDialog {
         }
     }
     
-    private void arrumarcomboBox() {
+    private void arrumarComboBox() {
         // 1. Pinta a "caixa" principal (quando ele está fechado)
         comboBoxPrioridade.setBackground(new java.awt.Color(30, 30, 30));
         comboBoxPrioridade.setForeground(new java.awt.Color(210, 210, 210));

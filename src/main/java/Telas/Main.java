@@ -4,10 +4,13 @@
  */
 package Telas;
 
+import DB.NotaDAO;
 import Modelo.CartaoNota;
-import java.awt.BorderLayout;
+import Modelo.Nota;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 
 
@@ -27,7 +30,8 @@ public class Main extends javax.swing.JFrame {
         initComponents();  //Inicia os componentes
         
         arrumarCoresMenuPopup();
-
+        carregarNotas();
+        
         //jLabel1.setText("Seja Bem-Vindo " + user.nome);
         
         // ContentPane é o conteúdo invisível que o Swing adiciona no jFrame 
@@ -37,27 +41,6 @@ public class Main extends javax.swing.JFrame {
         painelAFScroll.getVerticalScrollBar().setUnitIncrement(20);
         painelSFScroll.getVerticalScrollBar().setUnitIncrement(20);
         painelCScroll.getVerticalScrollBar().setUnitIncrement(20);
-        
-        // Criando as notas só para teste
-        CartaoNota nota1 = new CartaoNota("Fazer Almoço", "Nícolas", "Hoje, 13:00", "Alta");
-        CartaoNota nota2 = new CartaoNota("Lavar a Louça", "Nícolas", "25/04", "Média");
-        CartaoNota nota3 = new CartaoNota("Arrumar a casa", "Nícolas", "Sábado, às 2", "Baixa");
-        CartaoNota nota4 = new CartaoNota("Nome Grande pra ver o que acontece", "Nícolas", "Sábado, às 2", "Baixa");
-        
-        // Adicionando no painel
-        painelSFNotas.add(nota1);
-        painelAFNotas.add(nota2);
-        // ISSO DAQUI É PRA QUANDO VIR DO BD AS NOTAS CRIADAS, 
-        // VOU DEIXAR ASSIM PORQUE SENÃO EU TERIA QUE MUDAR O LAYOUT
-        // Isso adiciona um "tijolo invisível" de 5 pixels de altura logo embaixo dela
-        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
-
-        painelAFNotas.add(nota3);
-        painelAFNotas.add(nota4);
-        
-        // Atualizando o painel para aparecer as notas
-        painelAFNotas.revalidate();
-        painelAFNotas.repaint();
     }
 
     
@@ -374,9 +357,8 @@ public class Main extends javax.swing.JFrame {
         // Deixa visível, o Modal aparece na tela e trava a tela principal
         tela.setVisible(true);
         
-        /* 
-        --- Vem a parte de chamar as Notas no DAO ---
-        */
+        // Terminou de criar a nota, recarrega para aparecer a nota
+        carregarNotas();
     }//GEN-LAST:event_itemCriarNotasActionPerformed
 
     /**
@@ -416,8 +398,7 @@ public class Main extends javax.swing.JFrame {
 
         // Força todos os botões de dentro a ficarem escuros também usando um laço de repetição
         for (java.awt.Component item : menuPopup.getComponents()) {
-            if (item instanceof javax.swing.JMenuItem) {
-                javax.swing.JMenuItem menuItem = (javax.swing.JMenuItem) item;
+            if (item instanceof javax.swing.JMenuItem menuItem) {
                 menuItem.setOpaque(true);
                 menuItem.setBackground(new java.awt.Color(51, 51, 51)); 
                 menuItem.setForeground(new java.awt.Color(210, 210, 210)); 
@@ -427,7 +408,72 @@ public class Main extends javax.swing.JFrame {
             }
         }
     }
+    
+    private void carregarNotas() {
+        try {
+            // Limpa as colunas (pra não ter notas duplicadas)
+            painelAFNotas.removeAll();
+            painelSFNotas.removeAll();
+            painelCNotas.removeAll();
+            
+            // Puxa os dados do banco
+            NotaDAO dao = new NotaDAO();
+            ArrayList<Nota> notas = dao.listar();
+            
+            // For Each maroto pra instanciar as notas
+            for(Nota n : notas) {
+                String prioridade;
+                
+                switch(n.getPrioridade()) {
+                    case 3 -> prioridade = "Alta";
+                    case 2 -> prioridade = "Média";
+                    case 1 -> prioridade = "Baixa";
+                    default -> prioridade = "Baixa";
+                }
+                
+                // Cria o cartao agora passando a nota atual (n) e a prioridade como parâmetro
+                CartaoNota cartao = new CartaoNota(n, prioridade);
+                
+                
+                // Switch para colocar as notas nas colunas certas dependendo da categoria delas
+                switch (n.getCategoria()) {
+                    // Case com a sintaxe moderna do Java e usando as chaves para que ele possa adicionar a nota E
+                    // colocar uma "área rígida" de baixo da nota
+                    case "AF" -> { 
+                        painelAFNotas.add(cartao);
+                        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                    }
+                    case "SF" -> {
+                        painelSFNotas.add(cartao);
+                        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
 
+                    }
+                    case "C" -> {  
+                        painelCNotas.add(cartao);
+                        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                    }
+                    default -> {
+                        painelAFNotas.add(cartao);
+                        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                    }
+                }
+            }
+            
+            // Manda o Java Swing recarregar a tela 
+            painelAFNotas.revalidate();
+            painelAFNotas.repaint();
+            
+            painelSFNotas.revalidate();
+            painelSFNotas.repaint();
+            
+            painelCNotas.revalidate();
+            painelCNotas.repaint();
+            
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this,"Erro ao carregar o Kanban: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Logout;
     private javax.swing.JButton btnMenu;

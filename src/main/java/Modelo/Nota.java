@@ -6,6 +6,7 @@ public class Nota {
     private int id_usuario; // Id_usuario pra passar direto para o DAO sem ter que passar como parâmetro na função
     private int prioridade;
     private String nome;
+    private String nomeAutor;
     private String descricao;
     private String categoria;
     
@@ -17,10 +18,11 @@ public class Nota {
     public Nota() {}
     
     // Construtor passado na hora de INSERIR os dados, id é AUTOINCREMENT
-    public Nota(int id_usuario, int prioridade, String nome, String descricao, String categoria, LocalDateTime data, LocalDateTime prazo) {
+    public Nota(int id_usuario, int prioridade, String nome, String nomeAutor, String descricao, String categoria, LocalDateTime data, LocalDateTime prazo) {
         this.id_usuario = id_usuario;
         this.prioridade = prioridade;
         this.nome = nome;
+        this.nomeAutor = nomeAutor;
         this.descricao = descricao;
         this.categoria = categoria;
         this.data = data;
@@ -57,6 +59,14 @@ public class Nota {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getNomeAutor() {
+        return nomeAutor;
+    }
+
+    public void setNomeAutor(String nomeAutor) {
+        this.nomeAutor = nomeAutor;
     }
 
     public String getDescricao() {
