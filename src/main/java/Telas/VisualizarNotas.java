@@ -3,6 +3,10 @@ package Telas;
 import Modelo.Nota;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import java.awt.Component; 
 
 public class VisualizarNotas extends javax.swing.JDialog {
     
@@ -12,9 +16,11 @@ public class VisualizarNotas extends javax.swing.JDialog {
     public VisualizarNotas(java.awt.Frame parent, boolean modal, Nota n) {
         super(parent, modal);
         this.notaAtual = n;
-        
+        this.setResizable(false);
         initComponents();
         
+        preencherDados();
+        arrumarCoresMenuPopup();
         
     }
     
@@ -44,23 +50,40 @@ public class VisualizarNotas extends javax.swing.JDialog {
         btnMenu = new javax.swing.JButton();
         varPrioridade = new javax.swing.JLabel();
 
+        menuPopUp.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        menuPopUp.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+
+        itemModificarNota.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         itemModificarNota.setText("Modificar Nota");
+        itemModificarNota.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        itemModificarNota.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        itemModificarNota.addActionListener(this::itemModificarNotaActionPerformed);
         menuPopUp.add(itemModificarNota);
 
-        menuMoverPara.setText("jMenu1");
+        menuMoverPara.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+        menuMoverPara.setForeground(new java.awt.Color(230, 230, 230));
+        menuMoverPara.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        menuMoverPara.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        menuMoverPara.setInheritsPopupMenu(true);
+        menuMoverPara.setLabel("Mover Para");
 
-        itemAFazer.setText("jMenuItem1");
+        itemAFazer.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 14)); // NOI18N
+        itemAFazer.setForeground(new java.awt.Color(220, 230, 230));
+        itemAFazer.setText("A Fazer");
         menuMoverPara.add(itemAFazer);
 
-        itemSendoFeito.setText("jMenuItem2");
+        itemSendoFeito.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 14)); // NOI18N
+        itemSendoFeito.setText("Sendo Feito");
         menuMoverPara.add(itemSendoFeito);
 
-        itemConcluido.setText("jMenuItem3");
+        itemConcluido.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 14)); // NOI18N
+        itemConcluido.setText("Concluído");
         menuMoverPara.add(itemConcluido);
 
         menuPopUp.add(menuMoverPara);
 
-        itemHistorico.setText("jMenuItem1");
+        itemHistorico.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        itemHistorico.setText("Histórico");
         menuPopUp.add(itemHistorico);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -80,7 +103,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
             painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(txtNome, javax.swing.GroupLayout.DEFAULT_SIZE, 676, Short.MAX_VALUE)
+                .addComponent(txtNome, javax.swing.GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
                 .addContainerGap())
         );
         painelTopoLayout.setVerticalGroup(
@@ -119,6 +142,8 @@ public class VisualizarNotas extends javax.swing.JDialog {
         areaDescricao.setLineWrap(true);
         areaDescricao.setRows(5);
         areaDescricao.setWrapStyleWord(true);
+        areaDescricao.setBorder(null);
+        areaDescricao.setCaretColor(java.awt.Color.gray);
         painelScrollDescricao.setViewportView(areaDescricao);
 
         txtPrazo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -126,6 +151,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
         txtPrazo.setText("Prazo: 29/05/2026 até 23:59:59");
 
         txtDataCriacao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        txtDataCriacao.setForeground(new java.awt.Color(220, 220, 220));
         txtDataCriacao.setText("Data de Criação: 26/05/2026 ás 13:57:23");
 
         txtStatus.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -166,13 +192,13 @@ public class VisualizarNotas extends javax.swing.JDialog {
                             .addComponent(txtPrioridade)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(varPrioridade))))
-                .addContainerGap(222, Short.MAX_VALUE))
+                .addContainerGap(290, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelInfoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnFechar)
-                .addGap(33, 33, 33)
                 .addComponent(btnMenu)
-                .addGap(34, 34, 34))
+                .addGap(31, 31, 31)
+                .addComponent(btnFechar)
+                .addGap(31, 31, 31))
         );
         painelInfoLayout.setVerticalGroup(
             painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,7 +219,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
                 .addComponent(txtDataCriacao)
                 .addGap(28, 28, 28)
                 .addComponent(txtStatus)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
                 .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFechar)
                     .addComponent(btnMenu))
@@ -210,8 +236,17 @@ public class VisualizarNotas extends javax.swing.JDialog {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMenuActionPerformed
-        menuPopUp.show(btnMenu, 0, -btnMenu.getHeight());
+        // Para calcular o tamanho exato para o menu ficar exatamente grudado à direita do botão
+        int x = btnMenu.getWidth() - menuPopUp.getPreferredSize().width;
+        // Altura negativa do tamanho preferido do MenuPopUp
+        int y = -menuPopUp.getPreferredSize().height;
+        
+        menuPopUp.show(btnMenu, x, y);
     }//GEN-LAST:event_btnMenuActionPerformed
+
+    private void itemModificarNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemModificarNotaActionPerformed
+        // CriarNotas tela = new CriarNotas(, rootPaneCheckingEnabled, WIDTH)
+    }//GEN-LAST:event_itemModificarNotaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,12 +285,14 @@ public class VisualizarNotas extends javax.swing.JDialog {
         });
     }
 
-    // --- Finalizar aq em sala ---
+    
     private void preencherDados() {
         try {
             String textoDescricao = notaAtual.getDescricao().trim();
+            String categoriaAtual = notaAtual.getCategoria();
+            String categoriaFormatada = "";
             int prioridade = notaAtual.getPrioridade();
-
+                
             txtNome.setText(notaAtual.getNome());
             txtAutor.setText("Autor: " + notaAtual.getNomeAutor());
 
@@ -288,25 +325,82 @@ public class VisualizarNotas extends javax.swing.JDialog {
 
             if(notaAtual.getPrazo() != null) {
                 DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-                txtPrazo.setText("Prazo: " + notaAtual.getPrazo().format(formatador)); 
+                txtPrazo.setText("Prazo: " + notaAtual.getPrazo().format(formatador));
             }
             else {
                 txtPrazo.setText("Prazo: Indefinido");
             }
-
+            
+            
             if(notaAtual.getData() != null) {
-                DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-                txtDataCriacao.setText("Data de Criação: " + notaAtual.getPrazo().format(formatador)); 
+                DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+                DateTimeFormatter formatadorHora = DateTimeFormatter.ofPattern("HH:mm");
+                
+                txtDataCriacao.setText("Data de Criação: " 
+                        + notaAtual.getData().format(formatadorData) 
+                        + " às " 
+                        + notaAtual.getData().format(formatadorHora)); 
             }
             else {
-                txtPrazo.setText("Prazo: Indefinido");
+                txtPrazo.setText("Data: Indefinida");
             }
+            
+            switch(categoriaAtual) {
+                case "AF" -> { 
+                    categoriaFormatada = "A Fazer";
+                }
+                case "SF" -> {
+                    categoriaFormatada = "Sendo Feito";
+                }
+                case "C" -> {
+                    categoriaFormatada = "Concluído";
+                }
+                default -> {
+                    categoriaFormatada = "A Fazer";
+                }
+            }
+                
+            
+            txtStatus.setText("Status: " + categoriaFormatada);
         } 
         catch(Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro: Não foi possível carregar as informações da nota! " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }      
+    }
+    
+    private void arrumarCoresMenuPopup() {
+        // O UIManager serve para trocar a cor do hover padrão (que não tem como trocar pela interface).
+        // Trocamos o azulão padrão por um cinza um pouco mais claro que o fundo
+        javax.swing.UIManager.put("MenuItem.selectionBackground", new java.awt.Color(85, 85, 85)); 
+        javax.swing.UIManager.put("MenuItem.selectionForeground", new java.awt.Color(255, 255, 255)); 
+
+        // Força o fundo do menu a ficar escuro
+        menuPopUp.setOpaque(true);
+        menuPopUp.setBackground(new java.awt.Color(51, 51, 51));
+
+        // Força todos os botões de dentro a ficarem escuros também usando um laço de repetição
+        for (Component item : menuPopUp.getComponents()) {
+            if(item instanceof JMenu menu) {
+                
+                    menu.setOpaque(true);
+                    menu.setBackground(new java.awt.Color(51, 51, 51)); 
+                    menu.setForeground(new java.awt.Color(210, 210, 210)); 
+
+                    // Cria uma borda invisivel para dar o espaçamento nas bordas
+                    menu.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));  
+               
+            }
+            
+            if(item instanceof JMenuItem menuItem) {
+                menuItem.setOpaque(true);
+                menuItem.setBackground(new java.awt.Color(51, 51, 51)); 
+                menuItem.setForeground(new java.awt.Color(210, 210, 210)); 
+                
+                // Cria uma borda invisivel para dar o espaçamento nas bordas
+                menuItem.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
+            }
             
         }
-        
-            
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;

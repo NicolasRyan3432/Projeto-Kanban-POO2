@@ -1,8 +1,13 @@
 
 package Modelo;
+import Telas.VisualizarNotas;
+import Telas.Main;
 import java.awt.Cursor;
 import java.time.format.DateTimeFormatter;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import java.awt.Window;
+import javax.swing.SwingUtilities;
 
 public class CartaoNota extends javax.swing.JPanel {
     private Nota notaAtual;
@@ -11,7 +16,7 @@ public class CartaoNota extends javax.swing.JPanel {
     public CartaoNota(Nota n, String prioridade) {
         // A notaAtual recebe a nota que foi clicada
         this.notaAtual = n;
-        
+        String notaFormatada = "";
         initComponents();
         
         // Faz com que ocupe todo o espaço disponível na horizontal
@@ -20,11 +25,14 @@ public class CartaoNota extends javax.swing.JPanel {
         // Se o titulo for maior do que 22, pega e fatia a string em 19 caracteres
         // e adiciona mais três caracteres (...)
         if(notaAtual.getNome().length() > 22) {
-            notaAtual.setNome(notaAtual.getNome().substring(0,19) + " ...");
+            notaFormatada = (notaAtual.getNome().substring(0,19) + " ...");
+            txtTitulo.setText(notaFormatada);
+        }
+        else {
+            txtTitulo.setText(notaAtual.getNome());
         }
         
         // Parte onde que a nota recebe os seus valores reais
-        txtTitulo.setText(notaAtual.getNome());
         txtAutor.setText("Autor: " + notaAtual.getNomeAutor());
         
         if(notaAtual.getPrazo() != null) {
@@ -136,9 +144,24 @@ public class CartaoNota extends javax.swing.JPanel {
             // Muda o cursor para o de "carregando" para dar um feedback visual
             this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
             
-            // Parte que vai chamar a nova tela com as informações da nota atual
-            // Por enquanto vai ser um jOptionPane só pra ver se funcionou
-            JOptionPane.showMessageDialog(this, "Deu certo fudido!!! Nome da nota: " + notaAtual.getNome());
+            // Cria um objeto que pega tela principal em relação a essa tela 
+            // Aqui é só para pegar a posição da onde que a telaInfo deve nascer
+            Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
+            
+            // Cria a tela de informações passando como atributo a telaPrincipal (como JFrame) e essa nota atual (a clicada)
+            VisualizarNotas telaInfo = new VisualizarNotas((JFrame) telaPrincipal, true, this.notaAtual);
+            
+            // Fica no centro da telaPrincipal
+            telaInfo.setLocationRelativeTo(telaPrincipal);
+            
+            // Deixa visível
+            telaInfo.setVisible(true);
+            
+            // Cast da telaPrincipal para tela Main 
+            // para poder usar o método de recarregar as notas
+            if(telaPrincipal instanceof Main principal) {
+                principal.recarregarNotas();
+            }
             
             // Volta o cursor ao normal
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -153,4 +176,6 @@ public class CartaoNota extends javax.swing.JPanel {
     private javax.swing.JLabel txtTitulo;
     private javax.swing.JLabel varPrioridade;
     // End of variables declaration//GEN-END:variables
+
+  
 }

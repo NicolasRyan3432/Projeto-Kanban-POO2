@@ -30,7 +30,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();  //Inicia os componentes
         
         arrumarCoresMenuPopup();
-        carregarNotas();
+        recarregarNotas();
         
         //jLabel1.setText("Seja Bem-Vindo " + user.nome);
         
@@ -358,7 +358,7 @@ public class Main extends javax.swing.JFrame {
         tela.setVisible(true);
         
         // Terminou de criar a nota, recarrega para aparecer a nota
-        carregarNotas();
+        recarregarNotas();
     }//GEN-LAST:event_itemCriarNotasActionPerformed
 
     /**
@@ -409,7 +409,7 @@ public class Main extends javax.swing.JFrame {
         }
     }
     
-    private void carregarNotas() {
+    public void recarregarNotas() {
         try {
             // Limpa as colunas (pra não ter notas duplicadas)
             painelAFNotas.removeAll();

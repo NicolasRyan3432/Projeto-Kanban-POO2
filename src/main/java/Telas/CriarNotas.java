@@ -478,6 +478,7 @@ public class CriarNotas extends javax.swing.JDialog {
             }
         });
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;
     private javax.swing.JButton btnCancelar;
