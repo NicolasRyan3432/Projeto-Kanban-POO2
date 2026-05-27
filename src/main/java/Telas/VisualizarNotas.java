@@ -1,12 +1,11 @@
 
 package Telas;
 import Modelo.Nota;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import java.awt.Component; 
+import java.awt.Color;
+
 
 public class VisualizarNotas extends javax.swing.JDialog {
     
@@ -17,6 +16,9 @@ public class VisualizarNotas extends javax.swing.JDialog {
         super(parent, modal);
         this.notaAtual = n;
         this.setResizable(false);
+        
+        
+        
         initComponents();
         
         preencherDados();
@@ -55,28 +57,27 @@ public class VisualizarNotas extends javax.swing.JDialog {
 
         itemModificarNota.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         itemModificarNota.setText("Modificar Nota");
-        itemModificarNota.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        itemModificarNota.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         itemModificarNota.addActionListener(this::itemModificarNotaActionPerformed);
         menuPopUp.add(itemModificarNota);
 
         menuMoverPara.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
         menuMoverPara.setForeground(new java.awt.Color(230, 230, 230));
         menuMoverPara.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        menuMoverPara.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         menuMoverPara.setInheritsPopupMenu(true);
         menuMoverPara.setLabel("Mover Para");
 
-        itemAFazer.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 14)); // NOI18N
-        itemAFazer.setForeground(new java.awt.Color(220, 230, 230));
+        itemAFazer.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
+        itemAFazer.setForeground(new java.awt.Color(220, 220, 220));
         itemAFazer.setText("A Fazer");
         menuMoverPara.add(itemAFazer);
 
-        itemSendoFeito.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 14)); // NOI18N
+        itemSendoFeito.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
+        itemSendoFeito.setForeground(new java.awt.Color(220, 220, 220));
         itemSendoFeito.setText("Sendo Feito");
         menuMoverPara.add(itemSendoFeito);
 
-        itemConcluido.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 14)); // NOI18N
+        itemConcluido.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
+        itemConcluido.setForeground(new java.awt.Color(220, 220, 220));
         itemConcluido.setText("Concluído");
         menuMoverPara.add(itemConcluido);
 
@@ -288,12 +289,19 @@ public class VisualizarNotas extends javax.swing.JDialog {
     
     private void preencherDados() {
         try {
+            // Pega e limpa o texto da descrição pra ver se tem alguma coisa dentro
             String textoDescricao = notaAtual.getDescricao().trim();
+            
+            // Pega a categoria atual ("AF", "SF", "C")
             String categoriaAtual = notaAtual.getCategoria();
-            String categoriaFormatada = "";
+            String categoriaFormatada;
+            
+            // Pega a prioridade
             int prioridade = notaAtual.getPrioridade();
-                
+            
+            // Coloca o Título da nota
             txtNome.setText(notaAtual.getNome());
+            // Coloca o nome do Autor
             txtAutor.setText("Autor: " + notaAtual.getNomeAutor());
 
             // Verificação pra ver se a descrição está vazia 
@@ -304,6 +312,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
                 areaDescricao.setText(notaAtual.getDescricao());
             }
             
+            // Transformando a prioridade que é int para as suas respectivas prioridades em texto
             switch(prioridade) {
                 case 3 -> {
                     varPrioridade.setText("Alta");
@@ -322,7 +331,8 @@ public class VisualizarNotas extends javax.swing.JDialog {
                     varPrioridade.setForeground(java.awt.Color.GREEN); // Caso venha alguma outra cor
                 }
             }
-
+            
+            // Se o prazo for diferente de vazio, ele pega e formata, senão é indefinido
             if(notaAtual.getPrazo() != null) {
                 DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
                 txtPrazo.setText("Prazo: " + notaAtual.getPrazo().format(formatador));
@@ -331,7 +341,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
                 txtPrazo.setText("Prazo: Indefinido");
             }
             
-            
+            // Mesma coisa aqui, só que é com a data e formatamos bonitinho para aparecer a data e hora
             if(notaAtual.getData() != null) {
                 DateTimeFormatter formatadorData = DateTimeFormatter.ofPattern("dd/MM/uuuu");
                 DateTimeFormatter formatadorHora = DateTimeFormatter.ofPattern("HH:mm");
@@ -345,6 +355,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
                 txtPrazo.setText("Data: Indefinida");
             }
             
+            // Troca a sigla da categoria para o que ela significa para mostrar visualmente
             switch(categoriaAtual) {
                 case "AF" -> { 
                     categoriaFormatada = "A Fazer";
@@ -360,7 +371,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
                 }
             }
                 
-            
+            // Insere na tela
             txtStatus.setText("Status: " + categoriaFormatada);
         } 
         catch(Exception e) {
@@ -369,39 +380,50 @@ public class VisualizarNotas extends javax.swing.JDialog {
     }
     
     private void arrumarCoresMenuPopup() {
-        // O UIManager serve para trocar a cor do hover padrão (que não tem como trocar pela interface).
-        // Trocamos o azulão padrão por um cinza um pouco mais claro que o fundo
-        javax.swing.UIManager.put("MenuItem.selectionBackground", new java.awt.Color(85, 85, 85)); 
-        javax.swing.UIManager.put("MenuItem.selectionForeground", new java.awt.Color(255, 255, 255)); 
-
-        // Força o fundo do menu a ficar escuro
+        // Variáveis pra gente não ficar repetindo código
+        Color corFundo = new Color(51, 51, 51);
+        Color corTexto = new Color(210, 210, 210);
+        Color corHoverSelecao = new Color(255, 255, 255);
+        Color corHover = new Color(85, 85, 85);
+        
+        
+        javax.swing.UIManager.put("MenuItem.background", corFundo); 
+        javax.swing.UIManager.put("MenuItem.foreground", corTexto);
+        javax.swing.UIManager.put("MenuItem.selectionBackground", corHover);
+        javax.swing.UIManager.put("MenuItem.selectionForeground", corHoverSelecao);
+        
+        javax.swing.UIManager.put("Menu.background", corFundo); 
+        javax.swing.UIManager.put("Menu.foreground", corTexto);
+        javax.swing.UIManager.put("Menu.selectionBackground", corHover);
+        javax.swing.UIManager.put("Menu.selectionForeground", corHoverSelecao);
+        
         menuPopUp.setOpaque(true);
-        menuPopUp.setBackground(new java.awt.Color(51, 51, 51));
-
-        // Força todos os botões de dentro a ficarem escuros também usando um laço de repetição
-        for (Component item : menuPopUp.getComponents()) {
-            if(item instanceof JMenu menu) {
-                
-                    menu.setOpaque(true);
-                    menu.setBackground(new java.awt.Color(51, 51, 51)); 
-                    menu.setForeground(new java.awt.Color(210, 210, 210)); 
-
-                    // Cria uma borda invisivel para dar o espaçamento nas bordas
-                    menu.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));  
-               
-            }
-            
-            if(item instanceof JMenuItem menuItem) {
-                menuItem.setOpaque(true);
-                menuItem.setBackground(new java.awt.Color(51, 51, 51)); 
-                menuItem.setForeground(new java.awt.Color(210, 210, 210)); 
-                
-                // Cria uma borda invisivel para dar o espaçamento nas bordas
-                menuItem.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
-            }
-            
+        menuPopUp.setBackground(corFundo);
+        menuMoverPara.getPopupMenu().setOpaque(true);
+        menuMoverPara.getPopupMenu().setBackground(corFundo);
+        menuMoverPara.getPopupMenu().setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
+        
+        
+        // Pega e cria uma listinha de componentes com os items do menuPopUp e também do menuMoverPara
+        JMenuItem[] todosOsItens = {
+            itemModificarNota, menuMoverPara, itemHistorico, 
+            itemAFazer, itemSendoFeito, itemConcluido
+        };  
+        
+        /* 
+            Força todos os botões de dentro a ficarem escuros também usando um laço de repetição
+            Agora, ao invés de perguntar se o item é uma instância de um MenuItem, a gente passa
+            direto a nossa lista de componentes.
+        */
+        for (JMenuItem item : todosOsItens) {
+            item.setOpaque(true);
+            item.setBackground(corFundo); 
+            item.setForeground(corTexto);
+            item.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
         }
     }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;
     private javax.swing.JButton btnFechar;
