@@ -5,10 +5,13 @@
 package Telas;
 
 import javax.swing.JOptionPane;
+import Modelo.Usuario;
+import java.awt.event.KeyEvent;
 
 public class Login extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Login.class.getName());
+    private Usuario user;
     
     public Login() {
         initComponents();
@@ -213,14 +216,14 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_chkBoxActionPerformed
 
     private void botaoEntrarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_botaoEntrarKeyPressed
-        if(evt.getKeyCode() == evt.VK_ENTER) {
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
             logar();
         }
     }//GEN-LAST:event_botaoEntrarKeyPressed
 
     private void chkBoxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_chkBoxKeyPressed
         // Se o código da tecla digitada for igual ao VK_ENTER (que é a msm coisa do evt == 10, igual estava antes)
-        if(evt.getKeyCode() == evt.VK_ENTER) {
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
             /* 
                 Agora funciona tanto apertando o ENTER, quanto o ESPAÇO 
                 (que por padrão para checkboxes e outros o espaço serve para marcar-los). 
@@ -292,7 +295,7 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Erro: A senha está incorreta!!");
         }
         else {
-            Main tela = new Main(); 
+            Main tela = new Main(user); 
             tela.setVisible(true);
             this.dispose();
         }

@@ -5,59 +5,22 @@ import Telas.Main;
 import java.awt.Cursor;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import java.awt.Window;
 import javax.swing.SwingUtilities;
 
 public class CartaoNota extends javax.swing.JPanel {
-    private Nota notaAtual;
+    private final Nota notaAtual;
+    private final int idUsuario;
     
     // Construtor recebe uma nota inteira ao invés de pedaços separados da nota.
-    public CartaoNota(Nota n, String prioridade) {
+    public CartaoNota(Nota n, int idUsuario, String prioridade) {
         // A notaAtual recebe a nota que foi clicada
         this.notaAtual = n;
-        String notaFormatada = "";
+        this.idUsuario = idUsuario;
+        
         initComponents();
-        
-        // Faz com que ocupe todo o espaço disponível na horizontal
-        this.setMaximumSize(new java.awt.Dimension(32767, this.getPreferredSize().height));
-        
-        // Se o titulo for maior do que 22, pega e fatia a string em 19 caracteres
-        // e adiciona mais três caracteres (...)
-        if(notaAtual.getNome().length() > 22) {
-            notaFormatada = (notaAtual.getNome().substring(0,19) + " ...");
-            txtTitulo.setText(notaFormatada);
-        }
-        else {
-            txtTitulo.setText(notaAtual.getNome());
-        }
-        
-        // Parte onde que a nota recebe os seus valores reais
-        txtAutor.setText("Autor: " + notaAtual.getNomeAutor());
-        
-        if(notaAtual.getPrazo() != null) {
-            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            
-            txtPrazo.setText("Prazo: " + notaAtual.getPrazo().format(formatador));
-        }
-        else {
-            txtPrazo.setText("Prazo: Indefinido");
-        }
-        /*  
-            Aqui separei em dois labels, um é do texto "Prioridade" 
-            e o outro que é realmente a prioridade que vem do banco
-        */ 
-        
-        varPrioridade.setText(prioridade);
-        
-        // Troca a cor do texto dependendo da prioridade dele
-        // As setinhas substituem a antiga notação do switch (case coisa: coisa aqui dentro; break;)
-        switch(prioridade) {
-            case "Alta" -> varPrioridade.setForeground(java.awt.Color.RED);
-            case "Média" -> varPrioridade.setForeground(java.awt.Color.ORANGE);
-            case "Baixa" -> varPrioridade.setForeground(java.awt.Color.GREEN);
-            default -> varPrioridade.setForeground(java.awt.Color.GRAY); // Caso venha alguma outra cor
-        } 
+        preencherCampos(prioridade);
+         
     }
     
     @SuppressWarnings("unchecked")
@@ -149,7 +112,7 @@ public class CartaoNota extends javax.swing.JPanel {
             Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
             
             // Cria a tela de informações passando como atributo a telaPrincipal (como JFrame) e essa nota atual (a clicada)
-            VisualizarNotas telaInfo = new VisualizarNotas((JFrame) telaPrincipal, true, this.notaAtual);
+            VisualizarNotas telaInfo = new VisualizarNotas((JFrame) telaPrincipal, true, this.notaAtual, idUsuario);
             
             // Fica no centro da telaPrincipal
             telaInfo.setLocationRelativeTo(telaPrincipal);
@@ -167,7 +130,52 @@ public class CartaoNota extends javax.swing.JPanel {
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
     }//GEN-LAST:event_formMouseClicked
-
+    
+    private void preencherCampos(String prioridade) {
+        String notaFormatada;
+        
+        // Faz com que ocupe todo o espaço disponível na horizontal
+        this.setMaximumSize(new java.awt.Dimension(32767, this.getPreferredSize().height));
+        
+        // Se o titulo for maior do que 22, pega e fatia a string em 19 caracteres
+        // e adiciona mais três caracteres (...)
+        
+        if(notaAtual.getNome().length() > 22) {
+            notaFormatada = (notaAtual.getNome().substring(0,19) + " ...");
+            txtTitulo.setText(notaFormatada);
+        }
+        else {
+            txtTitulo.setText(notaAtual.getNome());
+        }
+        
+        // Parte onde que a nota recebe os seus valores reais
+        txtAutor.setText("Autor: " + notaAtual.getNomeAutor());
+        
+        if(notaAtual.getPrazo() != null) {
+            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            
+            txtPrazo.setText("Prazo: " + notaAtual.getPrazo().format(formatador));
+        }
+        else {
+            txtPrazo.setText("Prazo: Indefinido");
+        }
+        /*  
+            Aqui separei em dois labels, um é do texto "Prioridade" 
+            e o outro que é realmente a prioridade que vem do banco
+        */ 
+        
+        varPrioridade.setText(prioridade);
+        
+        // Troca a cor do texto dependendo da prioridade dele
+        // As setinhas substituem a antiga notação do switch (case coisa: coisa aqui dentro; break;)
+        switch(prioridade) {
+            case "Alta" -> varPrioridade.setForeground(java.awt.Color.RED);
+            case "Média" -> varPrioridade.setForeground(java.awt.Color.ORANGE);
+            case "Baixa" -> varPrioridade.setForeground(java.awt.Color.GREEN);
+            default -> varPrioridade.setForeground(java.awt.Color.GRAY); // Caso venha alguma outra cor
+        }
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel txtAutor;

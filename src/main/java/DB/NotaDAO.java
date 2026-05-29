@@ -43,7 +43,7 @@ public class NotaDAO {
                 ps.setNull(4, java.sql.Types.TIMESTAMP);
             }
             
-            ps.setInt(5, nota.getId_usuario());
+            ps.setInt(5, nota.getIdUsuario());
             
             // Joga os dados no Banco
             ps.executeUpdate(); 
@@ -108,7 +108,7 @@ public class NotaDAO {
                     nota.setPrazo(null); 
                 }
                 
-                nota.setId_usuario(rs.getInt("id_usuario"));
+                nota.setIdUsuario(rs.getInt("id_usuario"));
                 nota.setNomeAutor(rs.getString("nome_autor"));
                 
                 // Adiciona a nota na nossa lista
@@ -123,4 +123,29 @@ public class NotaDAO {
             conexao.fecharConexao(con, ps, rs);
         }
     }
+    
+    public void mover(int idNota, String novaCategoria) throws Exception {
+        Connection con = null;
+        PreparedStatement ps = null;
+        Conexao conexao = new Conexao();
+        
+        try {
+            con = conexao.abrirConexao();
+
+            String sql = "UPDATE notas SET categoria = ? WHERE id_nota = ?";
+
+            ps = con.prepareStatement(sql);
+            ps.setString(1, novaCategoria);
+            ps.setInt(2, idNota);
+            ps.executeUpdate();
+        }
+        catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        finally {
+            conexao.fecharConexao(con, ps, null);
+        }
+    }
+    
+    
 }

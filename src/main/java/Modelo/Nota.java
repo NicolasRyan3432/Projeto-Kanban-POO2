@@ -3,7 +3,7 @@ import java.time.LocalDateTime;
 
 public class Nota {
     private int id;
-    private int id_usuario; // Id_usuario pra passar direto para o DAO sem ter que passar como parâmetro na função
+    private int idUsuario; // Id_usuario pra passar direto para o DAO sem ter que passar como parâmetro na função
     private int prioridade;
     private String nome;
     private String nomeAutor;
@@ -19,7 +19,7 @@ public class Nota {
     
     // Construtor passado na hora de INSERIR os dados, id é AUTOINCREMENT
     public Nota(int id_usuario, int prioridade, String nome, String nomeAutor, String descricao, String categoria, LocalDateTime data, LocalDateTime prazo) {
-        this.id_usuario = id_usuario;
+        this.idUsuario = id_usuario;
         this.prioridade = prioridade;
         this.nome = nome;
         this.nomeAutor = nomeAutor;
@@ -37,12 +37,12 @@ public class Nota {
         this.id = id;
     }
 
-    public int getId_usuario() {
-        return id_usuario;
+    public int getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(int id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(int id_usuario) {
+        this.idUsuario = id_usuario;
     }
 
     public int getPrioridade() {

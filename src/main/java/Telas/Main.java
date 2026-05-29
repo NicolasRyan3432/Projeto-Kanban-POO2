@@ -5,6 +5,7 @@
 package Telas;
 
 import DB.NotaDAO;
+import Modelo.Usuario;
 import Modelo.CartaoNota;
 import Modelo.Nota;
 import java.awt.Dimension;
@@ -17,15 +18,24 @@ import javax.swing.JOptionPane;
 public class Main extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Main.class.getName());
-
-    public Main() {
+    
+    private Usuario user;
+    
+    /* 
+        A função Main recebe logo o usuario inteiro 
+        para poder enviar o id do usuario atual para as telas: CartaoNota, CriarNotas e VisualizarNotas 
+        (Que subdivide nas três funções que necessita que o id do usuário seja igual ao que fez a nota)
+    */
+    public Main(Usuario u) {
         // Configurações da janela
         setTitle("Painel Kanban"); // Titulo da aba
         this.setMinimumSize(new Dimension(1250, 960)); // Tamanho mínimo da tela (pra não quebrar)
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null); // Centraliza na tela
-       
+        
+        // Recebe todo o usuário que tá logado atualmente.
+        this.user = u;
         
         initComponents();  //Inicia os componentes
         
@@ -133,11 +143,11 @@ public class Main extends javax.swing.JFrame {
         btnMenu.addActionListener(this::btnMenuActionPerformed);
 
         jComboBox1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo (Ordem Crescente)", "Prazo (Ordem Decrescente)", "Nome (Ordem Alfabética)", " " }));
 
         jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         jLabel1.setForeground(java.awt.Color.lightGray);
-        jLabel1.setText("Filtrar por:");
+        jLabel1.setText("Ordenar por:");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
         painelTopo.setLayout(painelTopoLayout);
@@ -149,16 +159,14 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(txtBoasVindas)
                     .addComponent(txtTarefasTotais)
                     .addComponent(txtTarefasUser))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 260, Short.MAX_VALUE)
-                .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTopoLayout.createSequentialGroup()
-                        .addComponent(btnMenu)
-                        .addGap(60, 60, 60))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTopoLayout.createSequentialGroup()
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(painelTopoLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnMenu))
+                .addGap(60, 60, 60))
         );
         painelTopoLayout.setVerticalGroup(
             painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -383,7 +391,7 @@ public class Main extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Main().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Main(null).setVisible(true));
     }
     
     private void arrumarCoresMenuPopup() {
@@ -432,7 +440,8 @@ public class Main extends javax.swing.JFrame {
                 }
                 
                 // Cria o cartao agora passando a nota atual (n) e a prioridade como parâmetro
-                CartaoNota cartao = new CartaoNota(n, prioridade);
+                // Aqui vai vir do Usuario, como n tá criado ainda, deixei aqui assim msm.
+                CartaoNota cartao = new CartaoNota(n, 1, prioridade);
                 
                 
                 // Switch para colocar as notas nas colunas certas dependendo da categoria delas
@@ -445,12 +454,12 @@ public class Main extends javax.swing.JFrame {
                     }
                     case "SF" -> {
                         painelSFNotas.add(cartao);
-                        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                        painelSFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
 
                     }
                     case "C" -> {  
                         painelCNotas.add(cartao);
-                        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                        painelCNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
                     }
                     default -> {
                         painelAFNotas.add(cartao);
@@ -474,6 +483,7 @@ public class Main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Erro ao carregar o Kanban: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Logout;
     private javax.swing.JButton btnMenu;

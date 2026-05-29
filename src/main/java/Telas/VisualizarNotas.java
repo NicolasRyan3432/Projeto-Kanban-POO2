@@ -1,6 +1,7 @@
 
 package Telas;
 import Modelo.Nota;
+import DB.NotaDAO;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.JMenuItem;
@@ -10,20 +11,33 @@ import java.awt.Color;
 public class VisualizarNotas extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VisualizarNotas.class.getName());
-    private Nota notaAtual;
+   
+    // NotaAtual agora é final para não ter risco de ser trocada de Nota no decorrer do desinvolvimento
+    private final Nota notaAtual;
     
-    public VisualizarNotas(java.awt.Frame parent, boolean modal, Nota n) {
+    public VisualizarNotas(java.awt.Frame parent, boolean modal, Nota n, int idUsuario) {
         super(parent, modal);
         this.notaAtual = n;
         this.setResizable(false);
-        
-        
+        this.setTitle("Painel Kanban - Visualizar Nota");
         
         initComponents();
         
         preencherDados();
         arrumarCoresMenuPopup();
         
+        // Se o id do usuário que tá vendo a nota (idUsuario) 
+        // for diferente do id que tá dentro da Nota o botão do Menu é escondido para ele
+        if(this.notaAtual.getIdUsuario() != idUsuario) {
+            btnMenu.setVisible(false);
+        }
+        
+        // Dependendo da categoria da notaAtual os items tem q sumir
+        switch(notaAtual.getCategoria()) {
+            case "AF" -> itemAFazer.setVisible(false);
+            case "SF" -> itemSendoFeito.setVisible(false);
+            case "C"  -> itemConcluido.setVisible(false);
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -69,16 +83,19 @@ public class VisualizarNotas extends javax.swing.JDialog {
         itemAFazer.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
         itemAFazer.setForeground(new java.awt.Color(220, 220, 220));
         itemAFazer.setText("A Fazer");
+        itemAFazer.addActionListener(this::itemAFazerActionPerformed);
         menuMoverPara.add(itemAFazer);
 
         itemSendoFeito.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
         itemSendoFeito.setForeground(new java.awt.Color(220, 220, 220));
         itemSendoFeito.setText("Sendo Feito");
+        itemSendoFeito.addActionListener(this::itemSendoFeitoActionPerformed);
         menuMoverPara.add(itemSendoFeito);
 
         itemConcluido.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
         itemConcluido.setForeground(new java.awt.Color(220, 220, 220));
         itemConcluido.setText("Concluído");
+        itemConcluido.addActionListener(this::itemConcluidoActionPerformed);
         menuMoverPara.add(itemConcluido);
 
         menuPopUp.add(menuMoverPara);
@@ -249,6 +266,50 @@ public class VisualizarNotas extends javax.swing.JDialog {
         // CriarNotas tela = new CriarNotas(, rootPaneCheckingEnabled, WIDTH)
     }//GEN-LAST:event_itemModificarNotaActionPerformed
 
+    private void itemAFazerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemAFazerActionPerformed
+        try {
+            
+            NotaDAO dao = new NotaDAO();
+            dao.mover(this.notaAtual.getId(), "AF");
+        
+            JOptionPane.showMessageDialog(this, "Nota movida para coluna A Fazer com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+            
+            // Fecha a tela
+            this.dispose();
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao mover a nota: " + e.getMessage());
+        }
+    }//GEN-LAST:event_itemAFazerActionPerformed
+
+    private void itemSendoFeitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSendoFeitoActionPerformed
+        try {
+            NotaDAO dao = new NotaDAO();
+            dao.mover(this.notaAtual.getId(), "SF");
+            JOptionPane.showMessageDialog(this, "Nota movida para coluna Sendo Feito com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+            // Fecha a tela
+            this.dispose();
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao mover a nota: " + e.getMessage());
+        }
+    }//GEN-LAST:event_itemSendoFeitoActionPerformed
+
+    private void itemConcluidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemConcluidoActionPerformed
+        try {
+            NotaDAO dao = new NotaDAO();
+            dao.mover(this.notaAtual.getId(), "C");
+            JOptionPane.showMessageDialog(this, "Nota movida para coluna Concluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+
+            // Fecha a tela
+            this.dispose();
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao mover a nota: " + e.getMessage());
+        }
+    }//GEN-LAST:event_itemConcluidoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -274,7 +335,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                VisualizarNotas dialog = new VisualizarNotas(new javax.swing.JFrame(), true, null);
+                VisualizarNotas dialog = new VisualizarNotas(new javax.swing.JFrame(), true, null, 0);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

@@ -14,7 +14,9 @@ import javax.swing.text.MaskFormatter;
 public class CriarNotas extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CriarNotas.class.getName());
-    private int idUsuario;
+    
+    // Final porqeu aqui a gente tá tratando só o id do usuário que tá tratando a nota
+    private final int idUsuario;
     
     public CriarNotas(java.awt.Frame parent, boolean modal, int id) {
         super(parent, modal);
@@ -366,7 +368,8 @@ public class CriarNotas extends javax.swing.JDialog {
             String titulo = campoTextoNome.getText().trim();
             
             // Colocando os dados normais
-            nota.setId_usuario(1);
+            // --- Lembrar de trocar aqui quando o DAO Tiver Pronto
+            nota.setIdUsuario(idUsuario);
             
             if(titulo.isEmpty()) {
                 // Isso cria uma tela com o icone de erro, a segunda string é o titulo do Pane

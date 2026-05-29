@@ -56,6 +56,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="A Fazer"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemAFazerActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="itemSendoFeito">
               <Properties>
@@ -67,6 +70,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Sendo Feito"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemSendoFeitoActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="itemConcluido">
               <Properties>
@@ -78,6 +84,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Conclu&#xed;do"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemConcluidoActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
