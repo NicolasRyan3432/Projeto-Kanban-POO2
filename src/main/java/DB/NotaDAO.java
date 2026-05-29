@@ -147,5 +147,40 @@ public class NotaDAO {
         }
     }
     
-    
+    public void modificar(Nota nota) throws Exception {
+        Connection con = null;
+        PreparedStatement ps = null;
+        Conexao conexao = new Conexao();
+        
+        try {
+            con = conexao.abrirConexao();
+            // Sql grandão pq n soube como quebrar ele kkkkkkk
+            String sql = "UPDATE notas SET nome = ?, descricao = ?, " 
+                       + "prioridade = ?, prazo = ? " 
+                       + "WHERE id_nota = ?";
+
+            ps = con.prepareStatement(sql);
+            ps.setString(1, nota.getNome());
+            ps.setString(2, nota.getDescricao());
+            ps.setInt(3, nota.getPrioridade());
+            
+            if(nota.getPrazo() != null) {
+                // Transforma o LocalDateTime para o formato Timestamp do Banco
+                ps.setTimestamp(4, Timestamp.valueOf(nota.getPrazo()));  
+            }
+            else {
+                // Prazo indefinido, manda um null do tipo Timestamp (já que o null não tem valor)
+                ps.setNull(4, java.sql.Types.TIMESTAMP);
+            }
+            
+            ps.setInt(5, nota.getId());
+            ps.executeUpdate();
+        }
+        catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        finally {
+            conexao.fecharConexao(con, ps, null);
+        }
+    }
 }

@@ -15,17 +15,37 @@ public class CriarNotas extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CriarNotas.class.getName());
     
-    // Final porqeu aqui a gente tá tratando só o id do usuário que tá tratando a nota
-    private final int idUsuario;
+
+    private int idUsuario = 0;
+    private final int tipoFuncao;
+    private Nota notaEdicao = null;
     
+    // Constutor usado para criar a nota
     public CriarNotas(java.awt.Frame parent, boolean modal, int id) {
         super(parent, modal);
-        this.setTitle("Painel Kanban - Criar Notas");
+        this.setTitle("Painel Kanban - Criar Nota");
         this.idUsuario = id;
+        this.tipoFuncao = 0;
         initComponents();
         
         arrumarCampoPrazo();
         arrumarComboBox();
+    }
+    
+    // Construtor para modificar a nota
+    public CriarNotas(java.awt.Frame parent, boolean modal, Nota n) {
+        super(parent, modal);
+        this.setTitle("Painel Kanban - Modificar Nota");        
+        this.tipoFuncao = 1;
+        this.notaEdicao = n;
+        
+        initComponents();
+        
+        arrumarCampoPrazo();
+        arrumarComboBox();
+        
+        arrumarTextoMod();
+        
     }
     
     @SuppressWarnings("unchecked")
@@ -48,7 +68,7 @@ public class CriarNotas extends javax.swing.JDialog {
         txtContadorDescricao = new javax.swing.JLabel();
         txtContadorNome = new javax.swing.JLabel();
         campoPrazoNota = new javax.swing.JFormattedTextField();
-        cboxPrazoIndefinido = new javax.swing.JCheckBox();
+        chkBoxPrazoIndefinido = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(102, 102, 102));
@@ -157,10 +177,10 @@ public class CriarNotas extends javax.swing.JDialog {
         campoPrazoNota.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
         campoPrazoNota.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
 
-        cboxPrazoIndefinido.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
-        cboxPrazoIndefinido.setForeground(new java.awt.Color(210, 210, 210));
-        cboxPrazoIndefinido.setText("Indefinido");
-        cboxPrazoIndefinido.addActionListener(this::cboxPrazoIndefinidoActionPerformed);
+        chkBoxPrazoIndefinido.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
+        chkBoxPrazoIndefinido.setForeground(new java.awt.Color(210, 210, 210));
+        chkBoxPrazoIndefinido.setText("Indefinido");
+        chkBoxPrazoIndefinido.addActionListener(this::chkBoxPrazoIndefinidoActionPerformed);
 
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
@@ -195,7 +215,7 @@ public class CriarNotas extends javax.swing.JDialog {
                                                 .addComponent(campoPrazoNota, javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(txtPrazo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                             .addGap(18, 18, 18)
-                                            .addComponent(cboxPrazoIndefinido))))))))
+                                            .addComponent(chkBoxPrazoIndefinido))))))))
                 .addContainerGap(251, Short.MAX_VALUE))
         );
         painelDadosLayout.setVerticalGroup(
@@ -218,7 +238,7 @@ public class CriarNotas extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(campoPrazoNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboxPrazoIndefinido))
+                    .addComponent(chkBoxPrazoIndefinido))
                 .addGap(28, 28, 28)
                 .addComponent(txtPrioridade)
                 .addGap(18, 18, 18)
@@ -293,15 +313,20 @@ public class CriarNotas extends javax.swing.JDialog {
     }//GEN-LAST:event_areaDescricaoKeyReleased
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        cadastrar();
+        if(tipoFuncao == 0) {
+            cadastrar();
+        }
+        else {
+            modificar(notaEdicao);
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void cboxPrazoIndefinidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboxPrazoIndefinidoActionPerformed
-        if(cboxPrazoIndefinido.isSelected()) {
+    private void chkBoxPrazoIndefinidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkBoxPrazoIndefinidoActionPerformed
+        if(chkBoxPrazoIndefinido.isSelected()) {
             // Bloqueia o campo
             campoPrazoNota.setEnabled(false);
 
@@ -320,7 +345,7 @@ public class CriarNotas extends javax.swing.JDialog {
 
             arrumarCampoPrazo(); 
         }
-    }//GEN-LAST:event_cboxPrazoIndefinidoActionPerformed
+    }//GEN-LAST:event_chkBoxPrazoIndefinidoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -383,7 +408,7 @@ public class CriarNotas extends javax.swing.JDialog {
             nota.setDescricao(areaDescricao.getText());
             
             // Se tá marcado, o prazo é nulo
-            if(cboxPrazoIndefinido.isSelected()) {
+            if(chkBoxPrazoIndefinido.isSelected()) {
                 JOptionPane.showMessageDialog(this, "Aviso! Essa tarefa ficará sem data de entrega!!", "Aviso!", JOptionPane.WARNING_MESSAGE);
                 nota.setPrazo(null);
             }
@@ -431,6 +456,77 @@ public class CriarNotas extends javax.swing.JDialog {
         }
         catch(Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage());
+        }
+    }
+    
+    private void modificar(Nota notaEdicao) {
+        try {
+           Nota nota = notaEdicao;
+           NotaDAO dao = new NotaDAO();
+           
+           String titulo = campoTextoNome.getText().trim();
+           String prazo = campoPrazoNota.getText().trim();
+           int prioridade;
+           
+           // Pega e transforma pros números das prioridades
+           // 1 = Baixa, 2 = Média e 3 = Alta
+           switch(comboBoxPrioridade.getSelectedIndex()) {
+               case 0 -> prioridade = 1;
+               case 1 -> prioridade = 2;
+               case 2 -> prioridade = 3;
+               default -> prioridade = 1;
+           }
+           
+           // Se o titulo não estiver vazio (vazio = não quer modificar)
+           if(!titulo.isEmpty()) {
+               // O texto é igual ao texto que já está na nota (igual = não quer modificar)
+               if(!campoTextoNome.getText().equals(nota.getNome())) {
+                   nota.setNome(campoTextoNome.getText());
+               }
+           }
+           
+           
+           if(!areaDescricao.getText().equals(nota.getDescricao())) {
+                nota.setDescricao(areaDescricao.getText());
+           }
+            
+            if(chkBoxPrazoIndefinido.isSelected()) {
+                nota.setPrazo(null);
+            }
+            else {
+                // Se o prazo não estiver vazio e também não conter só as barras da máscara
+                if(!prazo.isEmpty() && prazo.equals("/  /")) {
+                    // Formata só a data
+                    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+                    LocalDate data = LocalDate.parse(campoPrazoNota.getText(), formatador);
+                    
+                    // Formata para até as meia noite do dia
+                    LocalDateTime prazoFormatado = data.atTime(23, 59, 59);
+                    
+                    if(!prazoFormatado.equals(nota.getPrazo())) {
+                        nota.setPrazo(prazoFormatado);
+                    }
+                }
+            }
+            
+           
+           if(prioridade != nota.getPrioridade()) {
+               nota.setPrioridade(prioridade);
+           }
+           
+           // Salvando a nota no DAO
+            dao.modificar(nota);
+            JOptionPane.showMessageDialog(this, "Nota modificada com sucesso!!!", "Sucesso!!", JOptionPane.INFORMATION_MESSAGE);
+            
+            // Fecha a tela de cadastro caso deu tudo certo
+            this.dispose();
+           
+        } 
+        catch(java.time.format.DateTimeParseException dtpe) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Data inválida! Digite no formato DD/MM/AAAA.", "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+        catch(Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao modificar a nota: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -482,13 +578,27 @@ public class CriarNotas extends javax.swing.JDialog {
         });
     }
     
+    private void arrumarTextoMod() {
+        txtCriarNota.setText("Modificar Nota");
+        txtTitulo.setText("Digite o novo nome da nota: ");
+        campoTextoNome.setText(notaEdicao.getNome());
+        
+        txtDescricao.setText("Digite a nova descrição da nota: ");
+        areaDescricao.setText(notaEdicao.getDescricao());
+        
+        txtPrazo.setText("Qual é o novo prazo da nota?");
+        
+        txtPrioridade.setText("Qual é a nova prioridade?");
+        btnSalvar.setText("Modificar");
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JFormattedTextField campoPrazoNota;
     private javax.swing.JTextField campoTextoNome;
-    private javax.swing.JCheckBox cboxPrazoIndefinido;
+    private javax.swing.JCheckBox chkBoxPrazoIndefinido;
     private javax.swing.JComboBox<String> comboBoxPrioridade;
     private javax.swing.JPanel painelDados;
     private javax.swing.JScrollPane painelScrollDescricao;

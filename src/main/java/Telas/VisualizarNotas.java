@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.JMenuItem;
 import java.awt.Color;
+import java.awt.Window;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 
 public class VisualizarNotas extends javax.swing.JDialog {
@@ -263,7 +266,12 @@ public class VisualizarNotas extends javax.swing.JDialog {
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void itemModificarNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemModificarNotaActionPerformed
-        // CriarNotas tela = new CriarNotas(, rootPaneCheckingEnabled, WIDTH)
+        Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
+        
+        CriarNotas tela = new CriarNotas((JFrame) telaPrincipal, true, this.notaAtual);
+        tela.setLocationRelativeTo(this);
+        this.dispose();
+        tela.setVisible(true);
     }//GEN-LAST:event_itemModificarNotaActionPerformed
 
     private void itemAFazerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemAFazerActionPerformed

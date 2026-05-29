@@ -14,7 +14,7 @@ public class Nota {
     private LocalDateTime data; 
     private LocalDateTime prazo;
 
-    // Construtor vazio pra passar para o DAO
+    // Construtor vazio para usar sem ter que inserir diretamente (usando os sets)
     public Nota() {}
     
     // Construtor passado na hora de INSERIR os dados, id é AUTOINCREMENT
