@@ -278,6 +278,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
         try {
             
             NotaDAO dao = new NotaDAO();
+            dao.adicionarHistorico(notaAtual.getId(), notaAtual.getCategoria());
             dao.mover(this.notaAtual.getId(), "AF");
         
             JOptionPane.showMessageDialog(this, "Nota movida para coluna A Fazer com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
@@ -293,6 +294,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
     private void itemSendoFeitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSendoFeitoActionPerformed
         try {
             NotaDAO dao = new NotaDAO();
+            dao.adicionarHistorico(notaAtual.getId(), notaAtual.getCategoria());
             dao.mover(this.notaAtual.getId(), "SF");
             JOptionPane.showMessageDialog(this, "Nota movida para coluna Sendo Feito com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
 
@@ -307,6 +309,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
     private void itemConcluidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemConcluidoActionPerformed
         try {
             NotaDAO dao = new NotaDAO();
+            dao.adicionarHistorico(notaAtual.getId(), notaAtual.getCategoria());
             dao.mover(this.notaAtual.getId(), "C");
             JOptionPane.showMessageDialog(this, "Nota movida para coluna Concluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
 

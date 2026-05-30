@@ -357,7 +357,7 @@ public class Main extends javax.swing.JFrame {
     private void itemCriarNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCriarNotasActionPerformed
         // Cria a tela de criação. 
         // O zero é  o id do usuário que clicou para poder mandar para o DAO o id dele
-        CriarNotas tela = new CriarNotas(this, true, 0);
+        CriarNotas tela = new CriarNotas(this, true, 1);
         
         // Coloca ela no centro da tela
         tela.setLocationRelativeTo(this);

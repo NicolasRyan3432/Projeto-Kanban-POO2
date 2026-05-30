@@ -183,4 +183,55 @@ public class NotaDAO {
             conexao.fecharConexao(con, ps, null);
         }
     }
+    
+    public void deletar(int id) throws Exception {
+        Connection con = null;
+        PreparedStatement ps = null;
+        Conexao conexao = new Conexao();
+        
+        try {
+            con = conexao.abrirConexao();
+            
+            String sql = "DELETE FROM notas WHERE id_nota = ?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.executeUpdate();  
+        } 
+        catch(Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        finally {
+            conexao.fecharConexao(con, ps, null);
+        }
+    }
+    
+    public void adicionarHistorico(int id, String categoriaNova) throws Exception {
+        Connection con = null;
+        PreparedStatement ps = null;
+        Conexao conexao = new Conexao();
+        
+        try {
+            con = conexao.abrirConexao();
+
+            // Ele insere no histórico copiando direto a nota selecionada
+            String sql = "INSERT INTO historico_notas "
+                       + "(id_usuario, id_nota, nome_antigo, descricao_antiga, categoria_antiga, prioridade_antiga, prazo_antigo, categoria_nova) "
+                       + "SELECT id_usuario, id_nota, nome, descricao, categoria, prioridade, prazo, ? "
+                       + "FROM notas WHERE id_nota = ?";
+
+            ps = con.prepareStatement(sql);
+
+            // Passa a categoria nova (se for só edição, passa a mesma que já tava)
+            ps.setString(1, categoriaNova); 
+            // Passa o ID da nota que vai ser copiada
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } 
+        catch (Exception e) {
+            throw new Exception("Erro ao adicionar no histórico: " + e.getMessage());
+        } 
+        finally {
+            conexao.fecharConexao(con, ps, null);
+        }
+    }
 }

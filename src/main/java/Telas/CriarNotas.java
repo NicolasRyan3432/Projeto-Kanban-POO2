@@ -30,6 +30,9 @@ public class CriarNotas extends javax.swing.JDialog {
         
         arrumarCampoPrazo();
         arrumarComboBox();
+        
+        // Botão excluir fica invisível na aba de Criar
+        btnExcluir.setVisible(false);
     }
     
     // Construtor para modificar a nota
@@ -38,12 +41,10 @@ public class CriarNotas extends javax.swing.JDialog {
         this.setTitle("Painel Kanban - Modificar Nota");        
         this.tipoFuncao = 1;
         this.notaEdicao = n;
-        
         initComponents();
         
         arrumarCampoPrazo();
         arrumarComboBox();
-        
         arrumarTextoMod();
         
     }
@@ -69,6 +70,7 @@ public class CriarNotas extends javax.swing.JDialog {
         txtContadorNome = new javax.swing.JLabel();
         campoPrazoNota = new javax.swing.JFormattedTextField();
         chkBoxPrazoIndefinido = new javax.swing.JCheckBox();
+        btnExcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(102, 102, 102));
@@ -182,40 +184,43 @@ public class CriarNotas extends javax.swing.JDialog {
         chkBoxPrazoIndefinido.setText("Indefinido");
         chkBoxPrazoIndefinido.addActionListener(this::chkBoxPrazoIndefinidoActionPerformed);
 
+        btnExcluir.setBackground(new java.awt.Color(185, 0, 0));
+        btnExcluir.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        btnExcluir.setForeground(new java.awt.Color(245, 245, 245));
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(this::btnExcluirActionPerformed);
+
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
         painelDados.setLayout(painelDadosLayout);
         painelDadosLayout.setHorizontalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelDadosLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnExcluir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSalvar)
                 .addGap(29, 29, 29))
             .addGroup(painelDadosLayout.createSequentialGroup()
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtContadorNome)
+                .addGap(33, 33, 33)
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(comboBoxPrioridade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPrioridade)
+                    .addComponent(txtTitulo)
+                    .addComponent(txtDescricao)
+                    .addGroup(painelDadosLayout.createSequentialGroup()
+                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(campoPrazoNota, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPrazo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(chkBoxPrazoIndefinido))
                     .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(painelDadosLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(campoTextoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, painelDadosLayout.createSequentialGroup()
-                            .addGap(33, 33, 33)
-                            .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(comboBoxPrioridade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtPrioridade)
-                                .addComponent(txtTitulo)
-                                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txtContadorDescricao)
-                                    .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtDescricao)
-                                        .addComponent(painelScrollDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(painelDadosLayout.createSequentialGroup()
-                                            .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(campoPrazoNota, javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(txtPrazo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGap(18, 18, 18)
-                                            .addComponent(chkBoxPrazoIndefinido))))))))
+                        .addComponent(txtContadorNome)
+                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(campoTextoNome, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtContadorDescricao)
+                            .addComponent(painelScrollDescricao, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))))
                 .addContainerGap(251, Short.MAX_VALUE))
         );
         painelDadosLayout.setVerticalGroup(
@@ -231,9 +236,9 @@ public class CriarNotas extends javax.swing.JDialog {
                 .addComponent(txtDescricao)
                 .addGap(18, 18, 18)
                 .addComponent(painelScrollDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtContadorDescricao)
-                .addGap(28, 28, 28)
+                .addGap(24, 24, 24)
                 .addComponent(txtPrazo)
                 .addGap(18, 18, 18)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -246,7 +251,8 @@ public class CriarNotas extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar)
-                    .addComponent(btnCancelar))
+                    .addComponent(btnCancelar)
+                    .addComponent(btnExcluir))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
@@ -313,6 +319,7 @@ public class CriarNotas extends javax.swing.JDialog {
     }//GEN-LAST:event_areaDescricaoKeyReleased
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        // Se for zero (construtor de criar) ele chama o cadastrar
         if(tipoFuncao == 0) {
             cadastrar();
         }
@@ -346,6 +353,29 @@ public class CriarNotas extends javax.swing.JDialog {
             arrumarCampoPrazo(); 
         }
     }//GEN-LAST:event_chkBoxPrazoIndefinidoActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+       int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir essa nota?", 
+                "Aviso!", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.WARNING_MESSAGE);
+        
+       // Se a resposta for sim
+        if(resposta == JOptionPane.YES_OPTION) {
+            try {
+                NotaDAO dao = new NotaDAO();
+                dao.deletar(this.notaEdicao.getId()); 
+                
+                // Fecha a tela
+                this.dispose(); 
+                JOptionPane.showMessageDialog(this, "Nota removida com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+            
+            } 
+            catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir: " + e.getMessage());
+            }
+        }      
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -514,6 +544,9 @@ public class CriarNotas extends javax.swing.JDialog {
                nota.setPrioridade(prioridade);
            }
            
+           // Salva no histórico antes de modificar a nota
+           dao.adicionarHistorico(nota.getId(), nota.getCategoria());
+           
            // Salvando a nota no DAO
             dao.modificar(nota);
             JOptionPane.showMessageDialog(this, "Nota modificada com sucesso!!!", "Sucesso!!", JOptionPane.INFORMATION_MESSAGE);
@@ -580,10 +613,11 @@ public class CriarNotas extends javax.swing.JDialog {
     
     private void arrumarTextoMod() {
         txtCriarNota.setText("Modificar Nota");
-        txtTitulo.setText("Digite o novo nome da nota: ");
+        txtTitulo.setText("Digite o novo nome da nota:");
         campoTextoNome.setText(notaEdicao.getNome());
         
-        txtDescricao.setText("Digite a nova descrição da nota: ");
+        
+        txtDescricao.setText("Digite a nova descrição da nota:");
         areaDescricao.setText(notaEdicao.getDescricao());
         
         txtPrazo.setText("Qual é o novo prazo da nota?");
@@ -595,6 +629,7 @@ public class CriarNotas extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JFormattedTextField campoPrazoNota;
     private javax.swing.JTextField campoTextoNome;
