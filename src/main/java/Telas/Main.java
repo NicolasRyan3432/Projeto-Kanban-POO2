@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package Telas;
 
 import DB.NotaDAO;
@@ -478,7 +475,7 @@ public class Main extends javax.swing.JFrame {
             painelCNotas.revalidate();
             painelCNotas.repaint();
             
-        } 
+        }
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,"Erro ao carregar o Kanban: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }

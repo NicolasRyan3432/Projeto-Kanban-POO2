@@ -4,6 +4,8 @@ package Telas;
 import DB.NotaDAO;
 import Modelo.HistoricoNota;
 import Modelo.Nota;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 
@@ -19,6 +21,7 @@ public class VisualizarHistorico extends javax.swing.JDialog {
         super(parent, modal);
         this.notaHistorico = notaClicada;
         this.notaAtual = notaAtual;
+        this.setTitle("Painel Kanban - Visualizar Histórico");
         initComponents();
         
         preencherDados();
@@ -46,11 +49,14 @@ public class VisualizarHistorico extends javax.swing.JDialog {
         btnFechar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(760, 730));
+        setResizable(false);
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));
         painelTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         txtNome.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        txtNome.setForeground(new java.awt.Color(240, 240, 240));
         txtNome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtNome.setText("Fazer Almoço");
 
@@ -199,17 +205,25 @@ public class VisualizarHistorico extends javax.swing.JDialog {
     }//GEN-LAST:event_btnFecharActionPerformed
 
     private void btnRestaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestaurarActionPerformed
-        restaurarInfo();
+        int resultado = verificarAlteracoes(notaAtual, notaHistorico);
         
-        // Seta como sucesso
-        restaurouComSucesso = true;
-        
-        // Explode todos os JDialog que estão abertos (Visualizar Notas, TelaHistorico e VisualizarNotas)
-        for (java.awt.Window janela : java.awt.Window.getWindows()) {
-            // Se a janela for um JDialog (qualquer modal aberto), manda pro ralo!
-            // Como a tela Main é um JFrame, ela sobrevive intacta.
-            if (janela instanceof javax.swing.JDialog) {
-                janela.dispose();
+        if(resultado == 5) {
+            JOptionPane.showMessageDialog(this, "As notas são iguais! Cancelando restauração...", "Cancelando...", JOptionPane.INFORMATION_MESSAGE);
+            restaurouComSucesso = false;
+        }
+        else {
+            restaurarInfo();
+
+            // Seta como sucesso
+            restaurouComSucesso = true;
+
+            // Explode todos os JDialog que estão abertos (Visualizar Notas, TelaHistorico e VisualizarNotas)
+            for (java.awt.Window janela : java.awt.Window.getWindows()) {
+                // Se a janela for um JDialog (qualquer modal aberto), manda pro ralo!
+                // Como a tela Main é um JFrame, ela sobrevive intacta.
+                if (janela instanceof javax.swing.JDialog) {
+                    janela.dispose();
+                }
             }
         }
     }//GEN-LAST:event_btnRestaurarActionPerformed
@@ -372,7 +386,8 @@ public class VisualizarHistorico extends javax.swing.JDialog {
         if(resposta == JOptionPane.YES_OPTION) {
                 try {
                 NotaDAO dao = new NotaDAO();
-
+                
+                
                 // Salva a nota atual no histórico antes de restaurar a alteração
                 dao.adicionarHistorico(this.notaAtual.getId(), this.notaAtual.getCategoria());
 
@@ -385,6 +400,57 @@ public class VisualizarHistorico extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this, "Erro ao restaurar a nota: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
             } 
         }
+    }
+    
+    private int verificarAlteracoes(Nota notaEdicao, HistoricoNota n) {
+        int contador = 0;
+        Nota nota = notaEdicao;
+        HistoricoNota notaH = n;
+        
+        String tituloN = nota.getNome().trim();
+        String tituloH = notaH.getNomeAntigo().trim();
+        String desN = nota.getDescricao().trim();
+        String desH = notaH.getDescricaoAntiga().trim();
+        String categoriaN = nota.getCategoria();
+        String categoriaH = notaH.getCategoriaAntiga();
+        int prioN = nota.getPrioridade();
+        int prioH = notaH.getPrioridadeAntiga();
+        LocalDateTime prazoN = nota.getPrazo();
+        LocalDateTime prazoH = notaH.getPrazoAntigo();
+        String pH = "";
+        String pN = "";
+        
+        if(prazoN == null) {
+            pN = "Indefinido";
+        }
+        
+        if(prazoH == null) {
+            pH = "Indefinido";
+        }
+        
+        if(pN.equals(pH)) {
+            contador ++;
+        }
+        
+        if(tituloN.equals(tituloH)) {
+            contador ++;
+        }
+
+        if(desN.equals(desH)) {
+            contador ++;
+        }
+        
+        if(categoriaN.equals(categoriaH)) {
+            contador ++;
+        }
+        
+        if(prioN == prioH) {
+            contador ++;
+        }
+        
+        
+        // contador = 5, nota igual, não insere
+        return contador;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

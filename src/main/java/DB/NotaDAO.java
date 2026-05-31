@@ -139,7 +139,11 @@ public class NotaDAO {
             con = conexao.abrirConexao();
             
             // Pega só o histórico daquela nota e ordena pela alteração mais nova
-            String sql = "SELECT * FROM historico_notas WHERE id_nota = ? ORDER BY data_alteracao DESC";
+            String sql = "SELECT h.*, u.nome AS nome_autor "
+                    + "FROM historico_notas h "
+                    + "INNER JOIN usuarios u ON h.id_usuario = u.id "
+                    + "WHERE id_nota = ? "
+                    + "ORDER BY data_alteracao DESC";
            
             
             ps = con.prepareStatement(sql);
@@ -174,6 +178,9 @@ public class NotaDAO {
                 else {
                     nota.setPrazoAntigo(null); 
                 }
+                
+                // Pega o nome do autor (tinha esquecido kkk)
+                nota.setAutor(rs.getString("nome_autor"));
                 
                 // Adiciona a nota na nossa lista
                 listaNotas.add(nota);

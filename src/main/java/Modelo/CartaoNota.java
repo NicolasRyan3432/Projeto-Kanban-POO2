@@ -40,7 +40,8 @@ public class CartaoNota extends javax.swing.JPanel {
         this.modoOperacao = 1;
         
         initComponents();
-        preencherCampos(prioridade);
+        preencherCampos(notaClicada, prioridade);
+        
     }
     
     @SuppressWarnings("unchecked")
@@ -55,7 +56,9 @@ public class CartaoNota extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(85, 85, 85));
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        setMaximumSize(new java.awt.Dimension(393, 208));
+        setMaximumSize(new java.awt.Dimension(430, 208));
+        setMinimumSize(new java.awt.Dimension(400, 208));
+        setPreferredSize(new java.awt.Dimension(400, 208));
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 formMouseClicked(evt);
@@ -91,18 +94,17 @@ public class CartaoNota extends javax.swing.JPanel {
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtAutor)
-                            .addComponent(txtTitulo))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(txtAutor)
+                        .addContainerGap(244, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtPrazo)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtPrioridade)
                                 .addGap(18, 18, 18)
-                                .addComponent(varPrioridade)))
-                        .addGap(0, 93, Short.MAX_VALUE))))
+                                .addComponent(varPrioridade))
+                            .addComponent(txtTitulo))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,6 +206,52 @@ public class CartaoNota extends javax.swing.JPanel {
         
         // Troca a cor do texto dependendo da prioridade dele
         // As setinhas substituem a antiga notação do switch (case coisa: coisa aqui dentro; break;)
+        switch(prioridade) {
+            case "Alta" -> varPrioridade.setForeground(java.awt.Color.RED);
+            case "Média" -> varPrioridade.setForeground(java.awt.Color.ORANGE);
+            case "Baixa" -> varPrioridade.setForeground(java.awt.Color.GREEN);
+            default -> varPrioridade.setForeground(java.awt.Color.GRAY); // Caso venha alguma outra cor
+        }
+    }
+    
+    private void preencherCampos(HistoricoNota notaAtual, String prioridade) {
+        String notaFormatada;
+        
+        // Faz com que ocupe todo o espaço disponível na horizontal
+        this.setMaximumSize(new java.awt.Dimension(32767, this.getPreferredSize().height));
+        
+        // Se o titulo for maior do que 22, pega e fatia a string em 19 caracteres
+        // e adiciona mais três caracteres (...)
+        if(notaAtual.getNomeAntigo().length() > 22) {
+            notaFormatada = (notaAtual.getNomeAntigo().substring(0,19) + " ...");
+            txtTitulo.setText(notaFormatada);
+        }
+        else {
+            txtTitulo.setText(notaAtual.getNomeAntigo());
+        }
+       
+        
+        if(notaAtual.getAutor() != null) {
+            txtAutor.setText("Autor: " + notaAtual.getAutor());
+        }
+        else {
+            txtAutor.setText("Autor: Indefinido");
+        }
+        
+        
+        if(notaAtual.getPrazoAntigo() != null) {
+            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            
+            txtPrazo.setText("Prazo: " + notaAtual.getPrazoAntigo().format(formatador));
+        }
+        else {
+            txtPrazo.setText("Prazo: Indefinido");
+        }
+
+        
+        varPrioridade.setText(prioridade);
+        
+       
         switch(prioridade) {
             case "Alta" -> varPrioridade.setForeground(java.awt.Color.RED);
             case "Média" -> varPrioridade.setForeground(java.awt.Color.ORANGE);

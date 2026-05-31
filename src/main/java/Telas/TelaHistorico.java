@@ -5,8 +5,13 @@ import DB.NotaDAO;
 import Modelo.Nota;
 import Modelo.CartaoNota;
 import Modelo.HistoricoNota;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 
 public class TelaHistorico extends javax.swing.JDialog {
     
@@ -16,11 +21,12 @@ public class TelaHistorico extends javax.swing.JDialog {
     public TelaHistorico(java.awt.Frame parent, boolean modal, Nota notaAtual) {
         super(parent, modal);
         this.notaAtual = notaAtual;
+        this.setTitle("Painel Kanban - Histórico");
         initComponents();
         
         recarregarNotas();
         // Aumenta a quantidade de pixels que a tela desce por rolagem
-        painelScroll.getVerticalScrollBar().setUnitIncrement(20);
+        painelScroll.getVerticalScrollBar().setUnitIncrement(20);   
         
     }
     
@@ -35,6 +41,10 @@ public class TelaHistorico extends javax.swing.JDialog {
         painelNotas = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setBackground(new java.awt.Color(51, 51, 51));
+        setMinimumSize(new java.awt.Dimension(1240, 800));
+        setPreferredSize(new java.awt.Dimension(1240, 134));
+        setResizable(false);
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));
         painelTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -51,7 +61,7 @@ public class TelaHistorico extends javax.swing.JDialog {
             painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTopoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 884, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1184, Short.MAX_VALUE)
                 .addContainerGap())
         );
         painelTopoLayout.setVerticalGroup(
@@ -66,30 +76,27 @@ public class TelaHistorico extends javax.swing.JDialog {
 
         painelConteiner.setBackground(new java.awt.Color(51, 51, 51));
         painelConteiner.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        painelConteiner.setPreferredSize(new java.awt.Dimension(1240, 32771));
 
         painelScroll.setBackground(new java.awt.Color(51, 51, 51));
         painelScroll.setBorder(null);
         painelScroll.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         painelScroll.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        painelScroll.setPreferredSize(new java.awt.Dimension(1240, 692));
 
         painelNotas.setBackground(new java.awt.Color(51, 51, 51));
-        painelNotas.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        painelNotas.setLayout(new java.awt.GridLayout(0, 3, 8, 8));
+        painelNotas.setLayout(new java.awt.BorderLayout(8, 8));
         painelScroll.setViewportView(painelNotas);
 
         javax.swing.GroupLayout painelConteinerLayout = new javax.swing.GroupLayout(painelConteiner);
         painelConteiner.setLayout(painelConteinerLayout);
         painelConteinerLayout.setHorizontalGroup(
             painelConteinerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 896, Short.MAX_VALUE)
-            .addGroup(painelConteinerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(painelScroll))
+            .addComponent(painelScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 1196, Short.MAX_VALUE)
         );
         painelConteinerLayout.setVerticalGroup(
             painelConteinerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 692, Short.MAX_VALUE)
-            .addGroup(painelConteinerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(painelScroll))
+            .addComponent(painelScroll, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         getContentPane().add(painelConteiner, java.awt.BorderLayout.CENTER);
@@ -136,6 +143,10 @@ public class TelaHistorico extends javax.swing.JDialog {
     
     public void recarregarNotas() {
         try {
+            // Cria um painelGrid com três colunas com oito de espaço entre eles
+            JPanel painelGrid = new JPanel(new GridLayout(0, 3, 5, 5));
+            painelGrid.setOpaque(false); 
+            
             // Limpa as colunas (pra não ter notas duplicadas)
             painelNotas.removeAll();
            
@@ -157,8 +168,24 @@ public class TelaHistorico extends javax.swing.JDialog {
                 // Cria o cartao agora passando a nota atual (n) e a prioridade como parâmetro
                 // Aqui vai vir do Usuario, como n tá criado ainda, deixei aqui assim msm.
                 CartaoNota cartao = new CartaoNota(this.notaAtual, n, prioridade);
-                painelNotas.add(cartao);
+                
+                // Adiciona primeiro no grid ao invés de adicionar no painelNotas
+                painelGrid.add(cartao);
             }
+            // Aqui cria paineis vazios para não deixar a nota ocupar todo o espaço disponível (o grid por padrão faz isso)
+            // quando o tamanho é menor do que 3
+            int resto = notas.size() % 3;
+            if (resto != 0) {
+                int fantasmas = 3 - resto;
+                for (int i = 0; i < fantasmas; i++) {
+                    JPanel painelFantasma = new JPanel();
+                    painelFantasma.setOpaque(false);
+                    painelGrid.add(painelFantasma);
+                }
+            }
+            
+            // Adiciona o grid no topo do painelNotas para não esticar as linhas
+            painelNotas.add(painelGrid, BorderLayout.NORTH);
             
             // Manda o Java Swing recarregar a tela 
             painelNotas.revalidate();

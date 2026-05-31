@@ -503,7 +503,6 @@ public class CriarNotas extends javax.swing.JDialog {
                NotaDAO dao = new NotaDAO();
 
                String titulo = campoTextoNome.getText().trim();
-               String prazo = campoPrazoNota.getText().trim();
                int prioridade;
 
                // Pega e transforma pros números das prioridades
@@ -523,37 +522,40 @@ public class CriarNotas extends javax.swing.JDialog {
                    }
                }
 
-               // Aqui é pra garantir que a descrição tá vazia antes de pegar e mandar pro banco
-               if(areaDescricao.getText().trim().equals("Sem descrição!")) {
-                   nota.setDescricao("");
-               }
-               if(!areaDescricao.getText().equals(nota.getDescricao())) {
-                    nota.setDescricao(areaDescricao.getText());
-               }
+                // Aqui é pra garantir que a descrição tá vazia antes de pegar e mandar pro banco
+                if(areaDescricao.getText().trim().equals("Sem descrição!")) {
+                    nota.setDescricao("");
+                }
+                if(!areaDescricao.getText().equals(nota.getDescricao())) {
+                     nota.setDescricao(areaDescricao.getText());
+                }
 
+                 // Se o usuário não marcou o checkbox
                 if(chkBoxPrazoIndefinido.isSelected()) {
-                    nota.setPrazo(null);
+                     nota.setPrazo(null);
                 }
                 else {
-                    // Se o prazo não estiver vazio e também não conter só as barras da máscara
-                    if(!prazo.isEmpty() && prazo.equals("/  /")) {
-                        // Formata só a data
+                    // Verifica se houve mudança no prazo
+                    boolean status = verificarPrazo(nota);
+                    
+                    // Se sim, modifica na nota, se não, permanece o mesmo prazo
+                    if(status == true) {
+                        // Pega o prazo que o usuário digitou
+                        String prazoDigitado = campoPrazoNota.getText();
+
+                        // Formata o prazo para LocalDateTime 
                         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-                        LocalDate data = LocalDate.parse(campoPrazoNota.getText(), formatador);
+                        LocalDate prazoConvertido = LocalDate.parse(prazoDigitado, formatador);
+                        LocalDateTime prazo = prazoConvertido.atTime(23, 59, 59);
 
-                        // Formata para até as meia noite do dia
-                        LocalDateTime prazoFormatado = data.atTime(23, 59, 59);
-
-                        if(!prazoFormatado.equals(nota.getPrazo())) {
-                            nota.setPrazo(prazoFormatado);
-                        }
+                        // Insere o novo prazo na nota
+                        nota.setPrazo(prazo);
                     }
                 }
-
-
-               if(prioridade != nota.getPrioridade()) {
+                
+                if(prioridade != nota.getPrioridade()) {
                    nota.setPrioridade(prioridade);
-               }
+                }        
 
                // Salva no histórico antes de modificar a nota
                dao.adicionarHistorico(nota.getId(), nota.getCategoria());
@@ -565,7 +567,6 @@ public class CriarNotas extends javax.swing.JDialog {
                 // Fecha a tela de cadastro caso deu tudo certo
                 this.dispose();
             }
-
             catch(java.time.format.DateTimeParseException dtpe) {
                 JOptionPane.showMessageDialog(this, "Data inválida! Digite no formato DD/MM/AAAA.", "Erro!", JOptionPane.ERROR_MESSAGE);
             }
@@ -634,8 +635,57 @@ public class CriarNotas extends javax.swing.JDialog {
         
         txtPrazo.setText("Qual é o novo prazo da nota?");
         
+        // Se o prazo for diferente de vazio, ele pega e formata, senão é indefinido
+        if(notaEdicao.getPrazo() != null) {
+            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+            txtPrazo.setText(notaEdicao.getPrazo().format(formatador));
+        }
+
         txtPrioridade.setText("Qual é a nova prioridade?");
+        
+        switch(notaEdicao.getPrioridade()) {
+            case 1 -> comboBoxPrioridade.setSelectedIndex(0);
+            case 2 -> comboBoxPrioridade.setSelectedIndex(1);
+            case 3 -> comboBoxPrioridade.setSelectedIndex(2);
+            default -> comboBoxPrioridade.setSelectedIndex(0);
+        }
         btnSalvar.setText("Modificar");
+    }
+    
+    private boolean verificarPrazo(Nota n) {
+        // Inicia considerando que ele não mexeu no prazo
+        boolean prazoMudou = false; 
+        
+        // Pega a string do campo de texto
+        String prazoTexto = campoPrazoNota.getText();
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+        
+        // Verifica se ele digitou algo. O matches fala: "Java, verifica se tem algum número no meio dessa string"
+        boolean textoTemNumero = prazoTexto.matches(".*\\d.*"); 
+        
+        // Verifica se a nota tinha prazo. null = Indefinido
+        boolean notaTinhaPrazo = (n.getPrazo() != null); 
+
+        // Cenário 1: Não tinha prazo, e agora ele digitou um
+        if (textoTemNumero && !notaTinhaPrazo) {
+            prazoMudou = true;
+        } 
+        // Cenário 2: Tinha prazo, e ele apagou (deixou só a máscara)
+        else if (!textoTemNumero && notaTinhaPrazo) {
+            prazoMudou = true;
+        } 
+        // Cenário 3: Tinha prazo antigo, e a tela tem um prazo digitado. Vamos comparar!
+        else if (textoTemNumero && notaTinhaPrazo) {
+            String dataAntigaTexto = n.getPrazo().format(formatador); // Converte a do banco pra texto
+
+            // Se o texto da tela for diferente do texto do banco
+            if (!prazoTexto.equals(dataAntigaTexto)) {
+                prazoMudou = true; 
+            }
+        }
+
+        // O Cenário 4 (Não tinha e continua sem) cai no vazio, e prazoMudou continua 'false'.
+        return prazoMudou;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -113,6 +113,8 @@ public class VisualizarNotas extends javax.swing.JDialog {
         menuPopUp.add(itemHistorico);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(760, 730));
+        setResizable(false);
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));
         painelTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -528,6 +530,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao validar botão de histórico: " + e.getMessage());
         }
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;
     private javax.swing.JButton btnFechar;
