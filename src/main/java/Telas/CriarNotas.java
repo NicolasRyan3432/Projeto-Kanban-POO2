@@ -490,76 +490,88 @@ public class CriarNotas extends javax.swing.JDialog {
     }
     
     private void modificar(Nota notaEdicao) {
-        try {
-           Nota nota = notaEdicao;
-           NotaDAO dao = new NotaDAO();
-           
-           String titulo = campoTextoNome.getText().trim();
-           String prazo = campoPrazoNota.getText().trim();
-           int prioridade;
-           
-           // Pega e transforma pros números das prioridades
-           // 1 = Baixa, 2 = Média e 3 = Alta
-           switch(comboBoxPrioridade.getSelectedIndex()) {
-               case 0 -> prioridade = 1;
-               case 1 -> prioridade = 2;
-               case 2 -> prioridade = 3;
-               default -> prioridade = 1;
-           }
-           
-           // Se o titulo não estiver vazio (vazio = não quer modificar)
-           if(!titulo.isEmpty()) {
-               // O texto é igual ao texto que já está na nota (igual = não quer modificar)
-               if(!campoTextoNome.getText().equals(nota.getNome())) {
-                   nota.setNome(campoTextoNome.getText());
+        // Adicionei um verificador para confirmar a modificação do usuário
+        int resposta = JOptionPane.showConfirmDialog(this, 
+                "Você deseja realmente modificar essa nota?", 
+                "Confirmar Alteração", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+        
+        if(resposta == JOptionPane.YES_OPTION) {
+            try {
+               Nota nota = notaEdicao;
+               NotaDAO dao = new NotaDAO();
+
+               String titulo = campoTextoNome.getText().trim();
+               String prazo = campoPrazoNota.getText().trim();
+               int prioridade;
+
+               // Pega e transforma pros números das prioridades
+               // 1 = Baixa, 2 = Média e 3 = Alta
+               switch(comboBoxPrioridade.getSelectedIndex()) {
+                   case 0 -> prioridade = 1;
+                   case 1 -> prioridade = 2;
+                   case 2 -> prioridade = 3;
+                   default -> prioridade = 1;
                }
-           }
-           
-           
-           if(!areaDescricao.getText().equals(nota.getDescricao())) {
-                nota.setDescricao(areaDescricao.getText());
-           }
-            
-            if(chkBoxPrazoIndefinido.isSelected()) {
-                nota.setPrazo(null);
-            }
-            else {
-                // Se o prazo não estiver vazio e também não conter só as barras da máscara
-                if(!prazo.isEmpty() && prazo.equals("/  /")) {
-                    // Formata só a data
-                    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-                    LocalDate data = LocalDate.parse(campoPrazoNota.getText(), formatador);
-                    
-                    // Formata para até as meia noite do dia
-                    LocalDateTime prazoFormatado = data.atTime(23, 59, 59);
-                    
-                    if(!prazoFormatado.equals(nota.getPrazo())) {
-                        nota.setPrazo(prazoFormatado);
+
+               // Se o titulo não estiver vazio (vazio = não quer modificar)
+               if(!titulo.isEmpty()) {
+                   // O texto é igual ao texto que já está na nota (igual = não quer modificar)
+                   if(!campoTextoNome.getText().equals(nota.getNome())) {
+                       nota.setNome(campoTextoNome.getText());
+                   }
+               }
+
+               // Aqui é pra garantir que a descrição tá vazia antes de pegar e mandar pro banco
+               if(areaDescricao.getText().trim().equals("Sem descrição!")) {
+                   nota.setDescricao("");
+               }
+               if(!areaDescricao.getText().equals(nota.getDescricao())) {
+                    nota.setDescricao(areaDescricao.getText());
+               }
+
+                if(chkBoxPrazoIndefinido.isSelected()) {
+                    nota.setPrazo(null);
+                }
+                else {
+                    // Se o prazo não estiver vazio e também não conter só as barras da máscara
+                    if(!prazo.isEmpty() && prazo.equals("/  /")) {
+                        // Formata só a data
+                        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+                        LocalDate data = LocalDate.parse(campoPrazoNota.getText(), formatador);
+
+                        // Formata para até as meia noite do dia
+                        LocalDateTime prazoFormatado = data.atTime(23, 59, 59);
+
+                        if(!prazoFormatado.equals(nota.getPrazo())) {
+                            nota.setPrazo(prazoFormatado);
+                        }
                     }
                 }
+
+
+               if(prioridade != nota.getPrioridade()) {
+                   nota.setPrioridade(prioridade);
+               }
+
+               // Salva no histórico antes de modificar a nota
+               dao.adicionarHistorico(nota.getId(), nota.getCategoria());
+
+               // Salvando a nota no DAO
+                dao.modificar(nota);
+                JOptionPane.showMessageDialog(this, "Nota modificada com sucesso!!!", "Sucesso!!", JOptionPane.INFORMATION_MESSAGE);
+
+                // Fecha a tela de cadastro caso deu tudo certo
+                this.dispose();
             }
-            
-           
-           if(prioridade != nota.getPrioridade()) {
-               nota.setPrioridade(prioridade);
-           }
-           
-           // Salva no histórico antes de modificar a nota
-           dao.adicionarHistorico(nota.getId(), nota.getCategoria());
-           
-           // Salvando a nota no DAO
-            dao.modificar(nota);
-            JOptionPane.showMessageDialog(this, "Nota modificada com sucesso!!!", "Sucesso!!", JOptionPane.INFORMATION_MESSAGE);
-            
-            // Fecha a tela de cadastro caso deu tudo certo
-            this.dispose();
-           
-        } 
-        catch(java.time.format.DateTimeParseException dtpe) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Data inválida! Digite no formato DD/MM/AAAA.", "Erro!", JOptionPane.ERROR_MESSAGE);
-        }
-        catch(Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao modificar a nota: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+
+            catch(java.time.format.DateTimeParseException dtpe) {
+                JOptionPane.showMessageDialog(this, "Data inválida! Digite no formato DD/MM/AAAA.", "Erro!", JOptionPane.ERROR_MESSAGE);
+            }
+            catch(Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro ao modificar a nota: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
     

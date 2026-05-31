@@ -2,25 +2,45 @@
 package Modelo;
 import Telas.VisualizarNotas;
 import Telas.Main;
+import Telas.VisualizarHistorico;
 import java.awt.Cursor;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
 import java.awt.Window;
+import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
 public class CartaoNota extends javax.swing.JPanel {
     private final Nota notaAtual;
-    private final int idUsuario;
+    private HistoricoNota notaHistorico;
+    private int idUsuario;
+    private final int modoOperacao;
     
     // Construtor recebe uma nota inteira ao invés de pedaços separados da nota.
+    // Construtor chamado no main
     public CartaoNota(Nota n, int idUsuario, String prioridade) {
         // A notaAtual recebe a nota que foi clicada
         this.notaAtual = n;
         this.idUsuario = idUsuario;
+        this.modoOperacao = 0;
         
         initComponents();
         preencherCampos(prioridade);
          
+    }
+    
+    /*
+        Construtor chamado no TelaHistórico, 
+        precisa de receber a nota que o cara selecionou pra poder salvar no histórico 
+        na hora de salvar
+    */ 
+    public CartaoNota(Nota n, HistoricoNota notaClicada, String prioridade) {
+        this.notaAtual = n;
+        this.notaHistorico = notaClicada;
+        this.modoOperacao = 1;
+        
+        initComponents();
+        preencherCampos(prioridade);
     }
     
     @SuppressWarnings("unchecked")
@@ -111,21 +131,37 @@ public class CartaoNota extends javax.swing.JPanel {
             // Aqui é só para pegar a posição da onde que a telaInfo deve nascer
             Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
             
-            // Cria a tela de informações passando como atributo a telaPrincipal (como JFrame) e essa nota atual (a clicada)
-            VisualizarNotas telaInfo = new VisualizarNotas((JFrame) telaPrincipal, true, this.notaAtual, idUsuario);
-            
-            // Fica no centro da telaPrincipal
-            telaInfo.setLocationRelativeTo(telaPrincipal);
-            
-            // Deixa visível
-            telaInfo.setVisible(true);
-            
-            // Cast da telaPrincipal para tela Main 
-            // para poder usar o método de recarregar as notas
-            if(telaPrincipal instanceof Main principal) {
-                principal.recarregarNotas();
+            // SE FOR NO MAIN, chama o VisualizarNotas, se não, chama o VisualizarHistorico
+            if(modoOperacao == 0) {
+                // Cria a tela de informações passando como atributo a telaPrincipal (como JFrame) e essa nota atual (a clicada)
+                VisualizarNotas telaInfo = new VisualizarNotas((JFrame) telaPrincipal, true, this.notaAtual, idUsuario);
+                
+                // Fica no centro da telaPrincipal
+                telaInfo.setLocationRelativeTo(telaPrincipal);
+
+                // Deixa visível
+                telaInfo.setVisible(true);
+                
+                // Depois que fechou a tela de visualizar, como a gente não sabe se o cara fez alguma modificação,
+                // a gente recarrega a tela só por preucaução
+                if(telaPrincipal instanceof Main principal) {
+                    principal.recarregarNotas();
+                }
             }
-            
+            else {
+                VisualizarHistorico telaHistorico = new VisualizarHistorico((JDialog) telaPrincipal, true,  notaAtual, notaHistorico);
+                telaHistorico.setLocationRelativeTo(telaPrincipal);
+                telaHistorico.setVisible(true);
+                
+                // Se a restauração foi sucedida, manda recarregar as notas
+                // Se o cara abriu, viu o histórico, abriu uma nota mas só fechou ele não recarrega
+                if(telaHistorico.restaurouComSucesso == true) {
+                    if(telaPrincipal instanceof Main principal) {
+                        principal.recarregarNotas();
+                    }
+                }
+            }
+           
             // Volta o cursor ao normal
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }

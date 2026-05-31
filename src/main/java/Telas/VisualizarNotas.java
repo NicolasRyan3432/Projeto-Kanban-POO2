@@ -2,11 +2,13 @@
 package Telas;
 import Modelo.Nota;
 import DB.NotaDAO;
+import Modelo.HistoricoNota;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.JMenuItem;
 import java.awt.Color;
 import java.awt.Window;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -28,6 +30,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
         
         preencherDados();
         arrumarCoresMenuPopup();
+        verificarHistorico();
         
         // Se o id do usuário que tá vendo a nota (idUsuario) 
         // for diferente do id que tá dentro da Nota o botão do Menu é escondido para ele
@@ -35,6 +38,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
             btnMenu.setVisible(false);
         }
         
+     
         // Dependendo da categoria da notaAtual os items tem q sumir
         switch(notaAtual.getCategoria()) {
             case "AF" -> itemAFazer.setVisible(false);
@@ -105,6 +109,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
 
         itemHistorico.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         itemHistorico.setText("Histórico");
+        itemHistorico.addActionListener(this::itemHistoricoActionPerformed);
         menuPopUp.add(itemHistorico);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -321,6 +326,15 @@ public class VisualizarNotas extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_itemConcluidoActionPerformed
 
+    private void itemHistoricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemHistoricoActionPerformed
+        Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
+        
+        // Mando a nota atual para a tela de histórico
+        TelaHistorico tela = new TelaHistorico((JFrame) telaPrincipal, true, this.notaAtual);
+        tela.setLocationRelativeTo(this);
+        tela.setVisible(true);
+    }//GEN-LAST:event_itemHistoricoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -424,7 +438,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
                         + notaAtual.getData().format(formatadorHora)); 
             }
             else {
-                txtPrazo.setText("Data: Indefinida");
+                txtDataCriacao.setText("Data: Indefinida");
             }
             
             // Troca a sigla da categoria para o que ela significa para mostrar visualmente
@@ -495,7 +509,25 @@ public class VisualizarNotas extends javax.swing.JDialog {
         }
     }
     
-    
+    private void verificarHistorico() {
+        try {
+            NotaDAO dao = new NotaDAO();
+
+            // Faz uma busca rápida no histórico da nota que acabou de ser aberta
+            ArrayList<HistoricoNota> listaHistorico = dao.listarHistorico(this.notaAtual.getId());
+
+            // Se a lista for vazia (significa que n tem histórico) 
+            if (listaHistorico.isEmpty()) {
+                itemHistorico.setEnabled(false); // O botão fica cinza e bloqueado
+            } 
+            else {
+                itemHistorico.setEnabled(true);  // O botão fica normal
+            }
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao validar botão de histórico: " + e.getMessage());
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;
     private javax.swing.JButton btnFechar;
