@@ -4,9 +4,11 @@
  */
 package Telas;
 
+import DB.Conexao;
 import javax.swing.JOptionPane;
 import Modelo.Usuario;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
 
 public class Login extends javax.swing.JFrame {
     
@@ -277,27 +279,43 @@ public class Login extends javax.swing.JFrame {
     }
     
     public void logar() {
-        // --- Teste aqui!!! ---
-        // --- Criando se o DAO do Usuário, aqui volta a ser um try-catch --- 
+        // Teste de conexão, se der ruim não deixa o usuário logar
+        // As coisas vão dentro do try dps
+        try {
+            // Vai ser substituido pela parte de conexão do banco lá com o DAO do usuário
+            Conexao conexao = new Conexao();
+            Connection con = conexao.abrirConexao();
+            
+            String senha = new String(campoSenha.getPassword());
         
-        String senha = new String(campoSenha.getPassword());
-        
-        if(campoTexto.getText().equals("")) {
-            JOptionPane.showMessageDialog(this, "O login não pode estar vazio!!");
-        }
-        else if(campoSenha.getPassword().length < 3) {
-            JOptionPane.showMessageDialog(this, "A senha não pode ter menos do que três caracteres!!");
-        }
-        else if(!campoTexto.getText().equals("Nicolas")) {
-            JOptionPane.showMessageDialog(this, "Erro: O login está incorreto!!");
-        }
-        else if(!senha.equals("12345")) {
-            JOptionPane.showMessageDialog(this, "Erro: A senha está incorreta!!");
-        }
-        else {
-            Main tela = new Main(user); 
-            tela.setVisible(true);
-            this.dispose();
+            if(campoTexto.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "O login não pode estar vazio!!");
+            }
+            else if(campoSenha.getPassword().length < 3) {
+                JOptionPane.showMessageDialog(this, "A senha não pode ter menos do que três caracteres!!");
+            }
+            else if(!campoTexto.getText().equals("Nicolas")) {
+                JOptionPane.showMessageDialog(this, "Erro: O login está incorreto!!");
+            }
+            else if(!senha.equals("12345")) {
+                JOptionPane.showMessageDialog(this, "Erro: A senha está incorreta!!");
+            }
+            else {
+                Main tela = new Main(user); 
+                tela.setVisible(true);
+                this.dispose();
+            }
+        } 
+        catch(Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao iniciar o sistema:\n" + e.getMessage(),
+                    "Erro de Conexão!",
+                    JOptionPane.ERROR_MESSAGE);
+            
+            // Deixa o botão de login desabilitado pra pessoa não tentar entrar dnv
+            botaoEntrar.setEnabled(false);
+            
+            // Fecha o programa (O status 0 fala "fechou de propósito sem crashar")
+            // System.exit(0);
         }
     }
     

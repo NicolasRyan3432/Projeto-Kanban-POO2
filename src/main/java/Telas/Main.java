@@ -140,7 +140,7 @@ public class Main extends javax.swing.JFrame {
         btnMenu.addActionListener(this::btnMenuActionPerformed);
 
         jComboBox1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo (Ordem Crescente)", "Prazo (Ordem Decrescente)", "Nome (Ordem Alfabética)", " " }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo (Ordem Crescente)", "Prazo (Ordem Decrescente)", "Nome (Ordem Alfabética)" }));
 
         jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         jLabel1.setForeground(java.awt.Color.lightGray);
@@ -477,7 +477,8 @@ public class Main extends javax.swing.JFrame {
             
         }
         catch (Exception e) {
-            JOptionPane.showMessageDialog(this,"Erro ao carregar o Kanban: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erro ao carregar o Kanban:\n" + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
     }
     

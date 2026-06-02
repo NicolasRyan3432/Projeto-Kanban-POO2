@@ -7,6 +7,9 @@ import java.awt.Cursor;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
 import java.awt.Window;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
@@ -26,7 +29,36 @@ public class CartaoNota extends javax.swing.JPanel {
         
         initComponents();
         preencherCampos(prioridade);
-         
+        
+        // Pega o titulo que tá na nota sem fatiar ele
+        final String tituloOriginal = notaAtual.getNome();
+        
+        // Cria um componente que vai ficar vendo se a tela (componente) cresceu ou diminuiu de tamanho
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent evt) {
+                // Aqui a gente usa o getWidth() porque a nota já nasceu e já tem tamanho real!
+                int larguraReal = getWidth(); 
+
+                // Se der algum bug e a largura vier 0, a gente trava no 400 padrão
+                if(larguraReal <= 0) { 
+                    larguraReal = 400; 
+                }
+                
+                // Aqui a gente usa a regra de 3: Se 400px cabem 22 letras, 'larguraReal' cabe X.
+                int limiteDinamico = (larguraReal * 22) / 400; 
+
+                // Aplica a tesoura
+                if (tituloOriginal.length() > limiteDinamico) {
+                    int corte = Math.max(0, limiteDinamico - 3);
+                    txtTitulo.setText(tituloOriginal.substring(0, corte) + "...");
+                } 
+                else {
+                    // Se for menor do que o limite, mostra inteiro o titulo
+                    txtTitulo.setText(tituloOriginal); 
+                }
+            }
+        });
     }
     
     /*
@@ -168,23 +200,10 @@ public class CartaoNota extends javax.swing.JPanel {
             this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
     }//GEN-LAST:event_formMouseClicked
-    
+
     private void preencherCampos(String prioridade) {
-        String notaFormatada;
-        
         // Faz com que ocupe todo o espaço disponível na horizontal
         this.setMaximumSize(new java.awt.Dimension(32767, this.getPreferredSize().height));
-        
-        // Se o titulo for maior do que 22, pega e fatia a string em 19 caracteres
-        // e adiciona mais três caracteres (...)
-        
-        if(notaAtual.getNome().length() > 22) {
-            notaFormatada = (notaAtual.getNome().substring(0,19) + " ...");
-            txtTitulo.setText(notaFormatada);
-        }
-        else {
-            txtTitulo.setText(notaAtual.getNome());
-        }
         
         // Parte onde que a nota recebe os seus valores reais
         txtAutor.setText("Autor: " + notaAtual.getNomeAutor());
