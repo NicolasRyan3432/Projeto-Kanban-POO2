@@ -5,6 +5,7 @@ import DB.NotaDAO;
 import Modelo.Usuario;
 import Modelo.CartaoNota;
 import Modelo.Nota;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.JFrame;
@@ -48,6 +49,30 @@ public class Main extends javax.swing.JFrame {
         painelAFScroll.getVerticalScrollBar().setUnitIncrement(20);
         painelSFScroll.getVerticalScrollBar().setUnitIncrement(20);
         painelCScroll.getVerticalScrollBar().setUnitIncrement(20);
+        
+        // Seta a cor escura no fundo do combobox
+        comboBoxOrdenacao.setBackground(new Color(51, 51, 51));
+        comboBoxOrdenacao.setForeground(new Color(220, 220, 200));
+
+        // Seta a cor escura no menu que aparece
+        comboBoxOrdenacao.setRenderer(new javax.swing.DefaultListCellRenderer() {
+        @Override
+        public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            java.awt.Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+            // Se o mouse estiver passando por cima dos items
+            if(isSelected) {
+                c.setBackground(new java.awt.Color(85, 85, 85)); 
+                c.setForeground(new Color(255, 255, 255));
+            } 
+            else {
+                c.setBackground(new Color(51, 51, 51)); 
+                c.setForeground(new Color(255, 255, 255));
+            }
+            return c;
+        }
+    });
+        
     }
 
     
@@ -64,7 +89,7 @@ public class Main extends javax.swing.JFrame {
         txtTarefasUser = new javax.swing.JLabel();
         txtTarefasTotais = new javax.swing.JLabel();
         btnMenu = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        comboBoxOrdenacao = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         painelColunas = new javax.swing.JPanel();
         painelAF = new javax.swing.JPanel();
@@ -139,8 +164,8 @@ public class Main extends javax.swing.JFrame {
         btnMenu.setText("Menu");
         btnMenu.addActionListener(this::btnMenuActionPerformed);
 
-        jComboBox1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo (Ordem Crescente)", "Prazo (Ordem Decrescente)", "Nome (Ordem Alfabética)" }));
+        comboBoxOrdenacao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
+        comboBoxOrdenacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo (Ordem Crescente)", "Prazo (Ordem Decrescente)", "Nome (Ordem Alfabética)" }));
 
         jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         jLabel1.setForeground(java.awt.Color.lightGray);
@@ -161,7 +186,7 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(painelTopoLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(comboBoxOrdenacao, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnMenu))
                 .addGap(60, 60, 60))
         );
@@ -182,7 +207,7 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelTopoLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboBoxOrdenacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
                         .addContainerGap())))
         );
@@ -485,9 +510,9 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Logout;
     private javax.swing.JButton btnMenu;
+    private javax.swing.JComboBox<String> comboBoxOrdenacao;
     private javax.swing.JMenuItem itemCriarNotas;
     private javax.swing.JMenuItem itemGerenciarUser;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPopupMenu menuPopup;
     private javax.swing.JPanel painelAF;

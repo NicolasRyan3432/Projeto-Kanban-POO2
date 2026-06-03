@@ -310,12 +310,6 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao iniciar o sistema:\n" + e.getMessage(),
                     "Erro de Conexão!",
                     JOptionPane.ERROR_MESSAGE);
-            
-            // Deixa o botão de login desabilitado pra pessoa não tentar entrar dnv
-            botaoEntrar.setEnabled(false);
-            
-            // Fecha o programa (O status 0 fala "fechou de propósito sem crashar")
-            // System.exit(0);
         }
     }
     
