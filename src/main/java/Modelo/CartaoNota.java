@@ -179,7 +179,7 @@ public class CartaoNota extends javax.swing.JPanel {
                 // Depois que fechou a tela de visualizar, como a gente não sabe se o cara fez alguma modificação,
                 // a gente recarrega a tela só por preucaução
                 if(telaPrincipal instanceof Main principal) {
-                    principal.recarregarNotas();
+                    principal.carregarNotas();
                 }
             }
             else {
@@ -191,7 +191,7 @@ public class CartaoNota extends javax.swing.JPanel {
                 // Se o cara abriu, viu o histórico, abriu uma nota mas só fechou ele não recarrega
                 if(telaHistorico.restaurouComSucesso == true) {
                     if(telaPrincipal instanceof Main principal) {
-                        principal.recarregarNotas();
+                        principal.carregarNotas();
                     }
                 }
             }

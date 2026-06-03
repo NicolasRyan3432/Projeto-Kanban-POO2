@@ -9,6 +9,7 @@ public class Nota {
     private String nomeAutor;
     private String descricao;
     private String categoria;
+    private String prioridadeFormatada; // Passar direto na hora de inserir na nota, sem ter que converter e mostrar
     
     // Pra já passar pro banco como DATETIME, sem precisar formatar igual seria se fosse String
     private LocalDateTime data; 
@@ -18,13 +19,14 @@ public class Nota {
     public Nota() {}
     
     // Construtor passado na hora de INSERIR os dados, id é AUTOINCREMENT
-    public Nota(int id_usuario, int prioridade, String nome, String nomeAutor, String descricao, String categoria, LocalDateTime data, LocalDateTime prazo) {
+    public Nota(int id_usuario, int prioridade, String nome, String nomeAutor, String descricao, String categoria, String prioridadeFormatada, LocalDateTime data, LocalDateTime prazo) {
         this.idUsuario = id_usuario;
         this.prioridade = prioridade;
         this.nome = nome;
         this.nomeAutor = nomeAutor;
         this.descricao = descricao;
         this.categoria = categoria;
+        this.prioridadeFormatada = prioridadeFormatada;
         this.data = data;
         this.prazo = prazo;
     }
@@ -83,6 +85,14 @@ public class Nota {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public String getPrioridadeFormatada() {
+        return prioridadeFormatada;
+    }
+
+    public void setPrioridadeFormatada(String prioridadeFormatada) {
+        this.prioridadeFormatada = prioridadeFormatada;
     }
     
     public LocalDateTime getData() {

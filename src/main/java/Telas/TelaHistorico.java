@@ -8,10 +8,8 @@ import Modelo.HistoricoNota;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
 
 public class TelaHistorico extends javax.swing.JDialog {
     
@@ -141,7 +139,9 @@ public class TelaHistorico extends javax.swing.JDialog {
         });
     }
     
-    public void recarregarNotas() {
+    // Aqui continua o recarregar porque não tem ordenação 
+    // (não precisa, mas se quiser dá pra ordenar por prioridade, ou por modificação mais recente)
+    public final void recarregarNotas() {
         try {
             // Cria um painelGrid com três colunas com oito de espaço entre eles
             JPanel painelGrid = new JPanel(new GridLayout(0, 3, 5, 5));

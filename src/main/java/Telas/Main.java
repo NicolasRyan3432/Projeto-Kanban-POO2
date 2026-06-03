@@ -20,6 +20,11 @@ public class Main extends javax.swing.JFrame {
     
     private final Usuario user;
     
+    // Lista das notas para o ActionPerformed do CheckBox consiga filtrar
+    ArrayList<Nota> listaAFNotas = new ArrayList<>();
+    ArrayList<Nota> listaSFNotas = new ArrayList<>();
+    ArrayList<Nota> listaCNotas = new ArrayList<>();
+    
     /* 
         A função Main recebe logo o usuario inteiro 
         para poder enviar o id do usuario atual para as telas: CartaoNota, CriarNotas e VisualizarNotas 
@@ -37,9 +42,9 @@ public class Main extends javax.swing.JFrame {
         this.user = u;
         
         initComponents();  //Inicia os componentes
-        
+
         arrumarCoresMenuPopup();
-        recarregarNotas();
+        carregarNotas();
         
         //jLabel1.setText("Seja Bem-Vindo " + user.nome);
         
@@ -53,14 +58,14 @@ public class Main extends javax.swing.JFrame {
         
         // Seta a cor escura no fundo do combobox
         comboBoxOrdenacao.setBackground(new Color(51, 51, 51));
-        comboBoxOrdenacao.setForeground(new Color(220, 220, 200));
+        comboBoxOrdenacao.setForeground(new Color(230, 230, 230));
         
         // Seta a cor escura no menu que aparece
         comboBoxOrdenacao.setRenderer(new javax.swing.DefaultListCellRenderer() {
         @Override
         public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             java.awt.Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
+            
             // Se o mouse estiver passando por cima dos items
             if(isSelected) {
                 c.setBackground(new java.awt.Color(85, 85, 85)); 
@@ -68,7 +73,7 @@ public class Main extends javax.swing.JFrame {
             } 
             else {
                 c.setBackground(new Color(51, 51, 51)); 
-                c.setForeground(new Color(255, 255, 255));
+                c.setForeground(new Color(220, 220, 220));
             }
             return c;
         }
@@ -151,26 +156,28 @@ public class Main extends javax.swing.JFrame {
 
         txtTarefasUser.setBackground(new java.awt.Color(204, 204, 204));
         txtTarefasUser.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
-        txtTarefasUser.setForeground(java.awt.Color.lightGray);
+        txtTarefasUser.setForeground(new java.awt.Color(220, 220, 220));
         txtTarefasUser.setText("Suas Tarefas: 0");
 
         txtTarefasTotais.setBackground(new java.awt.Color(204, 204, 204));
         txtTarefasTotais.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
-        txtTarefasTotais.setForeground(java.awt.Color.lightGray);
+        txtTarefasTotais.setForeground(new java.awt.Color(220, 220, 220));
         txtTarefasTotais.setText("Tarefas Totais: 0");
 
-        btnMenu.setBackground(new java.awt.Color(80, 80, 80));
+        btnMenu.setBackground(new java.awt.Color(60, 60, 60));
         btnMenu.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        btnMenu.setForeground(new java.awt.Color(200, 200, 200));
+        btnMenu.setForeground(new java.awt.Color(220, 220, 220));
         btnMenu.setText("Menu");
         btnMenu.addActionListener(this::btnMenuActionPerformed);
 
+        comboBoxOrdenacao.setBackground(new java.awt.Color(70, 70, 70));
         comboBoxOrdenacao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
-        comboBoxOrdenacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo (Ordem Crescente)", "Prazo (Ordem Decrescente)", "Nome (Ordem Alfabética)" }));
+        comboBoxOrdenacao.setForeground(new java.awt.Color(230, 230, 230));
+        comboBoxOrdenacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo mais longo", "Prazo mais curto", "Nome (Ordem Alfabética)" }));
         comboBoxOrdenacao.addActionListener(this::comboBoxOrdenacaoActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        jLabel1.setForeground(java.awt.Color.lightGray);
+        jLabel1.setForeground(new java.awt.Color(220, 220, 220));
         jLabel1.setText("Ordenar por:");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
@@ -390,15 +397,11 @@ public class Main extends javax.swing.JFrame {
         tela.setVisible(true);
         
         // Terminou de criar a nota, recarrega para aparecer a nota
-        recarregarNotas();
+        carregarNotas();
     }//GEN-LAST:event_itemCriarNotasActionPerformed
 
     private void comboBoxOrdenacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOrdenacaoActionPerformed
-        String filtro = comboBoxOrdenacao.getSelectedItem().toString();
- 
-        //ordenarLista(listaAFNotas, filtro);
-        
-        recarregarNotas();
+        ordenarNotas();
     }//GEN-LAST:event_comboBoxOrdenacaoActionPerformed
 
     /**
@@ -449,18 +452,37 @@ public class Main extends javax.swing.JFrame {
         }
     }
     
-    private void ordenarLista(List<Nota> lista, String filtro) {
+    private void ordenarLista(ArrayList<Nota> lista, int filtro) {
         switch(filtro) {
-            // Compara os nomes ignorando se são letras maiúsculas ou minúsculas
-            case "Nome (Ordem Alfabética)" -> lista.sort((n1, n2) -> n1.getNome().compareToIgnoreCase(n2.getNome()));
-            
             // Deixa o n2 > n1 para ser em ordem decrescente
-            case "Maior Prioridade" -> lista.sort((n1, n2) -> Integer.compare(n2.getPrioridade(), n1.getPrioridade()));
+            case 0 -> lista.sort((n1, n2) -> Integer.compare(n2.getPrioridade(), n1.getPrioridade()));
             
             // Deixa o n1 > n2 para ser em ordem crescente
-            case "Menor Prioridade" -> lista.sort((n1, n2) -> Integer.compare(n1.getPrioridade(), n2.getPrioridade()));
+            case 1 -> lista.sort((n1, n2) -> Integer.compare(n1.getPrioridade(), n2.getPrioridade()));
             
-            case "Prazo (Ordem Crescente)" -> lista.sort((n1, n2) -> {
+            // Prazo Mais longo (ordem crescente)
+            case 2 -> lista.sort((n1, n2) -> {
+                // Os prazos "Indefinidos" (null) vão pro final da fila!
+                if (n1.getPrazo() == null && n2.getPrazo() == null) {
+                    return 0;
+                } 
+                
+                // Joga o n1 pro fim
+                if (n1.getPrazo() == null) {
+                    return 1;  
+                }
+                
+                // Joga o n2 pro fim    
+                if(n2.getPrazo() == null) {
+                    return -1;
+                } 
+                
+                // Fica primeiro quem tiver mais em cima (1) 
+                return n2.getPrazo().compareTo(n1.getPrazo()); 
+            });
+            
+            // Prazo mais curto (ordem decrescente)
+            case 3 -> lista.sort((n1, n2) -> {
                 // Os prazos "Indefinidos" (null) vão pro final da fila!
                 if (n1.getPrazo() == null && n2.getPrazo() == null) {
                     return 0;
@@ -480,87 +502,104 @@ public class Main extends javax.swing.JFrame {
                 return n1.getPrazo().compareTo(n2.getPrazo()); 
             });
             
-            case "Prazo (Ordem Decrescente)" -> lista.sort((n1, n2) -> {
-                // Os prazos "Indefinidos" (null) vão pro final da fila!
-                if (n1.getPrazo() == null && n2.getPrazo() == null) {
-                    return 0;
-                } 
-                
-                // Joga o n1 pro fim
-                if (n1.getPrazo() == null) {
-                    return 1;  
-                }
-                
-                // Joga o n2 pro fim    
-                if(n2.getPrazo() == null) {
-                    return -1;
-                } 
-                
-                // Fica primeiro quem tiver mais em cima (1) 
-                return n2.getPrazo().compareTo(n1.getPrazo()); 
-            });
+            // Compara os nomes ignorando se são letras maiúsculas ou minúsculas
+            case 4 -> lista.sort((n1, n2) -> n1.getNome().compareToIgnoreCase(n2.getNome()));     
         }   
     }
+   
+    /* 
+        Dividi a função recarregarNotas em três por dois motivos:
+        Divisão de trabalhos e por conta de termos a ordenação.
     
-    public void recarregarNotas() {
+        A função antiga fazia tudo, pegava as notas no banco, 
+        dividia elas por categoria, criava o cartão com as informações
+        e aí distribuia nos paineis de acordo com a categoria.
+        
+        Agora, como a gente ordena as notas por lista (ordenarLista), 
+        como a função antiga pega as notas direto do banco, ela vinha bagunçada.
+        Cada função faz uma parte do código.
+    */
+    
+    // Puxa as notas do banco e ordena pelas categorias
+    // Deixando final pra que outras classes que possam herdar Main
+    // não consigam modificar o carregarNotas.
+    public final void carregarNotas() {
+        try {
+            // Limpa a lista para poder não duplicar
+            listaAFNotas.clear();
+            listaSFNotas.clear();
+            listaCNotas.clear();
+            
+            // Puxa os dados do banco
+            NotaDAO dao = new NotaDAO();
+            ArrayList<Nota> notas = dao.listar();
+            
+            // Preenche as listas dependendo da categoria das notas
+            // e seta a sua prioridade
+            for(Nota n : notas) {
+                switch (n.getCategoria()) {
+                    case "AF" -> listaAFNotas.add(n);
+                    case "SF" ->listaSFNotas.add(n);                    
+                    case "C" -> listaCNotas.add(n);                    
+                    default -> listaAFNotas.add(n);
+               }
+                switch(n.getPrioridade()) {
+                    case 3 -> n.setPrioridadeFormatada("Alta");
+                    case 2 -> n.setPrioridadeFormatada("Média");
+                    case 1 -> n.setPrioridadeFormatada("Baixa");
+                    default -> n.setPrioridadeFormatada("Baixa");
+                }
+            } 
+            
+            // Manda ordenar
+            ordenarNotas();
+        }   
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar as notas na lista: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    // Ordena as notas de acordo com o modo de ordenação
+    // Os dois são privados porque o carregarNotas já chama em cadeia os dois 
+    // carregarNotas -> ordenarNotas -> criarNotas
+    private void ordenarNotas() {
+        // Pega o indice escolhido (por padrão é o indice 0)
+        int indiceEscolhido = comboBoxOrdenacao.getSelectedIndex();
+        
+        // Ordena as listas da função de carregar as notas
+        ordenarLista(listaAFNotas, indiceEscolhido);
+        ordenarLista(listaSFNotas, indiceEscolhido);
+        ordenarLista(listaCNotas, indiceEscolhido);
+        
+        // Cria os cartões e joga na tela
+        criarNotas();
+    }
+    
+    // Cria as notas nos respectivos campos
+    private void criarNotas() {
         try {
             // Limpa as colunas (pra não ter notas duplicadas)
             painelAFNotas.removeAll();
             painelSFNotas.removeAll();
             painelCNotas.removeAll();
             
-            ArrayList<Nota> listaAFNotas = new ArrayList<>();
-            ArrayList<Nota> listaSFNotas = new ArrayList<>();
-            ArrayList<Nota> listaCNotas = new ArrayList<>();
+            // Foreach maroto pra instanciar as notas nas listas
+            for(Nota n : listaAFNotas) {
+                CartaoNota cartao = new CartaoNota(n, 1, n.getPrioridadeFormatada());
+                painelAFNotas.add(cartao);
+                painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+            }
             
-            // Puxa os dados do banco
-            NotaDAO dao = new NotaDAO();
-            ArrayList<Nota> notas = dao.listar();
+            for(Nota n : listaSFNotas) {
+                CartaoNota cartao = new CartaoNota(n, 1, n.getPrioridadeFormatada());
+                painelSFNotas.add(cartao);
+                painelSFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+            }
             
-            // For Each maroto pra instanciar as notas
-            for(Nota n : notas) {
-                String prioridade;
-                
-                switch(n.getPrioridade()) {
-                    case 3 -> prioridade = "Alta";
-                    case 2 -> prioridade = "Média";
-                    case 1 -> prioridade = "Baixa";
-                    default -> prioridade = "Baixa";
-                }
-                
-                // Cria o cartao agora passando a nota atual (n) e a prioridade como parâmetro
-                // Aqui vai vir do Usuario, como n tá criado ainda, deixei aqui assim msm.
-                CartaoNota cartao = new CartaoNota(n, 1, prioridade);
-                
-                
-                // Switch para colocar as notas nas colunas certas dependendo da categoria delas
-                switch (n.getCategoria()) {
-                    // Case com a sintaxe moderna do Java e usando as chaves para que ele possa adicionar a nota E
-                    // colocar uma "área rígida" de baixo da nota
-                    case "AF" -> { 
-                        painelAFNotas.add(cartao);
-                        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
-                        listaAFNotas.add(n);
-                    }
-                    
-                    case "SF" -> {
-                        painelSFNotas.add(cartao);
-                        painelSFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
-                        listaSFNotas.add(n);
-                    }
-                    
-                    case "C" -> {  
-                        painelCNotas.add(cartao);
-                        painelCNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
-                        listaCNotas.add(n);
-                    }
-                    
-                    default -> {
-                        painelAFNotas.add(cartao);
-                        painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
-                        listaAFNotas.add(n);
-                    }
-                }
+            for(Nota n : listaCNotas) {
+                CartaoNota cartao = new CartaoNota(n, 1, n.getPrioridadeFormatada());
+                painelCNotas.add(cartao);
+                painelCNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
             }
             
             // Manda o Java Swing recarregar a tela 
@@ -576,10 +615,8 @@ public class Main extends javax.swing.JFrame {
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar o Kanban:\n" + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
         }
     }
-    
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
