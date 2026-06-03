@@ -8,6 +8,7 @@ import Modelo.Nota;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -53,7 +54,7 @@ public class Main extends javax.swing.JFrame {
         // Seta a cor escura no fundo do combobox
         comboBoxOrdenacao.setBackground(new Color(51, 51, 51));
         comboBoxOrdenacao.setForeground(new Color(220, 220, 200));
-
+        
         // Seta a cor escura no menu que aparece
         comboBoxOrdenacao.setRenderer(new javax.swing.DefaultListCellRenderer() {
         @Override
@@ -166,6 +167,7 @@ public class Main extends javax.swing.JFrame {
 
         comboBoxOrdenacao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
         comboBoxOrdenacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo (Ordem Crescente)", "Prazo (Ordem Decrescente)", "Nome (Ordem Alfabética)" }));
+        comboBoxOrdenacao.addActionListener(this::comboBoxOrdenacaoActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         jLabel1.setForeground(java.awt.Color.lightGray);
@@ -181,12 +183,12 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(txtBoasVindas)
                     .addComponent(txtTarefasTotais)
                     .addComponent(txtTarefasUser))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(painelTopoLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(comboBoxOrdenacao, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(comboBoxOrdenacao, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnMenu))
                 .addGap(60, 60, 60))
         );
@@ -391,6 +393,14 @@ public class Main extends javax.swing.JFrame {
         recarregarNotas();
     }//GEN-LAST:event_itemCriarNotasActionPerformed
 
+    private void comboBoxOrdenacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOrdenacaoActionPerformed
+        String filtro = comboBoxOrdenacao.getSelectedItem().toString();
+ 
+        //ordenarLista(listaAFNotas, filtro);
+        
+        recarregarNotas();
+    }//GEN-LAST:event_comboBoxOrdenacaoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -439,12 +449,69 @@ public class Main extends javax.swing.JFrame {
         }
     }
     
+    private void ordenarLista(List<Nota> lista, String filtro) {
+        switch(filtro) {
+            // Compara os nomes ignorando se são letras maiúsculas ou minúsculas
+            case "Nome (Ordem Alfabética)" -> lista.sort((n1, n2) -> n1.getNome().compareToIgnoreCase(n2.getNome()));
+            
+            // Deixa o n2 > n1 para ser em ordem decrescente
+            case "Maior Prioridade" -> lista.sort((n1, n2) -> Integer.compare(n2.getPrioridade(), n1.getPrioridade()));
+            
+            // Deixa o n1 > n2 para ser em ordem crescente
+            case "Menor Prioridade" -> lista.sort((n1, n2) -> Integer.compare(n1.getPrioridade(), n2.getPrioridade()));
+            
+            case "Prazo (Ordem Crescente)" -> lista.sort((n1, n2) -> {
+                // Os prazos "Indefinidos" (null) vão pro final da fila!
+                if (n1.getPrazo() == null && n2.getPrazo() == null) {
+                    return 0;
+                } 
+                
+                // Joga o n1 pro fim
+                if (n1.getPrazo() == null) {
+                    return 1;  
+                }
+                
+                // Joga o n2 pro fim    
+                if(n2.getPrazo() == null) {
+                    return -1;
+                } 
+                
+                // Fica primeiro quem tiver mais em cima (1) 
+                return n1.getPrazo().compareTo(n2.getPrazo()); 
+            });
+            
+            case "Prazo (Ordem Decrescente)" -> lista.sort((n1, n2) -> {
+                // Os prazos "Indefinidos" (null) vão pro final da fila!
+                if (n1.getPrazo() == null && n2.getPrazo() == null) {
+                    return 0;
+                } 
+                
+                // Joga o n1 pro fim
+                if (n1.getPrazo() == null) {
+                    return 1;  
+                }
+                
+                // Joga o n2 pro fim    
+                if(n2.getPrazo() == null) {
+                    return -1;
+                } 
+                
+                // Fica primeiro quem tiver mais em cima (1) 
+                return n2.getPrazo().compareTo(n1.getPrazo()); 
+            });
+        }   
+    }
+    
     public void recarregarNotas() {
         try {
             // Limpa as colunas (pra não ter notas duplicadas)
             painelAFNotas.removeAll();
             painelSFNotas.removeAll();
             painelCNotas.removeAll();
+            
+            ArrayList<Nota> listaAFNotas = new ArrayList<>();
+            ArrayList<Nota> listaSFNotas = new ArrayList<>();
+            ArrayList<Nota> listaCNotas = new ArrayList<>();
             
             // Puxa os dados do banco
             NotaDAO dao = new NotaDAO();
@@ -473,19 +540,25 @@ public class Main extends javax.swing.JFrame {
                     case "AF" -> { 
                         painelAFNotas.add(cartao);
                         painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                        listaAFNotas.add(n);
                     }
+                    
                     case "SF" -> {
                         painelSFNotas.add(cartao);
                         painelSFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
-
+                        listaSFNotas.add(n);
                     }
+                    
                     case "C" -> {  
                         painelCNotas.add(cartao);
                         painelCNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                        listaCNotas.add(n);
                     }
+                    
                     default -> {
                         painelAFNotas.add(cartao);
                         painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
+                        listaAFNotas.add(n);
                     }
                 }
             }
@@ -506,6 +579,8 @@ public class Main extends javax.swing.JFrame {
             System.exit(0);
         }
     }
+    
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Logout;
