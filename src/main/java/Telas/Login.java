@@ -7,7 +7,9 @@ package Telas;
 import DB.Conexao;
 import javax.swing.JOptionPane;
 import Modelo.Usuario;
+import java.awt.FontFormatException;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.sql.Connection;
 
 public class Login extends javax.swing.JFrame {
@@ -16,6 +18,23 @@ public class Login extends javax.swing.JFrame {
     private Usuario user;
     
     public Login() {
+        // Seta a FiraCode Nerd Font Regular como padrão do aplicativo
+        try {
+            // 1. Lê o arquivo da fonte que está embutido no seu .jar
+            java.io.InputStream is = getClass().getResourceAsStream("/fonts/FiraCode-Regular.ttf");
+
+            // 2. Cria a fonte na memória do Java
+            java.awt.Font fonteFira = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, is);
+
+            // 3. A MÁGICA: Registra a fonte no Ambiente Gráfico do PC do usuário!
+            java.awt.GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(fonteFira);
+
+        } 
+        catch (FontFormatException | IOException e) {
+            System.out.println("Erro ao carregar a fonte: " + e.getMessage());
+        }
+        
         initComponents();
         this.setLocationRelativeTo(null);
         this.setTitle("Projeto Kanban");

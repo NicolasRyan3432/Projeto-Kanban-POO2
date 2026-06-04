@@ -3,13 +3,18 @@ package Telas;
 
 import DB.NotaDAO;
 import Modelo.Nota;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import java.awt.Color;
+import java.awt.Font;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
-import javax.swing.text.MaskFormatter;
+import java.util.ArrayList;
+import java.util.Locale;
+
 
 public class CriarNotas extends javax.swing.JDialog {
     
@@ -26,10 +31,12 @@ public class CriarNotas extends javax.swing.JDialog {
         this.setTitle("Painel Kanban - Criar Nota");
         this.idUsuario = id;
         this.tipoFuncao = 0;
+        
+        arrumarMenu();
         initComponents();
         
-        arrumarCampoPrazo();
         arrumarComboBox();
+        arrumarCalendario();
         
         // Botão excluir fica invisível na aba de Criar
         btnExcluir.setVisible(false);
@@ -41,11 +48,13 @@ public class CriarNotas extends javax.swing.JDialog {
         this.setTitle("Painel Kanban - Modificar Nota");        
         this.tipoFuncao = 1;
         this.notaEdicao = n;
+        
+        arrumarMenu();
         initComponents();
         
-        arrumarCampoPrazo();
         arrumarComboBox();
         arrumarTextoMod();
+        arrumarCalendario();
         
     }
     
@@ -68,9 +77,8 @@ public class CriarNotas extends javax.swing.JDialog {
         btnCancelar = new javax.swing.JButton();
         txtContadorDescricao = new javax.swing.JLabel();
         txtContadorNome = new javax.swing.JLabel();
-        campoPrazoNota = new javax.swing.JFormattedTextField();
-        chkBoxPrazoIndefinido = new javax.swing.JCheckBox();
         btnExcluir = new javax.swing.JButton();
+        campoPrazo = new com.github.lgooddatepicker.components.DatePicker();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(102, 102, 102));
@@ -174,16 +182,6 @@ public class CriarNotas extends javax.swing.JDialog {
         txtContadorNome.setForeground(new java.awt.Color(200, 200, 200));
         txtContadorNome.setText("0/35");
 
-        campoPrazoNota.setBackground(java.awt.Color.gray);
-        campoPrazoNota.setForeground(new java.awt.Color(210, 210, 210));
-        campoPrazoNota.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT))));
-        campoPrazoNota.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-
-        chkBoxPrazoIndefinido.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
-        chkBoxPrazoIndefinido.setForeground(new java.awt.Color(210, 210, 210));
-        chkBoxPrazoIndefinido.setText("Indefinido");
-        chkBoxPrazoIndefinido.addActionListener(this::chkBoxPrazoIndefinidoActionPerformed);
-
         btnExcluir.setBackground(new java.awt.Color(185, 0, 0));
         btnExcluir.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnExcluir.setForeground(new java.awt.Color(245, 245, 245));
@@ -195,7 +193,7 @@ public class CriarNotas extends javax.swing.JDialog {
         painelDadosLayout.setHorizontalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelDadosLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(284, Short.MAX_VALUE)
                 .addComponent(btnExcluir)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCancelar)
@@ -204,24 +202,20 @@ public class CriarNotas extends javax.swing.JDialog {
                 .addGap(29, 29, 29))
             .addGroup(painelDadosLayout.createSequentialGroup()
                 .addGap(33, 33, 33)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(comboBoxPrioridade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPrioridade)
                     .addComponent(txtTitulo)
                     .addComponent(txtDescricao)
-                    .addGroup(painelDadosLayout.createSequentialGroup()
-                        .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(campoPrazoNota, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtPrazo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(chkBoxPrazoIndefinido))
+                    .addComponent(txtPrazo)
                     .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(txtContadorNome)
                         .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(campoTextoNome, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtContadorDescricao)
-                            .addComponent(painelScrollDescricao, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))))
-                .addContainerGap(251, Short.MAX_VALUE))
+                            .addComponent(painelScrollDescricao, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)))
+                    .addComponent(campoPrazo, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         painelDadosLayout.setVerticalGroup(
             painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,10 +235,8 @@ public class CriarNotas extends javax.swing.JDialog {
                 .addGap(24, 24, 24)
                 .addComponent(txtPrazo)
                 .addGap(18, 18, 18)
-                .addGroup(painelDadosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(campoPrazoNota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkBoxPrazoIndefinido))
-                .addGap(28, 28, 28)
+                .addComponent(campoPrazo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(txtPrioridade)
                 .addGap(18, 18, 18)
                 .addComponent(comboBoxPrioridade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -253,7 +245,7 @@ public class CriarNotas extends javax.swing.JDialog {
                     .addComponent(btnSalvar)
                     .addComponent(btnCancelar)
                     .addComponent(btnExcluir))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         getContentPane().add(painelDados, java.awt.BorderLayout.CENTER);
@@ -331,28 +323,6 @@ public class CriarNotas extends javax.swing.JDialog {
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void chkBoxPrazoIndefinidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkBoxPrazoIndefinidoActionPerformed
-        if(chkBoxPrazoIndefinido.isSelected()) {
-            // Bloqueia o campo
-            campoPrazoNota.setEnabled(false);
-
-            // Limpa o que o usuário digitou (a máscara volta ao padrão __/__/____ __:__)
-            campoPrazoNota.setValue(null); 
-
-            // Deixa o fundo mais escuro pra mostrar que tá bloqueado
-            campoPrazoNota.setBackground(new java.awt.Color(30, 30, 30)); 
-        } 
-        else {
-            // Desbloqueia o campo
-            campoPrazoNota.setEnabled(true);
-
-            // Volta pra cor cinza original do seu formulário (ajuste se a sua for diferente)
-            campoPrazoNota.setBackground(java.awt.Color.gray); 
-
-            arrumarCampoPrazo(); 
-        }
-    }//GEN-LAST:event_chkBoxPrazoIndefinidoActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
        int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir essa nota?", 
@@ -437,27 +407,14 @@ public class CriarNotas extends javax.swing.JDialog {
             
             nota.setDescricao(areaDescricao.getText());
             
-            // Se tá marcado, o prazo é nulo
-            if(chkBoxPrazoIndefinido.isSelected()) {
+            // Se o campo estiver vazio, ele seta o nulo na nota
+            if(campoPrazo.getDate() == null) {
                 JOptionPane.showMessageDialog(this, "Aviso! Essa tarefa ficará sem data de entrega!!", "Aviso!", JOptionPane.WARNING_MESSAGE);
                 nota.setPrazo(null);
             }
             else {
-                // Se não, pega o texto do campo
-                String dataDigitada = campoPrazoNota.getText();
-                
-                // Aqui pega e verifica se a data é mesmo válida, o combo do uuuu no ano e com o estilo RESTRITO do ResolverStyle
-                // Faz com que ele só dê o erro ao invés de arredondar caso fosse 31/04 iria para 01/05
                 try {
-                    // Formata com o padrão brasileiro, já que o DTF por padrão é o padrão Americano de datas.
-                    // O Trocamos o yyyy para uuuu que é para o Java ser estritamente rigoroso com o padrão gregoriano.
-                    // Tirei a obrigatoriedade de ter que por hora
-                    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
-
-                    // Pega e transforma o texto em LocalDate (sem hora aqui) usando o formatador
-                    LocalDate dataPura = LocalDate.parse(dataDigitada, formatador);
-                    
-                    // Converte para o LocalDateTime com a hora pro final do dia
+                    LocalDate dataPura = campoPrazo.getDate();
                     LocalDateTime dataComHora = dataPura.atTime(23, 59, 59);
                     
                     // Insere a data dentro da Nota
@@ -530,27 +487,17 @@ public class CriarNotas extends javax.swing.JDialog {
                      nota.setDescricao(areaDescricao.getText());
                 }
 
-                 // Se o usuário não marcou o checkbox
-                if(chkBoxPrazoIndefinido.isSelected()) {
+                // Se o usuário não marcou o checkbox
+                if(campoPrazo.getDate() == null) {
                      nota.setPrazo(null);
                 }
                 else {
-                    // Verifica se houve mudança no prazo
-                    boolean status = verificarPrazo(nota);
+                    LocalDate prazoDigitado = campoPrazo.getDate();
+                    LocalDateTime prazo = prazoDigitado.atTime(23, 59, 59);
                     
-                    // Se sim, modifica na nota, se não, permanece o mesmo prazo
-                    if(status == true) {
-                        // Pega o prazo que o usuário digitou
-                        String prazoDigitado = campoPrazoNota.getText();
-
-                        // Formata o prazo para LocalDateTime 
-                        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-                        LocalDate prazoConvertido = LocalDate.parse(prazoDigitado, formatador);
-                        LocalDateTime prazo = prazoConvertido.atTime(23, 59, 59);
-
-                        // Insere o novo prazo na nota
+                    if(!prazo.equals(nota.getPrazo())) {
                         nota.setPrazo(prazo);
-                    }
+                   }
                 }
                 
                 if(prioridade != nota.getPrioridade()) {
@@ -576,48 +523,32 @@ public class CriarNotas extends javax.swing.JDialog {
         }
     }
     
-    private void arrumarCampoPrazo() {  
-        try {
-            // O '#' obriga o usuário a digitar apenas números
-            MaskFormatter mascaraData = new MaskFormatter("##/##/####");
-
-            // Coloca um underline onde o usuário ainda não digitou (fica visualmente bem claro)
-            mascaraData.setPlaceholderCharacter('_'); 
-
-            // Aplica a máscara no seu campo de texto
-            mascaraData.install(campoPrazoNota); 
-
-        } 
-        catch (java.text.ParseException ex) {
-            // Exceção obrigatória do Java caso você digite a máscara errado no código
-            System.out.println("Erro ao formatar data: " + ex.getMessage());
-        }
-    }
-    
     private void arrumarComboBox() {
-        // 1. Pinta a "caixa" principal (quando ele está fechado)
+        // Pinta a "caixa" principal (quando ele está fechado)
         comboBoxPrioridade.setBackground(new java.awt.Color(30, 30, 30));
         comboBoxPrioridade.setForeground(new java.awt.Color(210, 210, 210));
-        comboBoxPrioridade.setFocusable(false); // Tira aquele pontilhado feio de quando clica
+        comboBoxPrioridade.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(51, 51, 51), 2));
+        comboBoxPrioridade.setFocusable(false); 
 
-        // 2. A MÁGICA: Pinta a "listinha" (Dropdown) que cai quando clica
+        // Pinta a "listinha" (Dropdown) que cai quando clica
         comboBoxPrioridade.setRenderer(new javax.swing.DefaultListCellRenderer() {
             @Override
             public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 java.awt.Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-                // Dá aquele respiro/espaçamento no texto igual fizemos no Menu ontem!
+                // Seta uma borda para dar espaçamento nos items
                 setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
 
                 if (isSelected) {
                     // Cor do "Hover" (Quando o mouse passa em cima)
-                    c.setBackground(new java.awt.Color(85, 85, 85)); 
-                    c.setForeground(java.awt.Color.WHITE);
+                    c.setBackground(new Color(0, 100, 0)); 
+                    c.setForeground(new Color(230, 230, 230));
+
                 } 
                 else {
                     // Cor do fundo normal escuro
-                    c.setBackground(new java.awt.Color(60, 63, 65)); 
-                    c.setForeground(new java.awt.Color(230, 230, 230));
+                    c.setBackground(new Color(65, 65, 65)); 
+                    c.setForeground(new Color(230, 230, 230));
                 }
                 return c;
             }
@@ -637,8 +568,10 @@ public class CriarNotas extends javax.swing.JDialog {
         
         // Se o prazo for diferente de vazio, ele pega e formata, senão é indefinido
         if(notaEdicao.getPrazo() != null) {
-            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-            txtPrazo.setText(notaEdicao.getPrazo().format(formatador));
+            LocalDateTime prazoTempo = notaEdicao.getPrazo();
+            LocalDate prazo = prazoTempo.toLocalDate();
+            
+            campoPrazo.setDate(prazo);
         }
 
         txtPrioridade.setText("Qual é a nova prioridade?");
@@ -652,50 +585,140 @@ public class CriarNotas extends javax.swing.JDialog {
         btnSalvar.setText("Modificar");
     }
     
-    private boolean verificarPrazo(Nota n) {
-        // Inicia considerando que ele não mexeu no prazo
-        boolean prazoMudou = false; 
-        
-        // Pega a string do campo de texto
-        String prazoTexto = campoPrazoNota.getText();
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/uuuu");
-        
-        // Verifica se ele digitou algo. O matches fala: "Java, verifica se tem algum número no meio dessa string"
-        boolean textoTemNumero = prazoTexto.matches(".*\\d.*"); 
-        
-        // Verifica se a nota tinha prazo. null = Indefinido
-        boolean notaTinhaPrazo = (n.getPrazo() != null); 
+    private void arrumarMenu() {
+        // Força o UI do PopupMenu e os MenuItem a usar o UI básico
+        javax.swing.UIManager.put("PopupMenuUI", "javax.swing.plaf.basic.BasicPopupMenuUI");
+        javax.swing.UIManager.put("MenuItemUI", "javax.swing.plaf.basic.BasicMenuItemUI");
 
-        // Cenário 1: Não tinha prazo, e agora ele digitou um
-        if (textoTemNumero && !notaTinhaPrazo) {
-            prazoMudou = true;
-        } 
-        // Cenário 2: Tinha prazo, e ele apagou (deixou só a máscara)
-        else if (!textoTemNumero && notaTinhaPrazo) {
-            prazoMudou = true;
-        } 
-        // Cenário 3: Tinha prazo antigo, e a tela tem um prazo digitado. Vamos comparar!
-        else if (textoTemNumero && notaTinhaPrazo) {
-            String dataAntigaTexto = n.getPrazo().format(formatador); // Converte a do banco pra texto
+        // Força o menu a pegar as cores
+        javax.swing.UIManager.put("PopupMenu.background", new Color(51, 51, 51));
+        javax.swing.UIManager.put("PopupMenu.border", javax.swing.BorderFactory.createLineBorder(new Color(51, 51, 51), 2));
 
-            // Se o texto da tela for diferente do texto do banco
-            if (!prazoTexto.equals(dataAntigaTexto)) {
-                prazoMudou = true; 
-            }
-        }
-
-        // O Cenário 4 (Não tinha e continua sem) cai no vazio, e prazoMudou continua 'false'.
-        return prazoMudou;
+        javax.swing.UIManager.put("MenuItem.background", new Color(51, 51, 51));
+        javax.swing.UIManager.put("MenuItem.foreground", new Color(220, 220, 220));
+        javax.swing.UIManager.put("MenuItem.selectionBackground", new java.awt.Color(0, 110, 0)); 
+        javax.swing.UIManager.put("MenuItem.selectionForeground", new Color(220, 220, 220));
+        
+        // Força a pegar a fonte e força uma borda vazia para dar espaçamento nos itens
+        javax.swing.UIManager.put("MenuItem.font", new java.awt.Font("FiraCode Nerd Font", 0, 16));
+        javax.swing.UIManager.put("MenuItem.border", javax.swing.BorderFactory.createEmptyBorder(5, 15, 5, 15));
     }
     
+    private void arrumarCalendario() {
+        // Configuração do local
+        Locale localeBR = new Locale("pt", "BR");
+        
+        // Cor do campo
+        campoPrazo.getComponentDateTextField().setForeground(new Color(200, 200, 200)); // Texto branco
+        campoPrazo.getComponentDateTextField().setCaretColor(new Color(200, 200, 200)); // Aquele tracinho que pisca
+        campoPrazo.getComponentToggleCalendarButton().setBackground(Color.GRAY);
+        
+        
+        // 1. Captura as configurações internas do Calendário
+        DatePickerSettings config = campoPrazo.getSettings();
+
+        // Seta o local brasileiro
+        config.setLocale(localeBR);
+
+        // Permite datas vazias (Indefinido)
+        config.setAllowEmptyDates(true);
+
+        // Espaço entre o campo de texto e o botão do popup
+        config.setGapBeforeButtonPixels(0);
+        config.setBorderPropertiesList(new java.util.ArrayList<>());
+        
+        // Formatação do campo
+        config.setFormatForDatesCommonEra("dd/MM/yyyy");
+        config.setFormatForDatesBeforeCommonEra("dd/MM/uuuu");
+        
+        // Seta o limite de data que o usuário pode colocar  
+        config.setDateRangeLimits(LocalDate.of(2025, 1, 1), null);
+ 
+        // Tamanho do popup do calendário 
+        config.setSizeDatePanelMinimumHeight(200);
+        config.setSizeDatePanelMinimumWidth(200);
+
+        // Estilizando a Caixa de Texto (Onde a data fica escrita)
+        config.setColor(DatePickerSettings.DateArea.TextFieldBackgroundValidDate, Color.GRAY);
+        config.setColor(DatePickerSettings.DateArea.TextFieldBackgroundInvalidDate, new Color(51, 51, 51)); 
+
+
+        // Seta as fontes para os labels
+        config.setFontClearLabel(new Font("FiraCode Nerd Font", 0, 16));
+        config.setFontCalendarDateLabels(new Font("FiraCode Nerd Font", 0, 16));
+        config.setFontCalendarWeekNumberLabels(new Font("FiraCode Nerd Font", 0, 18));
+        config.setFontCalendarWeekdayLabels(new Font("FiraCode Nerd Font", 0, 16));
+        config.setFontInvalidDate(new Font("FiraCode Nerd Font", 0, 16));
+        config.setFontMonthAndYearMenuLabels(new Font("FiraCode Nerd Font", 0, 16));
+        config.setFontMonthAndYearNavigationButtons(new Font("FiraCode Nerd Font", 0, 16));
+        config.setFontTodayLabel(new Font("FiraCode Nerd Font", 0, 16));
+        config.setFontValidDate(new Font("FiraCode Nerd Font", 0, 16));
+        config.setFontVetoedDate(new Font("FiraCode Nerd Font", 0, 16));
+
+
+        // Fundo do painel geral
+        config.setColor(DatePickerSettings.DateArea.BackgroundOverallCalendarPanel, new Color(51, 51, 51));
+
+        // Fundo dos números
+        config.setColor(DatePickerSettings.DateArea.CalendarBackgroundNormalDates, new Color(65, 65, 65)); 
+
+        // Cor de fundo do label do ano e mês
+        config.setColor(DatePickerSettings.DateArea.BackgroundMonthAndYearMenuLabels, new Color(50, 50, 50));
+
+        // Cor de fundo do label do dia de hoje
+        config.setColor(DatePickerSettings.DateArea.BackgroundTodayLabel, new Color(50, 50, 50));
+
+        // Cor de hover
+        config.setColor(DatePickerSettings.DateArea.BackgroundCalendarPanelLabelsOnHover, new Color(100, 100, 100));
+
+        // Cor do fundo do campo de limpar
+        config.setColor(DatePickerSettings.DateArea.BackgroundClearLabel, new Color(50, 50, 50));
+
+        // Cor de fundo dos botões de navegação
+        config.setColor(DatePickerSettings.DateArea.BackgroundMonthAndYearNavigationButtons, new Color(65, 65, 65));
+
+        // Cor do fundo dos dias da semana
+        config.setColorBackgroundWeekdayLabels(new Color(60, 60, 60), true);
+
+        // Cor do texto dos quadradinhos dos dias
+        config.setColor(DatePickerSettings.DateArea.CalendarTextNormalDates, new Color(200, 200, 200));
+
+        // Cor do texto dos dias da semana (Seg, Ter, Qua..)
+        config.setColor(DatePickerSettings.DateArea.CalendarTextWeekdays, new Color(200, 200, 200));
+
+        // Cor do texto do label de limpar
+        config.setColor(DatePickerSettings.DateArea.TextClearLabel, new java.awt.Color(200, 200, 200));
+
+        // Cor do texto do mês e ano
+        config.setColor(DatePickerSettings.DateArea.TextMonthAndYearMenuLabels, new java.awt.Color(200, 200, 200));
+
+        // Cor do texto do dia de hoje
+        config.setColor(DatePickerSettings.DateArea.TextTodayLabel, new Color(200, 200, 200));
+
+        // Borda do dia selecionado
+        config.setColor(DatePickerSettings.DateArea.CalendarBorderSelectedDate, new Color(100, 100, 100)); 
+        
+        // Cor de Fundo das datas não permitidas
+        config.setColor(DatePickerSettings.DateArea.CalendarBackgroundVetoedDates, new Color(100, 100, 100));
+        
+        // Borda do popup do calendário
+        config.setBorderCalendarPopup(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+
+        // Tira a borda azul de dentro, no campo que fica os números
+        config.setBorderPropertiesList(new ArrayList<>());
+
+
+         // Cor do dia selecionado
+        config.setColor(DatePickerSettings.DateArea.CalendarBackgroundSelectedDate, new java.awt.Color(0, 100, 0)); 
+    }
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JFormattedTextField campoPrazoNota;
+    private com.github.lgooddatepicker.components.DatePicker campoPrazo;
     private javax.swing.JTextField campoTextoNome;
-    private javax.swing.JCheckBox chkBoxPrazoIndefinido;
     private javax.swing.JComboBox<String> comboBoxPrioridade;
     private javax.swing.JPanel painelDados;
     private javax.swing.JScrollPane painelScrollDescricao;

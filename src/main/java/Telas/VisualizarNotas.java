@@ -472,7 +472,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
         Color corFundo = new Color(51, 51, 51);
         Color corTexto = new Color(210, 210, 210);
         Color corHoverSelecao = new Color(255, 255, 255);
-        Color corHover = new Color(85, 85, 85);
+        Color corHover = new Color(0, 110, 0);
         
         
         javax.swing.UIManager.put("MenuItem.background", corFundo); 
@@ -490,7 +490,6 @@ public class VisualizarNotas extends javax.swing.JDialog {
         menuMoverPara.getPopupMenu().setOpaque(true);
         menuMoverPara.getPopupMenu().setBackground(corFundo);
         menuMoverPara.getPopupMenu().setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
-        
         
         // Pega e cria uma listinha de componentes com os items do menuPopUp e também do menuMoverPara
         JMenuItem[] todosOsItens = {
@@ -521,6 +520,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
             // Se a lista for vazia (significa que n tem histórico) 
             if (listaHistorico.isEmpty()) {
                 itemHistorico.setEnabled(false); // O botão fica cinza e bloqueado
+                itemHistorico.setForeground(new Color(150, 150, 150));
             } 
             else {
                 itemHistorico.setEnabled(true);  // O botão fica normal
