@@ -136,7 +136,7 @@ public class VisualizarHistorico extends javax.swing.JDialog {
 
         btnFechar.setBackground(new java.awt.Color(40, 40, 40));
         btnFechar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        btnFechar.setForeground(new java.awt.Color(240, 240, 240));
+        btnFechar.setForeground(new java.awt.Color(220, 220, 220));
         btnFechar.setText("Fechar");
         btnFechar.addActionListener(this::btnFecharActionPerformed);
 
@@ -368,8 +368,14 @@ public class VisualizarHistorico extends javax.swing.JDialog {
             }
                 
             // Insere na tela
-            txtCategoriaAntiga.setText("Status: " + categoriaFormatadaA);
-            txtCategoriaNova.setText("Status: " + categoriaFormatadaN);
+            if(categoriaFormatadaA.equals(categoriaFormatadaN)) {
+                txtCategoriaAntiga.setText("Status antigo: Sem alteração!");
+                txtCategoriaNova.setText("Status atual: " + categoriaFormatadaA);
+            }
+            else {
+                txtCategoriaAntiga.setText("Status antigo: " + categoriaFormatadaA);
+                txtCategoriaNova.setText("Status atual: " + categoriaFormatadaN);                
+            }
         } 
         catch(Exception e) {
             JOptionPane.showMessageDialog(this, "Erro: Não foi possível carregar as informações da nota! " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);

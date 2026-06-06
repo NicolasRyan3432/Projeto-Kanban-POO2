@@ -285,7 +285,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
         try {
             
             NotaDAO dao = new NotaDAO();
-            dao.adicionarHistorico(notaAtual.getId(), notaAtual.getCategoria());
+            dao.adicionarHistorico(notaAtual.getId(), "AF");
             dao.mover(this.notaAtual.getId(), "AF");
         
             JOptionPane.showMessageDialog(this, "Nota movida para coluna A Fazer com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
@@ -301,7 +301,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
     private void itemSendoFeitoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSendoFeitoActionPerformed
         try {
             NotaDAO dao = new NotaDAO();
-            dao.adicionarHistorico(notaAtual.getId(), notaAtual.getCategoria());
+            dao.adicionarHistorico(notaAtual.getId(), "SF");
             dao.mover(this.notaAtual.getId(), "SF");
             JOptionPane.showMessageDialog(this, "Nota movida para coluna Sendo Feito com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
 
@@ -316,7 +316,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
     private void itemConcluidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemConcluidoActionPerformed
         try {
             NotaDAO dao = new NotaDAO();
-            dao.adicionarHistorico(notaAtual.getId(), notaAtual.getCategoria());
+            dao.adicionarHistorico(notaAtual.getId(), "C");
             dao.mover(this.notaAtual.getId(), "C");
             JOptionPane.showMessageDialog(this, "Nota movida para coluna Concluído com sucesso!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
 
@@ -517,7 +517,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
             // Faz uma busca rápida no histórico da nota que acabou de ser aberta
             ArrayList<HistoricoNota> listaHistorico = dao.listarHistorico(this.notaAtual.getId());
 
-            // Se a lista for vazia (significa que n tem histórico) 
+            // Se a lista for vazia (significa que não tem histórico) 
             if (listaHistorico.isEmpty()) {
                 itemHistorico.setEnabled(false); // O botão fica cinza e bloqueado
                 itemHistorico.setForeground(new Color(150, 150, 150));
@@ -530,7 +530,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao validar botão de histórico: " + e.getMessage());
         }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;
     private javax.swing.JButton btnFechar;

@@ -6,6 +6,7 @@ import Modelo.Nota;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
@@ -36,6 +37,7 @@ public class CriarNotas extends javax.swing.JDialog {
         initComponents();
         
         arrumarComboBox();
+        arrumarCampoPrazo();
         arrumarCalendario();
         
         // Botão excluir fica invisível na aba de Criar
@@ -54,6 +56,7 @@ public class CriarNotas extends javax.swing.JDialog {
         
         arrumarComboBox();
         arrumarTextoMod();
+        arrumarCampoPrazo();
         arrumarCalendario();
         
     }
@@ -87,11 +90,11 @@ public class CriarNotas extends javax.swing.JDialog {
         painelTopo.setBackground(new java.awt.Color(130, 130, 130));
         painelTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        txtCriarNota.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtCriarNota.setText("Criar Nota");
         txtCriarNota.setBackground(new java.awt.Color(102, 102, 102));
         txtCriarNota.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
         txtCriarNota.setForeground(new java.awt.Color(230, 230, 230));
-        txtCriarNota.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtCriarNota.setText("Criar Nota");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
         painelTopo.setLayout(painelTopoLayout);
@@ -115,46 +118,62 @@ public class CriarNotas extends javax.swing.JDialog {
         painelDados.setBackground(new java.awt.Color(51, 51, 51));
         painelDados.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        txtTitulo.setText("Digite o título da Nota:");
         txtTitulo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtTitulo.setForeground(new java.awt.Color(220, 220, 220));
-        txtTitulo.setText("Digite o título da Nota:");
 
-        campoTextoNome.setBackground(java.awt.Color.gray);
         campoTextoNome.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        campoTextoNome.setBackground(java.awt.Color.gray);
         campoTextoNome.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 campoTextoNomeKeyReleased(evt);
             }
         });
 
+        txtDescricao.setText("Digite a descrição da Nota:");
         txtDescricao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtDescricao.setForeground(new java.awt.Color(220, 220, 220));
-        txtDescricao.setText("Digite a descrição da Nota:");
 
+        txtPrioridade.setText("Qual é a prioridade da Nota?");
         txtPrioridade.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtPrioridade.setForeground(new java.awt.Color(220, 220, 220));
-        txtPrioridade.setText("Qual é a prioridade da Nota?");
 
+        comboBoxPrioridade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Baixa", "Média", "Alta" }));
         comboBoxPrioridade.setBackground(new java.awt.Color(60, 60, 60));
         comboBoxPrioridade.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
         comboBoxPrioridade.setForeground(new java.awt.Color(210, 210, 210));
-        comboBoxPrioridade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Baixa", "Média", "Alta" }));
+        comboBoxPrioridade.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                comboBoxPrioridadeFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                comboBoxPrioridadeFocusLost(evt);
+            }
+        });
 
+        txtPrazo.setText("Qual é o prazo da Nota?");
         txtPrazo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtPrazo.setForeground(new java.awt.Color(220, 220, 220));
-        txtPrazo.setText("Qual é o prazo da Nota?");
 
         painelScrollDescricao.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         painelScrollDescricao.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
-        areaDescricao.setBackground(java.awt.Color.gray);
         areaDescricao.setColumns(20);
         areaDescricao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         areaDescricao.setLineWrap(true);
         areaDescricao.setRows(5);
         areaDescricao.setWrapStyleWord(true);
+        areaDescricao.setBackground(java.awt.Color.gray);
         areaDescricao.setBorder(null);
         areaDescricao.setDragEnabled(true);
+        areaDescricao.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                areaDescricaoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                areaDescricaoFocusLost(evt);
+            }
+        });
         areaDescricao.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 areaDescricaoKeyReleased(evt);
@@ -162,30 +181,30 @@ public class CriarNotas extends javax.swing.JDialog {
         });
         painelScrollDescricao.setViewportView(areaDescricao);
 
+        btnSalvar.setText("Salvar");
         btnSalvar.setBackground(new java.awt.Color(0, 110, 0));
         btnSalvar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnSalvar.setForeground(new java.awt.Color(240, 240, 240));
-        btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(this::btnSalvarActionPerformed);
 
+        btnCancelar.setText("Cancelar");
         btnCancelar.setBackground(new java.awt.Color(40, 40, 40));
         btnCancelar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnCancelar.setForeground(new java.awt.Color(230, 230, 230));
-        btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
+        txtContadorDescricao.setText("0/200");
         txtContadorDescricao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 14)); // NOI18N
         txtContadorDescricao.setForeground(new java.awt.Color(190, 190, 190));
-        txtContadorDescricao.setText("0/200");
 
+        txtContadorNome.setText("0/35");
         txtContadorNome.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 14)); // NOI18N
         txtContadorNome.setForeground(new java.awt.Color(200, 200, 200));
-        txtContadorNome.setText("0/35");
 
+        btnExcluir.setText("Excluir");
         btnExcluir.setBackground(new java.awt.Color(185, 0, 0));
         btnExcluir.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnExcluir.setForeground(new java.awt.Color(245, 245, 245));
-        btnExcluir.setText("Excluir");
         btnExcluir.addActionListener(this::btnExcluirActionPerformed);
 
         javax.swing.GroupLayout painelDadosLayout = new javax.swing.GroupLayout(painelDados);
@@ -346,6 +365,28 @@ public class CriarNotas extends javax.swing.JDialog {
             }
         }      
     }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void areaDescricaoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_areaDescricaoFocusGained
+        // Com o foco o enter serve pra quebrar as linhas
+        this.getRootPane().setDefaultButton(null);
+    }//GEN-LAST:event_areaDescricaoFocusGained
+
+    private void areaDescricaoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_areaDescricaoFocusLost
+        // Sem o foco na área da descrição, 
+        // o botão padrão volta a ser o enter pra salvar
+        this.getRootPane().setDefaultButton(btnSalvar);
+    }//GEN-LAST:event_areaDescricaoFocusLost
+
+    private void comboBoxPrioridadeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comboBoxPrioridadeFocusGained
+        // Com foco o enter serve pra poder selecionar a prioridade
+        // além do espaço que por padrão serve pra selecionar checkbox e comboobox
+        this.getRootPane().setDefaultButton(null);
+    }//GEN-LAST:event_comboBoxPrioridadeFocusGained
+
+    private void comboBoxPrioridadeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_comboBoxPrioridadeFocusLost
+        // Sem o foco, o botão padrão volta a ser o de salvar
+        this.getRootPane().setDefaultButton(btnSalvar);
+    }//GEN-LAST:event_comboBoxPrioridadeFocusLost
 
     /**
      * @param args the command line arguments
@@ -528,7 +569,6 @@ public class CriarNotas extends javax.swing.JDialog {
         comboBoxPrioridade.setBackground(new java.awt.Color(30, 30, 30));
         comboBoxPrioridade.setForeground(new java.awt.Color(210, 210, 210));
         comboBoxPrioridade.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(51, 51, 51), 2));
-        comboBoxPrioridade.setFocusable(false); 
 
         // Pinta a "listinha" (Dropdown) que cai quando clica
         comboBoxPrioridade.setRenderer(new javax.swing.DefaultListCellRenderer() {
@@ -712,6 +752,107 @@ public class CriarNotas extends javax.swing.JDialog {
         config.setColor(DatePickerSettings.DateArea.CalendarBackgroundSelectedDate, new java.awt.Color(0, 100, 0)); 
     }
    
+    private void arrumarCampoPrazo() {
+        
+        // Pegamos o campo de texto puro que fica dentro do LGoodDatePicker
+        javax.swing.JTextField campoTextoData = campoPrazo.getComponentDateTextField();
+
+        // Colocamos o nosso "espião" de teclado nele
+        campoTextoData.addKeyListener(new java.awt.event.KeyAdapter() {
+
+            // CAPTURANDO O ENTER (keyPressed acontece no exato milissegundo que a tecla afunda)
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    // Abre o calendário na tela!
+                    campoPrazo.openPopup();
+
+                    /*
+                        Como a gente definiu o ENTER como a ação padrão de salvar
+                        caso o usuário clique no enter ele pega e "consome" o enter
+                        para não "vazar" a ação e acionar o código de salvar
+                    */
+                    evt.consume(); 
+                }
+            }
+
+            // AUTO-COMPLETANDO A BARRA (keyReleased acontece quando o dedo solta a tecla)
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                
+                // Se for digitado Delete ou o Backspace, ignora para não atrapalhar
+                if(evt.getKeyCode() == KeyEvent.VK_BACK_SPACE || 
+                    evt.getKeyCode() == KeyEvent.VK_DELETE) {
+                    return;
+                }
+                
+                // Pega o texto do campo de texto
+                String texto = campoTextoData.getText();
+                
+                /*  
+                    
+                    Forçamos o dia e o mês a setar 0 se for 4, 5, 6, 7, 8 ou 9 o primeiro número
+                    pois não existe dia 40, 50, 60, 70, 80 e 90, mesma coisas pros meses
+                    (não passa nem de 20, o máximo é 12)
+                */
+                
+                /*
+                    O sistema já sabe que não existe dia 50, então transforma em "05/" na hora!
+                    Verifica se o número tá entre quatro e nove (os dois são inclusos).
+                    Se for, já mete um zero no começo, o número inserido e a barra
+                */ 
+                if(texto.matches("^[4-9]$")) {
+                    campoTextoData.setText("0" + texto + "/");
+                }
+                
+                /*
+                    Trava do dia: O cara tentou digitar de 32 a 39 -> Trava no "31/"
+                    Verifica se a string começa com o número 3, se sim, verifica
+                    se o número tá entre dois e nove, se sim, mete logo 31 e a barra
+                */
+                else if (texto.matches("^3[2-9]$")) {
+                    campoTextoData.setText("31/");
+                }
+                
+                /*
+                    Trava do mês: O cara tentou digitar de 13 a 19 no Mês -> Trava no "12/"
+                    Esse faz o seguinte: verifica se tem dois digitos no começo (d{2}),
+                    depois vem a barra, o número um e se o que vem depois tá entre três e nove
+                    se sim, já mete o número doze com a barra na frente com os três caracteres anteriores
+                */
+                else if (texto.matches("^\\d{2}/1[3-9]$")) {
+                    // Mantém os 3 primeiros caracteres ("10/") e joga o "12/" na frente
+                    campoTextoData.setText(texto.substring(0, 3) + "12/");
+                }
+                
+                // O sistema já sabe que não existe mês 52, então transforma em "10/05/" na hora!
+                else if(texto.matches("^\\d{2}/[2-9]$")) {
+                    campoTextoData.setText(texto.substring(0, 3) + "0" + texto.substring(3) + "/");
+                }
+                
+                // Temos três casos para esse caso aqui: "9/8/2025"
+                
+                // 1. O cara forçou a barra manualmente no Dia (Ex: "9/")
+                // Quaisquer números e a barra
+                else if(texto.matches("^\\d/$")) {
+                    campoTextoData.setText("0" + texto);
+                }
+                
+                // 2. O cara forçou a barra manualmente no Mês (Ex: "09/8/")
+                // Quaisquer dois números, a barra e qualquer número
+                else if(texto.matches("^\\d{2}/\\d/$")) {
+                    campoTextoData.setText(texto.substring(0, 3) + "0" + texto.substring(3));
+                }
+                
+                // 3. Comportamento normal: fechou o par do Dia ("10") ou do Mês ("09/08")
+                // Quaisquer dois números ou quaisquer dois números, a barra e quaisquer dois números
+                else if(texto.matches("^\\d{2}$") || texto.matches("^\\d{2}/\\d{2}$")) {
+                    campoTextoData.setText(texto + "/");
+                }
+            }
+        });  
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea areaDescricao;
     private javax.swing.JButton btnCancelar;
