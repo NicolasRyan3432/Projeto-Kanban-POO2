@@ -1,8 +1,8 @@
 
-package Telas;
-import Modelo.Nota;
-import DB.NotaDAO;
-import Modelo.HistoricoNota;
+package telas;
+import modelo.Nota;
+import database.NotaDAO;
+import modelo.HistoricoNota;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.JMenuItem;
@@ -119,11 +119,11 @@ public class VisualizarNotas extends javax.swing.JDialog {
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));
         painelTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        txtNome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtNome.setText("Fazer Compras");
         txtNome.setBackground(new java.awt.Color(102, 102, 102));
         txtNome.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtNome.setForeground(new java.awt.Color(230, 230, 230));
-        txtNome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtNome.setText("Fazer Compras");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
         painelTopo.setLayout(painelTopoLayout);
@@ -147,17 +147,17 @@ public class VisualizarNotas extends javax.swing.JDialog {
         painelInfo.setBackground(new java.awt.Color(51, 51, 51));
         painelInfo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        txtAutor.setText("Autor: Nícolas");
         txtAutor.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtAutor.setForeground(new java.awt.Color(220, 220, 220));
-        txtAutor.setText("Autor: Nícolas");
 
+        txtDescricao.setText("Descrição da Nota:");
         txtDescricao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtDescricao.setForeground(new java.awt.Color(220, 220, 220));
-        txtDescricao.setText("Descrição da Nota:");
 
+        txtPrioridade.setText("Prioridade:");
         txtPrioridade.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtPrioridade.setForeground(new java.awt.Color(220, 220, 220));
-        txtPrioridade.setText("Prioridade:");
 
         painelScrollDescricao.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         painelScrollDescricao.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -174,33 +174,33 @@ public class VisualizarNotas extends javax.swing.JDialog {
         areaDescricao.setCaretColor(java.awt.Color.gray);
         painelScrollDescricao.setViewportView(areaDescricao);
 
+        txtPrazo.setText("Prazo: 29/05/2026 até 23:59:59");
         txtPrazo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtPrazo.setForeground(new java.awt.Color(220, 220, 220));
-        txtPrazo.setText("Prazo: 29/05/2026 até 23:59:59");
 
+        txtDataCriacao.setText("Data de Criação: 26/05/2026 ás 13:57:23");
         txtDataCriacao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtDataCriacao.setForeground(new java.awt.Color(220, 220, 220));
-        txtDataCriacao.setText("Data de Criação: 26/05/2026 ás 13:57:23");
 
+        txtStatus.setText("Status: A Fazer");
         txtStatus.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtStatus.setForeground(new java.awt.Color(220, 220, 220));
-        txtStatus.setText("Status: A Fazer");
 
+        btnFechar.setText("Fechar");
         btnFechar.setBackground(new java.awt.Color(80, 80, 80));
         btnFechar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnFechar.setForeground(new java.awt.Color(230, 230, 230));
-        btnFechar.setText("Fechar");
         btnFechar.addActionListener(this::btnFecharActionPerformed);
 
+        btnMenu.setText("Menu");
         btnMenu.setBackground(new java.awt.Color(90, 90, 90));
         btnMenu.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnMenu.setForeground(new java.awt.Color(230, 230, 230));
-        btnMenu.setText("Menu");
         btnMenu.addActionListener(this::btnMenuActionPerformed);
 
+        varPrioridade.setText("Alta");
         varPrioridade.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         varPrioridade.setForeground(new java.awt.Color(220, 220, 220));
-        varPrioridade.setText("Alta");
 
         javax.swing.GroupLayout painelInfoLayout = new javax.swing.GroupLayout(painelInfo);
         painelInfo.setLayout(painelInfoLayout);

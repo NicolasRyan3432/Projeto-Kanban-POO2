@@ -1,15 +1,14 @@
 
-package Modelo;
-import Telas.VisualizarNotas;
-import Telas.Main;
-import Telas.VisualizarHistorico;
+package modelo;
+import telas.VisualizarNotas;
+import telas.Main;
+import telas.VisualizarHistorico;
 import java.awt.Cursor;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
 import java.awt.Window;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 

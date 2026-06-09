@@ -1,8 +1,8 @@
 
-package Telas;
+package telas;
 
-import DB.NotaDAO;
-import Modelo.Nota;
+import database.NotaDAO;
+import modelo.Nota;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import java.awt.Color;
 import java.awt.Font;
@@ -10,9 +10,7 @@ import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Locale;
 

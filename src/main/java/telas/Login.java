@@ -1,12 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package Telas;
 
-import DB.Conexao;
+package telas;
+import database.Conexao;
 import javax.swing.JOptionPane;
-import Modelo.Usuario;
+import modelo.Usuario;
 import java.awt.FontFormatException;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -67,7 +63,6 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
-        setPreferredSize(new java.awt.Dimension(800, 500));
         setResizable(false);
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));

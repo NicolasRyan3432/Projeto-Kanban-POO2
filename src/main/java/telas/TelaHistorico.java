@@ -1,10 +1,9 @@
 
-package Telas;
-
-import DB.NotaDAO;
-import Modelo.Nota;
-import Modelo.CartaoNota;
-import Modelo.HistoricoNota;
+package telas;
+import database.NotaDAO;
+import modelo.Nota;
+import modelo.CartaoNota;
+import modelo.HistoricoNota;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ public class TelaHistorico extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(51, 51, 51));
         setMinimumSize(new java.awt.Dimension(1240, 800));
-        setPreferredSize(new java.awt.Dimension(1240, 134));
         setResizable(false);
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));

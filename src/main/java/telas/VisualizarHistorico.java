@@ -1,10 +1,8 @@
 
-package Telas;
-
-import DB.NotaDAO;
-import Modelo.HistoricoNota;
-import Modelo.Nota;
-import java.time.LocalDate;
+package telas;
+import database.NotaDAO;
+import modelo.HistoricoNota;
+import modelo.Nota;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;

@@ -1,14 +1,13 @@
 
-package Telas;
+package telas;
 
-import DB.NotaDAO;
-import Modelo.Usuario;
-import Modelo.CartaoNota;
-import Modelo.Nota;
+import database.NotaDAO;
+import modelo.Usuario;
+import modelo.CartaoNota;
+import modelo.Nota;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -145,40 +144,39 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(102, 102, 102));
-        setPreferredSize(new java.awt.Dimension(1250, 950));
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));
 
+        txtBoasVindas.setText("Seja Bem-Vindo, Nícolas");
         txtBoasVindas.setBackground(new java.awt.Color(204, 204, 204));
         txtBoasVindas.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 22)); // NOI18N
         txtBoasVindas.setForeground(new java.awt.Color(230, 230, 230));
-        txtBoasVindas.setText("Seja Bem-Vindo, Nícolas");
 
+        txtTarefasUser.setText("Suas Tarefas: 0");
         txtTarefasUser.setBackground(new java.awt.Color(204, 204, 204));
         txtTarefasUser.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
         txtTarefasUser.setForeground(new java.awt.Color(220, 220, 220));
-        txtTarefasUser.setText("Suas Tarefas: 0");
 
+        txtTarefasTotais.setText("Tarefas Totais: 0");
         txtTarefasTotais.setBackground(new java.awt.Color(204, 204, 204));
         txtTarefasTotais.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
         txtTarefasTotais.setForeground(new java.awt.Color(220, 220, 220));
-        txtTarefasTotais.setText("Tarefas Totais: 0");
 
+        btnMenu.setText("Menu");
         btnMenu.setBackground(new java.awt.Color(60, 60, 60));
         btnMenu.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnMenu.setForeground(new java.awt.Color(220, 220, 220));
-        btnMenu.setText("Menu");
         btnMenu.addActionListener(this::btnMenuActionPerformed);
 
+        comboBoxOrdenacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo mais longo", "Prazo mais curto", "Nome (Ordem Alfabética)" }));
         comboBoxOrdenacao.setBackground(new java.awt.Color(70, 70, 70));
         comboBoxOrdenacao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
         comboBoxOrdenacao.setForeground(new java.awt.Color(230, 230, 230));
-        comboBoxOrdenacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo mais longo", "Prazo mais curto", "Nome (Ordem Alfabética)" }));
         comboBoxOrdenacao.addActionListener(this::comboBoxOrdenacaoActionPerformed);
 
+        jLabel1.setText("Ordenar por:");
         jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(220, 220, 220));
-        jLabel1.setText("Ordenar por:");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
         painelTopo.setLayout(painelTopoLayout);
@@ -236,11 +234,11 @@ public class Main extends javax.swing.JFrame {
         painelAFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelAFTopo.setForeground(new java.awt.Color(230, 230, 230));
 
+        txtAFTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtAFTopo.setText("A FAZER");
         txtAFTopo.setBackground(new java.awt.Color(204, 255, 51));
         txtAFTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
         txtAFTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
-        txtAFTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtAFTopo.setText("A FAZER");
 
         javax.swing.GroupLayout painelAFTopoLayout = new javax.swing.GroupLayout(painelAFTopo);
         painelAFTopo.setLayout(painelAFTopoLayout);
@@ -281,12 +279,12 @@ public class Main extends javax.swing.JFrame {
         painelSFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelSFTopo.setForeground(new java.awt.Color(230, 230, 230));
 
-        txtSFTopo.setBackground(new java.awt.Color(255, 102, 102));
-        txtSFTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
-        txtSFTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
         txtSFTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtSFTopo.setText("SENDO FEITO");
         txtSFTopo.setAlignmentX(0.5F);
+        txtSFTopo.setBackground(new java.awt.Color(255, 102, 102));
+        txtSFTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        txtSFTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
 
         javax.swing.GroupLayout painelSFTopoLayout = new javax.swing.GroupLayout(painelSFTopo);
         painelSFTopo.setLayout(painelSFTopoLayout);
@@ -327,10 +325,10 @@ public class Main extends javax.swing.JFrame {
         painelCTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelCTopo.setForeground(new java.awt.Color(230, 230, 230));
 
-        txtCTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
-        txtCTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
         txtCTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtCTopo.setText("CONCLUÍDO");
+        txtCTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
+        txtCTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
 
         javax.swing.GroupLayout painelCTopoLayout = new javax.swing.GroupLayout(painelCTopo);
         painelCTopo.setLayout(painelCTopoLayout);

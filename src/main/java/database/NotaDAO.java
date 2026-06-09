@@ -1,9 +1,7 @@
 
-package DB;
-
-import Modelo.HistoricoNota;
-import Modelo.Nota;
-import Telas.VisualizarNotas;
+package database;
+import modelo.HistoricoNota;
+import modelo.Nota;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
