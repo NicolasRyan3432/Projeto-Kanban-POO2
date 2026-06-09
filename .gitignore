@@ -26,3 +26,6 @@ replay_pid*
 # configuração do BD #
 config.properties
 /target/
+
+# Arquivo de mensagem
+mensagem.txt

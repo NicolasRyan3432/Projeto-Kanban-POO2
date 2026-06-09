@@ -1,5 +1,5 @@
 
-package telas;
+package telas.notas;
 
 import database.NotaDAO;
 import modelo.Nota;

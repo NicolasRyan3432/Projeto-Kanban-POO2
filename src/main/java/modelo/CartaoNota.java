@@ -1,8 +1,8 @@
 
 package modelo;
-import telas.VisualizarNotas;
+import telas.notas.VisualizarNotas;
 import telas.Main;
-import telas.VisualizarHistorico;
+import telas.notas.VisualizarHistorico;
 import java.awt.Cursor;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;

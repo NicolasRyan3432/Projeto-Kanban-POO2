@@ -1,5 +1,6 @@
 
-package telas;
+package telas.notas;
+import telas.notas.CriarNotas;
 import modelo.Nota;
 import database.NotaDAO;
 import modelo.HistoricoNota;
