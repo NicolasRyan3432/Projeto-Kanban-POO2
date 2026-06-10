@@ -382,7 +382,7 @@ public class VisualizarHistorico extends javax.swing.JDialog {
     
     private void restaurarInfo() {
         int resposta = JOptionPane.showConfirmDialog(this, 
-                "Tem certeza que deseja restaurar a nota para esta versão antiga?\nOs dados atuais no Kanban serão sobrescritos.",
+                "Tem certeza que deseja restaurar a nota para esta versão antiga?\nOs dados atuais da nota serão sobrescritos.",
                 "Confirmar Restauração",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);

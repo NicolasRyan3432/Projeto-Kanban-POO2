@@ -4,22 +4,20 @@ package telas.usuarios;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.font.TextAttribute;
-import java.util.Enumeration;
-import java.util.Vector;
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.TableColumnModelListener;
+import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.text.StyleConstants;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
 
 public class ListarUsuarios extends javax.swing.JDialog {
     
@@ -31,6 +29,8 @@ public class ListarUsuarios extends javax.swing.JDialog {
         this.setTitle("Painel Kanban - Listar Usuários");
         initComponents();
         arrumarTabela();
+        inicializarTabela();
+        configurarCampoPesquisa();
     }
 
 
@@ -40,15 +40,15 @@ public class ListarUsuarios extends javax.swing.JDialog {
 
         painelTopo = new javax.swing.JPanel();
         txtListarUsuarios = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        painelInfo = new javax.swing.JPanel();
+        txtPesquisar = new javax.swing.JLabel();
+        campoPesquisa = new javax.swing.JTextField();
         painelScrollTabela = new javax.swing.JScrollPane();
         tabela = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
+        btnFechar = new javax.swing.JButton();
+        btnCriar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1040, 1010));
@@ -83,15 +83,15 @@ public class ListarUsuarios extends javax.swing.JDialog {
 
         getContentPane().add(painelTopo, java.awt.BorderLayout.PAGE_START);
 
-        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        painelInfo.setBackground(new java.awt.Color(51, 51, 51));
+        painelInfo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(220, 220, 220));
-        jLabel1.setText("Pesquisar:");
+        txtPesquisar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        txtPesquisar.setForeground(new java.awt.Color(220, 220, 220));
+        txtPesquisar.setText("Pesquisar:");
 
-        jTextField1.setBackground(java.awt.Color.gray);
-        jTextField1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        campoPesquisa.setBackground(java.awt.Color.gray);
+        campoPesquisa.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
 
         painelScrollTabela.setBackground(java.awt.Color.gray);
         painelScrollTabela.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -120,74 +120,84 @@ public class ListarUsuarios extends javax.swing.JDialog {
         });
         painelScrollTabela.setViewportView(tabela);
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 110));
-        jButton1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(230, 230, 230));
-        jButton1.setText("Modificar");
+        btnModificar.setBackground(new java.awt.Color(0, 0, 110));
+        btnModificar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        btnModificar.setForeground(new java.awt.Color(230, 230, 230));
+        btnModificar.setText("Modificar");
 
-        jButton2.setBackground(new java.awt.Color(61, 61, 61));
-        jButton2.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(230, 230, 230));
-        jButton2.setText("Fechar");
+        btnFechar.setBackground(new java.awt.Color(61, 61, 61));
+        btnFechar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        btnFechar.setForeground(new java.awt.Color(230, 230, 230));
+        btnFechar.setText("Fechar");
+        btnFechar.addActionListener(this::btnFecharActionPerformed);
 
-        jButton3.setBackground(new java.awt.Color(0, 110, 0));
-        jButton3.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(230, 230, 230));
-        jButton3.setText("Criar");
+        btnCriar.setBackground(new java.awt.Color(0, 110, 0));
+        btnCriar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        btnCriar.setForeground(new java.awt.Color(230, 230, 230));
+        btnCriar.setText("Criar");
 
-        jButton4.setBackground(new java.awt.Color(185, 0, 0));
-        jButton4.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(230, 230, 230));
-        jButton4.setText("Excluir");
+        btnExcluir.setBackground(new java.awt.Color(185, 0, 0));
+        btnExcluir.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        btnExcluir.setForeground(new java.awt.Color(230, 230, 230));
+        btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(this::btnExcluirActionPerformed);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout painelInfoLayout = new javax.swing.GroupLayout(painelInfo);
+        painelInfo.setLayout(painelInfoLayout);
+        painelInfoLayout.setHorizontalGroup(
+            painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelInfoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnCriar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnFechar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(77, 77, 77))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(painelInfoLayout.createSequentialGroup()
                 .addGap(71, 71, 71)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(painelScrollTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 740, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                    .addGroup(painelInfoLayout.createSequentialGroup()
+                        .addComponent(txtPesquisar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField1)))
+                        .addComponent(campoPesquisa)))
                 .addGap(225, 225, 225))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        painelInfoLayout.setVerticalGroup(
+            painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelInfoLayout.createSequentialGroup()
                 .addGap(73, 73, 73)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPesquisar)
+                    .addComponent(campoPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(48, 48, 48)
                 .addComponent(painelScrollTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
+                .addGap(58, 58, 58)
+                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnModificar)
+                    .addComponent(btnCriar))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton2))
+                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnExcluir)
+                    .addComponent(btnFechar))
                 .addGap(37, 37, 37))
         );
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(painelInfo, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFecharActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnFecharActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        excluirUsuario();
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -227,15 +237,6 @@ public class ListarUsuarios extends javax.swing.JDialog {
     }
     
     private void arrumarTabela() {
-        
-        // Força o modelo padrão de tabela a não deixar modificar o conteúdo da linha
-        DefaultTableModel modelo = new DefaultTableModel() {
-            @Override 
-            public boolean isCellEditable(int row, int col) {
-                return false;
-            }
-        };
-        
         // Cria os renderizadores (é nele que a gente coloca as cores de fundo da tabela)
         DefaultTableCellRenderer renderizador = new DefaultTableCellRenderer();
         
@@ -291,28 +292,6 @@ public class ListarUsuarios extends javax.swing.JDialog {
         // Desabilita a movimentação das colunas
         cabecalho.setReorderingAllowed(false);
         cabecalho.setResizingAllowed(false);
-
-        // Adiciona as colunas no modelo
-        modelo.addColumn("Id");
-        modelo.addColumn("Nome");
-        modelo.addColumn("Login");
-        
-        // Linhas de teste, serão removidas após a criação do DAO do Usuário
-        modelo.addRow(new Object[] {
-            1,
-            "joao",
-            "rola"
-        });
-        modelo.addRow(new Object[] {
-            1,
-            "joao",
-            "rola"
-        });
-        modelo.addRow(new Object[] {
-            1,
-            "joao",
-            "rola"
-        });
         
         // Seta o cabeçalho que eu criei na tabela (antes só tinha criado o cabeçalho
         // e falado para ele: "olha, esse daqui é teu pai (tabela), gruda nele".
@@ -336,22 +315,140 @@ public class ListarUsuarios extends javax.swing.JDialog {
         // Força a aparecer as linhas do grid
         tabela.setGridColor(new Color(150, 150, 150));
         tabela.setShowGrid(true);
+    }
+    
+    private void inicializarTabela() {
+        // Força o modelo padrão de tabela a não deixar modificar o conteúdo da linha
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override 
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
+        
+        // Adiciona as colunas no modelo
+        modelo.addColumn("Id");
+        modelo.addColumn("Nome");
+        modelo.addColumn("Login");
+        modelo.addColumn("Permissão");
+        
+        // Linhas de teste, serão removidas após a criação do DAO do Usuário
+        modelo.addRow(new Object[] {
+            1,
+            "JOAO",
+            "rola",
+            "Administrador"
+        });
+        modelo.addRow(new Object[] {
+            1,
+            "Joao",
+            "rola",
+            "Usuário"
+        });
+        modelo.addRow(new Object[] {
+            1,
+            "jo3ao",
+            "rola"
+        });
         
         // Seta o modelo na tabela
         tabela.setModel(modelo);
+        RowSorter<TableModel> ordenador = new TableRowSorter<>(modelo);
+        tabela.setRowSorter(ordenador);
+    }
+    
+    private void pesquisar() {
+        // Pega o modelo da tabela
+        DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
+        
+        //Pega e cria um filtro a partir do modelo
+        TableRowSorter filtro = new TableRowSorter(modelo);
+        
+        //Pega o texto do campo
+        String termoBusca = campoPesquisa.getText();
+        
+        // Se o texto for igual a zero, ele não passa o filtro, se não, pega e pesquisa nas tabelas se tem o texto
+        if (termoBusca.length() == 0) {
+            filtro.setRowFilter(null);
+        } 
+        else {
+            filtro.setRowFilter(RowFilter.regexFilter("(?i)" + termoBusca));
+        }
+        tabela.setRowSorter(filtro);
     }
 
+    private void configurarCampoPesquisa() {
+        campoPesquisa.getDocument().addDocumentListener(
+                new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                pesquisar();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                pesquisar();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                pesquisar();
+            }
+        }
+        );
+    }
+    
+    private void excluirUsuario() {
+        int posicaoLinha = tabela.getSelectedRow();
+
+        if (posicaoLinha >= 0) {
+            // Pega a linha e converte o index pra um modelo
+            int posicaoModelo = tabela.convertRowIndexToModel(posicaoLinha);
+            
+            // Depois, pega o modelo da tabela, o valor da posição do modelo 
+            // e na linha que tá a posição e transforma tudo em string
+            String login = tabela.getModel().getValueAt(posicaoModelo, 1).toString();
+            
+            // Pega a resposta, se for sim (0), deleta aquela linha
+            int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente deletar a linha " + login + "?", 
+                    "Confirmar Remoção...", 
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+
+            if (resposta == JOptionPane.YES_OPTION) {
+                // int id = Integer.parseInt(tabela.getModel().getValueAt(posicaoModelo, 0).toString());
+
+                try {
+                    // UsuarioDAO dao = new UsuarioDAO();                    
+                    // dao.Remover(id);
+                    DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
+                    modelo.removeRow(posicaoModelo);
+                    
+                    
+                    JOptionPane.showMessageDialog(this, "Login removido com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                } 
+                catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } 
+        else {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha!!");
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton btnCriar;
+    private javax.swing.JButton btnExcluir;
+    private javax.swing.JButton btnFechar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JTextField campoPesquisa;
+    private javax.swing.JPanel painelInfo;
     private javax.swing.JScrollPane painelScrollTabela;
     private javax.swing.JPanel painelTopo;
     private javax.swing.JTable tabela;
     private javax.swing.JLabel txtListarUsuarios;
+    private javax.swing.JLabel txtPesquisar;
     // End of variables declaration//GEN-END:variables
 }

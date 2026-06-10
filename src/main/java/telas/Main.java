@@ -7,6 +7,7 @@ import modelo.Usuario;
 import modelo.CartaoNota;
 import modelo.Nota;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.JFrame;
@@ -63,8 +64,8 @@ public class Main extends javax.swing.JFrame {
         // Seta a cor escura no menu que aparece
         comboBoxOrdenacao.setRenderer(new javax.swing.DefaultListCellRenderer() {
         @Override
-        public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            java.awt.Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        public Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             
             // Se o mouse estiver passando por cima dos items
             if(isSelected) {

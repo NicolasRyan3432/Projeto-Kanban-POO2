@@ -191,7 +191,7 @@ public class TelaHistorico extends javax.swing.JDialog {
             
         } 
         catch (Exception e) {
-            JOptionPane.showMessageDialog(this,"Erro ao carregar o Kanban: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Erro ao carregar as notas: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
     
