@@ -11,7 +11,9 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import telas.usuarios.ListarUsuarios;
 
 
 
@@ -89,8 +91,10 @@ public class Main extends javax.swing.JFrame {
 
         menuPopup = new javax.swing.JPopupMenu();
         itemCriarNotas = new javax.swing.JMenuItem();
-        itemGerenciarUser = new javax.swing.JMenuItem();
-        Logout = new javax.swing.JMenuItem();
+        menuGerenciar = new javax.swing.JMenu();
+        itemListar = new javax.swing.JMenuItem();
+        itemCriar = new javax.swing.JMenuItem();
+        itemLogout = new javax.swing.JMenuItem();
         painelTopo = new javax.swing.JPanel();
         txtBoasVindas = new javax.swing.JLabel();
         txtTarefasUser = new javax.swing.JLabel();
@@ -128,57 +132,65 @@ public class Main extends javax.swing.JFrame {
         itemCriarNotas.addActionListener(this::itemCriarNotasActionPerformed);
         menuPopup.add(itemCriarNotas);
 
-        itemGerenciarUser.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        itemGerenciarUser.setForeground(java.awt.Color.lightGray);
-        itemGerenciarUser.setText("Gerenciar Usuários");
-        itemGerenciarUser.setAlignmentY(1.5F);
-        itemGerenciarUser.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        itemGerenciarUser.setMargin(new java.awt.Insets(10, 11, 3, 11));
-        itemGerenciarUser.setOpaque(true);
-        menuPopup.add(itemGerenciarUser);
+        menuGerenciar.setForeground(java.awt.Color.lightGray);
+        menuGerenciar.setText("Gerenciar Usuários");
+        menuGerenciar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
 
-        Logout.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        Logout.setForeground(java.awt.Color.lightGray);
-        Logout.setText("Logout");
-        Logout.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        Logout.setOpaque(true);
-        menuPopup.add(Logout);
+        itemListar.setBackground(java.awt.Color.lightGray);
+        itemListar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        itemListar.setText("Listar Usuários");
+        itemListar.addActionListener(this::itemListarActionPerformed);
+        menuGerenciar.add(itemListar);
+
+        itemCriar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        itemCriar.setForeground(java.awt.Color.lightGray);
+        itemCriar.setText("Criar Usuários");
+        menuGerenciar.add(itemCriar);
+
+        menuPopup.add(menuGerenciar);
+
+        itemLogout.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        itemLogout.setForeground(java.awt.Color.lightGray);
+        itemLogout.setText("Logout");
+        itemLogout.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        itemLogout.setOpaque(true);
+        menuPopup.add(itemLogout);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(102, 102, 102));
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));
 
-        txtBoasVindas.setText("Seja Bem-Vindo, Nícolas");
         txtBoasVindas.setBackground(new java.awt.Color(204, 204, 204));
         txtBoasVindas.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 22)); // NOI18N
         txtBoasVindas.setForeground(new java.awt.Color(230, 230, 230));
+        txtBoasVindas.setText("Seja Bem-Vindo, Nícolas");
 
-        txtTarefasUser.setText("Suas Tarefas: 0");
         txtTarefasUser.setBackground(new java.awt.Color(204, 204, 204));
         txtTarefasUser.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
         txtTarefasUser.setForeground(new java.awt.Color(220, 220, 220));
+        txtTarefasUser.setText("Suas Tarefas: 0");
 
-        txtTarefasTotais.setText("Tarefas Totais: 0");
         txtTarefasTotais.setBackground(new java.awt.Color(204, 204, 204));
         txtTarefasTotais.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
         txtTarefasTotais.setForeground(new java.awt.Color(220, 220, 220));
+        txtTarefasTotais.setText("Tarefas Totais: 0");
 
-        btnMenu.setText("Menu");
         btnMenu.setBackground(new java.awt.Color(60, 60, 60));
         btnMenu.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnMenu.setForeground(new java.awt.Color(220, 220, 220));
+        btnMenu.setText("Menu");
         btnMenu.addActionListener(this::btnMenuActionPerformed);
 
-        comboBoxOrdenacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo mais longo", "Prazo mais curto", "Nome (Ordem Alfabética)" }));
         comboBoxOrdenacao.setBackground(new java.awt.Color(70, 70, 70));
         comboBoxOrdenacao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
         comboBoxOrdenacao.setForeground(new java.awt.Color(230, 230, 230));
+        comboBoxOrdenacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo mais longo", "Prazo mais curto", "Nome (Ordem Alfabética)" }));
         comboBoxOrdenacao.addActionListener(this::comboBoxOrdenacaoActionPerformed);
 
-        jLabel1.setText("Ordenar por:");
         jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(220, 220, 220));
+        jLabel1.setText("Ordenar por:");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
         painelTopo.setLayout(painelTopoLayout);
@@ -236,11 +248,11 @@ public class Main extends javax.swing.JFrame {
         painelAFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelAFTopo.setForeground(new java.awt.Color(230, 230, 230));
 
-        txtAFTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtAFTopo.setText("A FAZER");
         txtAFTopo.setBackground(new java.awt.Color(204, 255, 51));
         txtAFTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
         txtAFTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
+        txtAFTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtAFTopo.setText("A FAZER");
 
         javax.swing.GroupLayout painelAFTopoLayout = new javax.swing.GroupLayout(painelAFTopo);
         painelAFTopo.setLayout(painelAFTopoLayout);
@@ -281,12 +293,12 @@ public class Main extends javax.swing.JFrame {
         painelSFTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelSFTopo.setForeground(new java.awt.Color(230, 230, 230));
 
-        txtSFTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtSFTopo.setText("SENDO FEITO");
-        txtSFTopo.setAlignmentX(0.5F);
         txtSFTopo.setBackground(new java.awt.Color(255, 102, 102));
         txtSFTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
         txtSFTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
+        txtSFTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtSFTopo.setText("SENDO FEITO");
+        txtSFTopo.setAlignmentX(0.5F);
 
         javax.swing.GroupLayout painelSFTopoLayout = new javax.swing.GroupLayout(painelSFTopo);
         painelSFTopo.setLayout(painelSFTopoLayout);
@@ -327,10 +339,10 @@ public class Main extends javax.swing.JFrame {
         painelCTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         painelCTopo.setForeground(new java.awt.Color(230, 230, 230));
 
-        txtCTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtCTopo.setText("CONCLUÍDO");
         txtCTopo.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 24)); // NOI18N
         txtCTopo.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.default.foreground"));
+        txtCTopo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtCTopo.setText("CONCLUÍDO");
 
         javax.swing.GroupLayout painelCTopoLayout = new javax.swing.GroupLayout(painelCTopo);
         painelCTopo.setLayout(painelCTopoLayout);
@@ -404,6 +416,19 @@ public class Main extends javax.swing.JFrame {
         ordenarNotas();
     }//GEN-LAST:event_comboBoxOrdenacaoActionPerformed
 
+    private void itemListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemListarActionPerformed
+        // Instancia a classe 
+        ListarUsuarios tela = new ListarUsuarios(this, true);
+        
+        // Coloca ela para aparecer no centro da tela atual
+        tela.setLocationRelativeTo(this);
+        
+        // Deixa visível
+        tela.setVisible(true);
+        
+        // Talvez terá que recarregar os usuários
+    }//GEN-LAST:event_itemListarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -430,25 +455,45 @@ public class Main extends javax.swing.JFrame {
     }
     
     private void arrumarCoresMenuPopup() {
-        // O UIManager serve para trocar a cor do hover padrão (que não tem como trocar pela interface).
-        // Trocamos o azulão padrão por um cinza um pouco mais claro que o fundo
-        javax.swing.UIManager.put("MenuItem.selectionBackground", new java.awt.Color(85, 85, 85)); 
-        javax.swing.UIManager.put("MenuItem.selectionForeground", new java.awt.Color(255, 255, 255)); 
-
-        // Força o fundo do menu a ficar escuro
+        // Variáveis pra gente não ficar repetindo código
+        Color corFundo = new Color(51, 51, 51);
+        Color corTexto = new Color(210, 210, 210);
+        Color corHoverSelecao = new Color(255, 255, 255);
+        Color corHover = new Color(0, 110, 0);
+        
+        
+        javax.swing.UIManager.put("MenuItem.background", corFundo); 
+        javax.swing.UIManager.put("MenuItem.foreground", corTexto);
+        javax.swing.UIManager.put("MenuItem.selectionBackground", corHover);
+        javax.swing.UIManager.put("MenuItem.selectionForeground", corHoverSelecao);
+        
+        javax.swing.UIManager.put("Menu.background", corFundo); 
+        javax.swing.UIManager.put("Menu.foreground", corTexto);
+        javax.swing.UIManager.put("Menu.selectionBackground", corHover);
+        javax.swing.UIManager.put("Menu.selectionForeground", corHoverSelecao);
+        
         menuPopup.setOpaque(true);
-        menuPopup.setBackground(new java.awt.Color(51, 51, 51));
+        menuPopup.setBackground(corFundo);
+        menuGerenciar.getPopupMenu().setOpaque(true);
+        menuGerenciar.getPopupMenu().setBackground(corFundo);
+        menuGerenciar.getPopupMenu().setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
 
-        // Força todos os botões de dentro a ficarem escuros também usando um laço de repetição
-        for (java.awt.Component item : menuPopup.getComponents()) {
-            if (item instanceof javax.swing.JMenuItem menuItem) {
-                menuItem.setOpaque(true);
-                menuItem.setBackground(new java.awt.Color(51, 51, 51)); 
-                menuItem.setForeground(new java.awt.Color(210, 210, 210)); 
-                
-                // Cria uma borda invisivel para dar o espaçamento nas bordas
-                menuItem.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
-            }
+        // Pega e cria uma listinha de componentes com os items do menuPopup e também do menuGerenciar
+        JMenuItem[] todosOsItens = {
+            itemCriar, menuGerenciar, itemCriarNotas, 
+            itemListar, itemLogout
+        };  
+        
+        /* 
+            Força todos os botões de dentro a ficarem escuros também usando um laço de repetição
+            Agora, ao invés de perguntar se o item é uma instância de um MenuItem, a gente passa
+            direto a nossa lista de componentes.
+        */
+        for (JMenuItem item : todosOsItens) {
+            item.setOpaque(true);
+            item.setBackground(corFundo); 
+            item.setForeground(corTexto);
+            item.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
         }
     }
     
@@ -620,12 +665,14 @@ public class Main extends javax.swing.JFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem Logout;
     private javax.swing.JButton btnMenu;
     private javax.swing.JComboBox<String> comboBoxOrdenacao;
+    private javax.swing.JMenuItem itemCriar;
     private javax.swing.JMenuItem itemCriarNotas;
-    private javax.swing.JMenuItem itemGerenciarUser;
+    private javax.swing.JMenuItem itemListar;
+    private javax.swing.JMenuItem itemLogout;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu menuGerenciar;
     private javax.swing.JPopupMenu menuPopup;
     private javax.swing.JPanel painelAF;
     private javax.swing.JPanel painelAFNotas;
