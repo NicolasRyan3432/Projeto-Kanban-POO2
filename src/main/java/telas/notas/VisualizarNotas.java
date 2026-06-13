@@ -1,6 +1,5 @@
 
 package telas.notas;
-import telas.notas.CriarNotas;
 import modelo.Nota;
 import database.NotaDAO;
 import modelo.HistoricoNota;
@@ -274,12 +273,18 @@ public class VisualizarNotas extends javax.swing.JDialog {
     }//GEN-LAST:event_btnMenuActionPerformed
 
     private void itemModificarNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemModificarNotaActionPerformed
-        Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
-        
-        CriarNotas tela = new CriarNotas((JFrame) telaPrincipal, true, this.notaAtual);
-        tela.setLocationRelativeTo(this);
-        this.dispose();
-        tela.setVisible(true);
+        try {
+            Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
+
+            CriarNotas tela = new CriarNotas((JFrame) telaPrincipal, true, this.notaAtual);
+            tela.setLocationRelativeTo(this);
+            this.dispose();
+            tela.setVisible(true);
+        }
+        catch(Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao abrir a tela de modificar: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+
+        }
     }//GEN-LAST:event_itemModificarNotaActionPerformed
 
     private void itemAFazerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemAFazerActionPerformed
@@ -295,7 +300,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
             this.dispose();
         } 
         catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao mover a nota: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao mover a nota: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_itemAFazerActionPerformed
 
@@ -310,7 +315,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
             this.dispose();
         } 
         catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao mover a nota: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao mover a nota: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE );
         }
     }//GEN-LAST:event_itemSendoFeitoActionPerformed
 
@@ -325,17 +330,22 @@ public class VisualizarNotas extends javax.swing.JDialog {
             this.dispose();
         } 
         catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao mover a nota: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao mover a nota: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_itemConcluidoActionPerformed
 
     private void itemHistoricoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemHistoricoActionPerformed
-        Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
-        
-        // Mando a nota atual para a tela de histórico
-        TelaHistorico tela = new TelaHistorico((JFrame) telaPrincipal, true, this.notaAtual);
-        tela.setLocationRelativeTo(this);
-        tela.setVisible(true);
+        try{
+            Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
+
+            // Mando a nota atual para a tela de histórico
+            TelaHistorico tela = new TelaHistorico((JFrame) telaPrincipal, true, this.notaAtual);
+            tela.setLocationRelativeTo(this);
+            tela.setVisible(true);
+        }
+        catch(Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao abrir a tela de histórico: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_itemHistoricoActionPerformed
 
     /**
@@ -528,7 +538,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
             }
         } 
         catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao validar botão de histórico: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao validar botão de histórico: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
