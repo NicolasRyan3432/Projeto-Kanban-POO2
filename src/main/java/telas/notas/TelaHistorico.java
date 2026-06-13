@@ -40,6 +40,7 @@ public class TelaHistorico extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(51, 51, 51));
         setMinimumSize(new java.awt.Dimension(1240, 800));
+        setPreferredSize(new java.awt.Dimension(1240, 800));
         setResizable(false);
 
         painelTopo.setBackground(new java.awt.Color(102, 102, 102));
@@ -188,7 +189,7 @@ public class TelaHistorico extends javax.swing.JDialog {
             // Manda o Java Swing recarregar a tela 
             painelNotas.revalidate();
             painelNotas.repaint();
-            
+          
         } 
         catch (Exception e) {
             JOptionPane.showMessageDialog(this,"Erro ao carregar as notas: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);

@@ -1,5 +1,6 @@
 
 package database;
+import java.sql.CallableStatement;
 import modelo.HistoricoNota;
 import modelo.Nota;
 import java.sql.Connection;
@@ -9,27 +10,51 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.sql.Timestamp;
 
+
+/* 
+               ***------------------- MUDANÇA ----------------------***
+    Eu criei uma Procedure que entra com os dados da nota na tabela diretamente
+    Suas vantagens sobre como tava antes (SELECT/INSERT plano): 
+
+        1. Economia no Tráfego de Rede: 
+                O Java que "executa" todo o processo, caso fosse um SELECT mais complexo (usando CTE, loops...) 
+                ele teria que pedir para o banco enviar os dados para ele, 
+                ele faria o que teria de ser feito e só assim o JDBC enviaria o resultado para o Banco.
+
+        2. Bloqueio de Permissões: 
+                O Java é permitido somente a usar aquela procedure, ou seja,   
+                ele não precisa de ter permissões de poder modificar 
+                todas as tabelas, e sim de somente chamar aquela procedure
+                
+        3. Centralização da lógica: 
+                Caso fosse adicionado mais uma coluna na tabela de Notas, 
+                o unico lugar que será modificado (caso precise) é na procedure chamada, 
+                evitando assim de que o programa pare de funcionar
+                
+        4. Pré-compilação e Cache: 
+                Ao criar a procedure, o MYSQL (ou qualquer SGDB usado) já analisa a sintaxe, 
+                analisa o plano de execução e guarda tudo isso na memória RAM.   
+               ***--------------------------------------------------------***
+        */
+
 public class NotaDAO {
     public void criar(Nota nota) throws Exception {
         if (nota == null) {
             throw new Exception("Erro: Dados da nota estão vazios!!");
         }
-
-        // Conexão com o banco
+        
         Connection con = null;
-        // Comando SQL a ser executado
-        PreparedStatement ps = null;
-        // Conexao com o banco
+        CallableStatement ps = null;
         Conexao conexao = new Conexao();
 
         try {
             // Conexao sem parametros por conta de passarmos direto dentro da função
             con = conexao.abrirConexao();
             
-            String sql = "INSERT INTO notas (nome, descricao, prioridade, prazo, id_usuario) VALUES (?, ?, ?, ?, ?)";
+            String sql = "{CALL pAdicionaNota(?, ?, ?, ?, ?)}";
             
             // Prepara para inserir os valores ? pelas variaveis
-            ps = con.prepareStatement(sql);
+            ps = con.prepareCall(sql);
             ps.setString(1, nota.getNome());
             ps.setString(2, nota.getDescricao());
             ps.setInt(3, nota.getPrioridade());
