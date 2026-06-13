@@ -1,14 +1,13 @@
 
 package database;
-import java.sql.CallableStatement;
 import modelo.HistoricoNota;
 import modelo.Nota;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import java.sql.Types;
 
 
 /* 
@@ -17,7 +16,7 @@ import java.sql.Timestamp;
     Suas vantagens sobre como tava antes (SELECT/INSERT plano): 
 
         1. Economia no Tráfego de Rede: 
-                O Java que "executa" todo o processo, caso fosse um SELECT mais complexo (usando CTE, loops...) 
+                O Java que "executa" todo o processo, caso fosse um SELECT mais complexo (usando CTE, loocd...) 
                 ele teria que pedir para o banco enviar os dados para ele, 
                 ele faria o que teria de ser feito e só assim o JDBC enviaria o resultado para o Banco.
 
@@ -44,7 +43,7 @@ public class NotaDAO {
         }
         
         Connection con = null;
-        CallableStatement ps = null;
+        CallableStatement cs = null;
         Conexao conexao = new Conexao();
 
         try {
@@ -54,31 +53,31 @@ public class NotaDAO {
             String sql = "{CALL pAdicionaNota(?, ?, ?, ?, ?)}";
             
             // Prepara para inserir os valores ? pelas variaveis
-            ps = con.prepareCall(sql);
-            ps.setString(1, nota.getNome());
-            ps.setString(2, nota.getDescricao());
-            ps.setInt(3, nota.getPrioridade());
+            cs = con.prepareCall(sql);
+            cs.setString(1, nota.getNome());
+            cs.setString(2, nota.getDescricao());
+            cs.setInt(3, nota.getPrioridade());
             
             if(nota.getPrazo() != null) {
                 // Transforma o LocalDateTime para o formato Timestamp do Banco
-                ps.setTimestamp(4, java.sql.Timestamp.valueOf(nota.getPrazo()));  
+                cs.setTimestamp(4, Timestamp.valueOf(nota.getPrazo()));  
             }
             else {
                 // Prazo indefinido, manda um null do tipo Timestamp (já que o null não tem valor)
-                ps.setNull(4, java.sql.Types.TIMESTAMP);
+                cs.setNull(4, Types.TIMESTAMP);
             }
             
-            ps.setInt(5, nota.getIdUsuario());
+            cs.setInt(5, nota.getIdUsuario());
             
             // Joga os dados no Banco
-            ps.executeUpdate(); 
+            cs.executeUpdate(); 
         }
         catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception("\n[CRIAR] Erro: " + e.getMessage());
         }
         finally {
             // Executa independente se executou o try ou o catch
-            conexao.fecharConexao(con, ps, null);
+            conexao.fecharConexao(con, cs, null);
         }
     }
     
@@ -86,7 +85,7 @@ public class NotaDAO {
     public ArrayList<Nota> listar() throws Exception {
 
         Connection con = null;
-        Statement ps = null;
+        CallableStatement cs = null;
         ResultSet rs = null;
         Conexao conexao = new Conexao();
 
@@ -94,14 +93,13 @@ public class NotaDAO {
             con = conexao.abrirConexao();
             
             // Pega tudo da tabela notas e junta com a tabela usuarios para pegar o nome
-            String sql = "SELECT n.*, u.nome AS nome_autor "
-                    + "FROM notas n "
-                    + "INNER JOIN usuarios u ON n.id_usuario = u.id";
+            String sql = "{CALL pListaNotas()}";
            
             // Cria o statement pra passar o comando pro banco
-            ps = con.createStatement();
+            cs = con.prepareCall(sql);
+            
             // Executa os comandos SQL
-            rs = ps.executeQuery(sql);
+            rs = cs.executeQuery(sql);
 
             ArrayList<Nota> listaNotas = new ArrayList<>();
 
@@ -143,10 +141,10 @@ public class NotaDAO {
             return listaNotas;
         } 
         catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception("\n[LISTAR] Erro: " + e.getMessage());
         } 
         finally {
-            conexao.fecharConexao(con, ps, rs);
+            conexao.fecharConexao(con, cs, rs);
         }
     }
     
@@ -154,7 +152,7 @@ public class NotaDAO {
     public ArrayList<HistoricoNota> listarHistorico(int idNota) throws Exception {
 
         Connection con = null;
-        PreparedStatement ps = null;
+        CallableStatement cs = null;
         ResultSet rs = null;
         Conexao conexao = new Conexao();
 
@@ -162,16 +160,12 @@ public class NotaDAO {
             con = conexao.abrirConexao();
             
             // Pega só o histórico daquela nota e ordena pela alteração mais nova
-            String sql = "SELECT h.*, u.nome AS nome_autor "
-                    + "FROM historico_notas h "
-                    + "INNER JOIN usuarios u ON h.id_usuario = u.id "
-                    + "WHERE id_nota = ? "
-                    + "ORDER BY data_alteracao DESC";
+            String sql = "{CALL pListaHistorico(?)}";
            
             
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, idNota);
-            rs = ps.executeQuery();
+            cs = con.prepareCall(sql);
+            cs.setInt(1, idNota);
+            rs = cs.executeQuery();
 
             ArrayList<HistoricoNota> listaNotas = new ArrayList<>();
             
@@ -211,158 +205,152 @@ public class NotaDAO {
             return listaNotas;
         } 
         catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception("\n[LISTAR HISTORICO] Erro: " + e.getMessage());
         } 
         finally {
-            conexao.fecharConexao(con, ps, rs);
+            conexao.fecharConexao(con, cs, rs);
         }
     }
    
     public void modificar(Nota nota) throws Exception {
         Connection con = null;
-        PreparedStatement ps = null;
+        CallableStatement cs = null;
         Conexao conexao = new Conexao();
         
         try {
             con = conexao.abrirConexao();
-            String sql = "UPDATE notas SET nome = ?, descricao = ?, " 
-                       + "prioridade = ?, prazo = ? " 
-                       + "WHERE id_nota = ?";
+            String sql = "{CALL pModificaNota(?, ?, ?, ?, ?)}";
 
-            ps = con.prepareStatement(sql);
-            ps.setString(1, nota.getNome());
-            ps.setString(2, nota.getDescricao());
-            ps.setInt(3, nota.getPrioridade());
+            cs = con.prepareCall(sql);
+            cs.setString(1, nota.getNome());
+            cs.setString(2, nota.getDescricao());
+            cs.setInt(3, nota.getPrioridade());
             
             if(nota.getPrazo() != null) {
                 // Transforma o LocalDateTime para o formato Timestamp do Banco
-                ps.setTimestamp(4, Timestamp.valueOf(nota.getPrazo()));  
+                cs.setTimestamp(4, Timestamp.valueOf(nota.getPrazo()));  
             }
             else {
                 // Prazo indefinido, manda um null do tipo Timestamp (já que o null não tem valor)
-                ps.setNull(4, java.sql.Types.TIMESTAMP);
+                cs.setNull(4, Types.TIMESTAMP);
             }
             
-            ps.setInt(5, nota.getId());
-            ps.executeUpdate();
+            cs.setInt(5, nota.getId());
+            cs.executeUpdate();
         }
         catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception("\n[MODIFICAR] Erro: " + e.getMessage());
         }
         finally {
-            conexao.fecharConexao(con, ps, null);
+            conexao.fecharConexao(con, cs, null);
         }
     }
     
     public void deletar(int id) throws Exception {
         Connection con = null;
-        PreparedStatement ps = null;
+        CallableStatement cd = null;
         Conexao conexao = new Conexao();
         
         try {
             con = conexao.abrirConexao();
             
-            String sql = "DELETE FROM notas WHERE id_nota = ?";
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, id);
-            ps.executeUpdate();  
+            String sql = "{CALL pDeletaNota(?)}";
+            cd = con.prepareCall(sql);
+            cd.setInt(1, id);
+            cd.executeUpdate();  
         } 
         catch(Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception("\n[DELETAR] Erro:" + e.getMessage());
         }
         finally {
-            conexao.fecharConexao(con, ps, null);
+            conexao.fecharConexao(con, cd, null);
         }
     }
     
     public void mover(int idNota, String novaCategoria) throws Exception {
         Connection con = null;
-        PreparedStatement ps = null;
+        CallableStatement cd = null;
         Conexao conexao = new Conexao();
         
         try {
             con = conexao.abrirConexao();
 
-            String sql = "UPDATE notas SET categoria = ? WHERE id_nota = ?";
+            String sql = "{CALL pMoveNota(?, ?)}";
 
-            ps = con.prepareStatement(sql);
-            ps.setString(1, novaCategoria);
-            ps.setInt(2, idNota);
-            ps.executeUpdate();
+            cd = con.prepareCall(sql);
+            cd.setString(1, novaCategoria);
+            cd.setInt(2, idNota);
+            cd.executeUpdate();
         }
         catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception("\n[MOVER] Erro:" + e.getMessage());
         }
         finally {
-            conexao.fecharConexao(con, ps, null);
+            conexao.fecharConexao(con, cd, null);
         }
     }
     
     public void adicionarHistorico(int id, String categoriaNova) throws Exception {
         Connection con = null;
-        PreparedStatement ps = null;
+        CallableStatement cd = null;
         Conexao conexao = new Conexao();
         
         try {
             con = conexao.abrirConexao();
 
             // Ele insere no histórico copiando direto a nota selecionada
-            String sql = "INSERT INTO historico_notas "
-                       + "(id_usuario, id_nota, nome_antigo, descricao_antiga, categoria_antiga, prioridade_antiga, prazo_antigo, categoria_nova) "
-                       + "SELECT id_usuario, id_nota, nome, descricao, categoria, prioridade, prazo, ? "
-                       + "FROM notas WHERE id_nota = ?";
+            String sql = "{CALL pAdicionaHistorico(?, ?)}";
 
-            ps = con.prepareStatement(sql);
+            cd = con.prepareCall(sql);
 
             // Passa a categoria nova (se for só edição, passa a mesma que já tava)
-            ps.setString(1, categoriaNova); 
+            cd.setString(1, categoriaNova); 
+            
             // Passa o ID da nota que vai ser copiada
-            ps.setInt(2, id);
-            ps.executeUpdate();
+            cd.setInt(2, id);
+            cd.executeUpdate();
         } 
         catch (Exception e) {
-            throw new Exception("Erro ao adicionar no histórico: " + e.getMessage());
+            throw new Exception("\n[ADICIONAR HISTORICO] Erro: " + e.getMessage());
         } 
         finally {
-            conexao.fecharConexao(con, ps, null);
+            conexao.fecharConexao(con, cd, null);
         }
     }
     
     public void restaurar(HistoricoNota nota) throws Exception {
         Connection con = null;
-        PreparedStatement ps = null;
+        CallableStatement cd = null;
         Conexao conexao = new Conexao();
         
         try {
             con = conexao.abrirConexao();
             
-            String sql = "UPDATE notas SET nome = ?, descricao = ?, " 
-                       + "prioridade = ?, prazo = ?, categoria = ? " 
-                       + "WHERE id_nota = ?";
+            String sql = "{CALL pRestauraNota(?, ?, ?, ?, ?, ?)}";
 
-            ps = con.prepareStatement(sql);
-            ps.setString(1, nota.getNomeAntigo());
-            ps.setString(2, nota.getDescricaoAntiga());
-            ps.setInt(3, nota.getPrioridadeAntiga());
+            cd = con.prepareCall(sql);
+            cd.setString(1, nota.getNomeAntigo());
+            cd.setString(2, nota.getDescricaoAntiga());
+            cd.setInt(3, nota.getPrioridadeAntiga());
             
             if(nota.getPrazoAntigo() != null) {
                 // Transforma o LocalDateTime para o formato Timestamp do Banco
-                ps.setTimestamp(4, Timestamp.valueOf(nota.getPrazoAntigo()));  
+                cd.setTimestamp(4, Timestamp.valueOf(nota.getPrazoAntigo()));  
             }
             else {
                 // Prazo indefinido, manda um null do tipo Timestamp (já que o null não tem valor)
-                ps.setNull(4, java.sql.Types.TIMESTAMP);
+                cd.setNull(4, Types.TIMESTAMP);
             }
-            ps.setString(5, nota.getCategoriaAntiga());
+            cd.setString(5, nota.getCategoriaAntiga());
             
-            ps.setInt(6, nota.getIdNota());
-            ps.executeUpdate();
+            cd.setInt(6, nota.getIdNota());
+            cd.executeUpdate();
         }
         catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception("\n[RESTAURAR] Erro: " + e.getMessage());
         }
         finally {
-            conexao.fecharConexao(con, ps, null);
+            conexao.fecharConexao(con, cd, null);
         }
     }
 }
