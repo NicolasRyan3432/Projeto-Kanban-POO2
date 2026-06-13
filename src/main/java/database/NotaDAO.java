@@ -278,12 +278,12 @@ public class NotaDAO {
             String sql = "{CALL pMoveNota(?, ?)}";
 
             cd = con.prepareCall(sql);
-            cd.setString(1, novaCategoria);
-            cd.setInt(2, idNota);
+            cd.setInt(1, idNota);
+            cd.setString(2, novaCategoria);
             cd.executeUpdate();
         }
         catch (Exception e) {
-            throw new Exception("\n[MOVER] Erro:" + e.getMessage());
+            throw new Exception("\n[MOVER] Erro: " + e.getMessage());
         }
         finally {
             conexao.fecharConexao(con, cd, null);

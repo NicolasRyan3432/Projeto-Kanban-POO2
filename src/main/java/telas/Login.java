@@ -7,6 +7,7 @@ import java.awt.FontFormatException;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.Connection;
+import util.EstiloGlobal;
 
 public class Login extends javax.swing.JFrame {
     
@@ -271,6 +272,10 @@ public class Login extends javax.swing.JFrame {
 
     
     public static void main(String args[]) {
+        
+        // Aplica o tema para poder aparecer estilizado o JOptionPane
+        EstiloGlobal.aplicarTema();
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

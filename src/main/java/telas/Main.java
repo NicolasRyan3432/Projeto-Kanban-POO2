@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import telas.usuarios.ListarUsuarios;
+import util.EstiloGlobal;
 
 
 
@@ -45,9 +46,11 @@ public class Main extends javax.swing.JFrame {
         this.user = u;
         
         initComponents();  //Inicia os componentes
-
+        
         arrumarCoresMenuPopup();
+        arrumarCoresComboBox();
         carregarNotas();
+        
         
         //jLabel1.setText("Seja Bem-Vindo " + user.nome);
         
@@ -58,29 +61,6 @@ public class Main extends javax.swing.JFrame {
         painelAFScroll.getVerticalScrollBar().setUnitIncrement(20);
         painelSFScroll.getVerticalScrollBar().setUnitIncrement(20);
         painelCScroll.getVerticalScrollBar().setUnitIncrement(20);
-        
-        // Seta a cor escura no fundo do combobox
-        comboBoxOrdenacao.setBackground(new Color(51, 51, 51));
-        comboBoxOrdenacao.setForeground(new Color(230, 230, 230));
-        
-        // Seta a cor escura no menu que aparece
-        comboBoxOrdenacao.setRenderer(new javax.swing.DefaultListCellRenderer() {
-        @Override
-        public Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            
-            // Se o mouse estiver passando por cima dos items
-            if(isSelected) {
-                c.setBackground(new java.awt.Color(85, 85, 85)); 
-                c.setForeground(new Color(255, 255, 255));
-            } 
-            else {
-                c.setBackground(new Color(51, 51, 51)); 
-                c.setForeground(new Color(220, 220, 220));
-            }
-            return c;
-        }
-    });
         
     }
 
@@ -433,6 +413,8 @@ public class Main extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        EstiloGlobal.aplicarTema();
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -495,6 +477,31 @@ public class Main extends javax.swing.JFrame {
             item.setForeground(corTexto);
             item.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 15, 8, 15));
         }
+    }
+    
+    private void arrumarCoresComboBox() {
+        // Seta a cor escura no fundo do combobox
+        comboBoxOrdenacao.setBackground(new Color(51, 51, 51));
+        comboBoxOrdenacao.setForeground(new Color(230, 230, 230));
+        
+        // Seta a cor escura no menu que aparece
+        comboBoxOrdenacao.setRenderer(new javax.swing.DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                // Se o mouse estiver passando por cima dos items
+                if(isSelected) {
+                    c.setBackground(new java.awt.Color(85, 85, 85)); 
+                    c.setForeground(new Color(255, 255, 255));
+                } 
+                else {
+                    c.setBackground(new Color(51, 51, 51)); 
+                    c.setForeground(new Color(220, 220, 220));
+                }
+                return c;
+            }
+        });
     }
     
     private void ordenarLista(ArrayList<Nota> lista, int filtro) {
