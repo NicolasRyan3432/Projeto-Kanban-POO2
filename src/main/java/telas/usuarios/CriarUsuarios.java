@@ -15,8 +15,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CriarUsuarios.class.getName());
 
-
-    public CriarUsuarios(java.awt.Frame parent, boolean modal, int id) {
+    public CriarUsuarios(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.setTitle("Painel Kanban - Criar Usuários");
 
@@ -263,6 +262,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
     private void campoTextoLoginKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoTextoLoginKeyReleased
         // Limite de caracteres lá no banco
         int limite = 50;
+        int tamMinimo = 5;
         
         // Pega o quê o usuário digitou e vê o tamanho
         String texto = campoTextoLogin.getText();
@@ -282,6 +282,10 @@ public class CriarUsuarios extends javax.swing.JDialog {
             // Deixa com a cor vermelha
             txtContadorLogin.setForeground(new Color(209,30,51));
         }
+        else if(tamanho > 0 && tamanho < tamMinimo) {
+            // Deixa com a cor vermelha
+            txtContadorLogin.setForeground(new Color(209,30,51));
+        }
         else {
             // Se tiver dentro do limite, deixa na cor normal do texto
             txtContadorLogin.setForeground(new Color(200, 200, 200));
@@ -289,8 +293,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
     }//GEN-LAST:event_campoTextoLoginKeyReleased
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        // Não salva ainda pq n tem funçao
-        JOptionPane.showConfirmDialog(this, "Botão salvar clicado, pena q n temos salvar ainda :(");
+        cadastrar();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -311,6 +314,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
     private void campoTextoApelidoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoTextoApelidoKeyReleased
         // Limite de caracteres lá no banco
         int limite = 50;
+        int tamMinimo = 5;
         
         // Pega o quê o usuário digitou e vê o tamanho
         String texto = campoTextoApelido.getText();
@@ -327,6 +331,10 @@ public class CriarUsuarios extends javax.swing.JDialog {
             // Seta o contador como limite/limite = 50/50
             txtContadorApelido.setText(limite + " / " + limite);
             
+            // Deixa com a cor vermelha
+            txtContadorApelido.setForeground(new Color(209,30,51));
+        }
+        else if(tamanho > 0 && tamanho < tamMinimo) {
             // Deixa com a cor vermelha
             txtContadorApelido.setForeground(new Color(209,30,51));
         }
@@ -396,7 +404,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                CriarUsuarios dialog = new CriarUsuarios(new javax.swing.JFrame(), true, 0);
+                CriarUsuarios dialog = new CriarUsuarios(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -419,13 +427,19 @@ public class CriarUsuarios extends javax.swing.JDialog {
         
         // Caso o login ou o apelido esteja vazio
         if(txtLogin.equals("") || txtApelido.equals("")) {
-            JOptionPane.showMessageDialog(this, "O login e apelido não podem estar vazio!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "O login e/ou apelido não podem estar vazio!!", "Erro!", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
         // Caso o login ou o apelido seja menor do que 5 
         if(txtLogin.length() < 5 || txtApelido.length() < 5) {
-            JOptionPane.showMessageDialog(this, "O login e apelido precisam ter pelo menos 5 caracteres!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "O login e/ou apelido precisam ter pelo menos 5 caracteres!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Senha vazia
+        if(tamSenha == 0) {
+            JOptionPane.showMessageDialog(this, "A senha não pode ser vazia!!", "Erro!", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -437,7 +451,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
         
         // Caso as senhas não baterem
         if(senhasDiferentes) {
-            JOptionPane.showMessageDialog(this, "As senhas não são iguais!!!");
+            JOptionPane.showMessageDialog(this, "As senhas não são iguais!!!", "Erro!", JOptionPane.ERROR_MESSAGE);
             return;
         } 
 
