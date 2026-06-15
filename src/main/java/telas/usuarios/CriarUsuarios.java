@@ -1,9 +1,13 @@
 
 package telas.usuarios;
 
+import database.UsuarioDAO;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import javax.swing.JOptionPane;
+import modelo.Usuario;
+import util.Criptografia;
 import util.EstiloGlobal;
 
 
@@ -132,10 +136,10 @@ public class CriarUsuarios extends javax.swing.JDialog {
         txtPermissao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtPermissao.setForeground(new java.awt.Color(220, 220, 220));
 
-        comboBoxPermissao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Usuário", "Administrador" }));
         comboBoxPermissao.setBackground(new java.awt.Color(60, 60, 60));
         comboBoxPermissao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
         comboBoxPermissao.setForeground(new java.awt.Color(210, 210, 210));
+        comboBoxPermissao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Usuário", "Administrador" }));
         comboBoxPermissao.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 comboBoxPermissaoFocusGained(evt);
@@ -404,6 +408,89 @@ public class CriarUsuarios extends javax.swing.JDialog {
         });
     }
 
+    public void cadastrar() {
+        String txtLogin = campoTextoLogin.getText().trim();
+        String txtApelido = campoTextoApelido.getText().trim();
+        
+        int tamSenha = campoSenha.getPassword().length;
+        boolean senhasDiferentes = !Arrays.equals(campoSenha.getPassword(), campoConfirmarSenha.getPassword());
+        
+        // Guard Clausures: Retorna logo o resultado para evitar aninhamento
+        
+        // Caso o login ou o apelido esteja vazio
+        if(txtLogin.equals("") || txtApelido.equals("")) {
+            JOptionPane.showMessageDialog(this, "O login e apelido não podem estar vazio!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Caso o login ou o apelido seja menor do que 5 
+        if(txtLogin.length() < 5 || txtApelido.length() < 5) {
+            JOptionPane.showMessageDialog(this, "O login e apelido precisam ter pelo menos 5 caracteres!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Senha fraca
+        if(tamSenha < 8) {
+            JOptionPane.showMessageDialog(this, "Senha muito fraca, tem que ter oito caracteres ou mais!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Caso as senhas não baterem
+        if(senhasDiferentes) {
+            JOptionPane.showMessageDialog(this, "As senhas não são iguais!!!");
+            return;
+        } 
+
+        // Pega o texto do campo de texto
+        String login = campoTextoLogin.getText();
+        String apelido = campoTextoApelido.getText();
+
+        try {
+            // Cria o objeto do DAO, busca o login no DAO
+            UsuarioDAO dao = new UsuarioDAO();
+
+            // Se não existir, cria o objeto de Usuario e insere o login
+            if (dao.verificarCadastro(login)) {
+                JOptionPane.showMessageDialog(this, "Erro, esse usuário já está cadastrado!!");
+                return;
+            }
+
+            Usuario user = new Usuario();
+            user.setLogin(login);
+            user.setApelido(apelido);
+
+            // Criptografa a senha e se a senha não for vazia, bota a senha
+            Criptografia crip = new Criptografia();
+            String senha = crip.criptografar(campoSenha.getPassword());
+
+            if (senha == null) {
+                JOptionPane.showMessageDialog(this, "A senha não pode estar vazia!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            }
+
+            user.setSenha(senha);
+            
+            // Index == 0? Sim, Usuario; Não, Adminstrador
+            String permissao = comboBoxPermissao.getSelectedIndex() == 0 ? "U" : "A";
+
+            user.setPermissao(permissao);
+
+            // Cadastra o usuário
+            dao.cadastrar(user);
+
+            JOptionPane.showMessageDialog(this, "Usuário cadastrado com sucesso", "Sucesso!!", JOptionPane.INFORMATION_MESSAGE);
+            campoTextoLogin.setText("");
+            campoTextoApelido.setText("");
+            campoSenha.setText("");
+            campoConfirmarSenha.setText("");
+        } 
+
+        catch (Exception e) {
+            //Não conseguiu cadastrar
+            JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    
     
     private void arrumarComboBox() {
         // Pinta a "caixa" principal (quando ele está fechado)

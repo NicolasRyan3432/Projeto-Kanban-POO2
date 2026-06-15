@@ -73,8 +73,6 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="txtCriarUsuarios">
           <Properties>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Criar Usu&#xe1;rios"/>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="66" green="66" red="66" type="rgb"/>
             </Property>
@@ -84,6 +82,8 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="e6" green="e6" red="e6" type="rgb"/>
             </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="text" type="java.lang.String" value="Criar Usu&#xe1;rios"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -184,22 +184,22 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="txtLogin">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Coloque o seu Login:"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="FiraCode Nerd Font" size="18" style="0"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="dc" green="dc" red="dc" type="rgb"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Coloque o seu Login:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="campoTextoLogin">
           <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="FiraCode Nerd Font" size="18" style="0"/>
-            </Property>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="80" green="80" id="gray" palette="1" red="80" type="palette"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="FiraCode Nerd Font" size="18" style="0"/>
             </Property>
           </Properties>
           <Events>
@@ -208,24 +208,24 @@
         </Component>
         <Component class="javax.swing.JLabel" name="txtContadorLogin">
           <Properties>
-            <Property name="text" type="java.lang.String" value="0/50"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="FiraCode Nerd Font" size="14" style="0"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="c8" green="c8" red="c8" type="rgb"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="0/50"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="txtApelido">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Coloque o seu apelido:"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="FiraCode Nerd Font" size="18" style="0"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="dc" green="dc" red="dc" type="rgb"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Coloque o seu apelido:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="campoTextoApelido">
@@ -254,13 +254,13 @@
         </Component>
         <Component class="javax.swing.JLabel" name="txtSenha">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Coloque a sua senha:"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="FiraCode Nerd Font" size="18" style="0"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="dc" green="dc" red="dc" type="rgb"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Coloque a sua senha:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JPasswordField" name="campoSenha">
@@ -296,23 +296,17 @@
         </Component>
         <Component class="javax.swing.JLabel" name="txtPermissao">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Selecione a sua permiss&#xe3;o:"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="FiraCode Nerd Font" size="18" style="0"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="dc" green="dc" red="dc" type="rgb"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Selecione a sua permiss&#xe3;o:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="comboBoxPermissao">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value="Usu&#xe1;rio"/>
-                <StringItem index="1" value="Administrador"/>
-              </StringArray>
-            </Property>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="3c" green="3c" red="3c" type="rgb"/>
             </Property>
@@ -321,6 +315,12 @@
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="d2" green="d2" red="d2" type="rgb"/>
+            </Property>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="2">
+                <StringItem index="0" value="Usu&#xe1;rio"/>
+                <StringItem index="1" value="Administrador"/>
+              </StringArray>
             </Property>
           </Properties>
           <Events>
@@ -333,7 +333,6 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnSalvar">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Salvar"/>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="0" green="6e" red="0" type="rgb"/>
             </Property>
@@ -343,6 +342,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="f0" green="f0" red="f0" type="rgb"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Salvar"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalvarActionPerformed"/>
@@ -350,7 +350,6 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnCancelar">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Cancelar"/>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="28" green="28" red="28" type="rgb"/>
             </Property>
@@ -360,6 +359,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="e6" green="e6" red="e6" type="rgb"/>
             </Property>
+            <Property name="text" type="java.lang.String" value="Cancelar"/>
           </Properties>
           <Events>
             <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="btnCancelarFocusGained"/>
