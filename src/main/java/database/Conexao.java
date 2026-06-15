@@ -53,6 +53,7 @@ public class Conexao {
         
     }
     
+    // TODO: Deletar esse método após refatorar o DAO da Nota que ainda tem o finally
     public void fecharConexao(Connection con, Statement stmt, ResultSet rs) throws Exception {
         try {
             if(rs != null) {
