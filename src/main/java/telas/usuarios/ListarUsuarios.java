@@ -1,9 +1,11 @@
 
 package telas.usuarios;
 
+import database.UsuarioDAO;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -17,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import modelo.Usuario;
 
 
 public class ListarUsuarios extends javax.swing.JDialog {
@@ -236,6 +239,141 @@ public class ListarUsuarios extends javax.swing.JDialog {
         });
     }
     
+    private void inicializarTabela() {
+        // Força o modelo padrão de tabela a não deixar modificar o conteúdo da linha
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override 
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
+        
+        // Adiciona as colunas no modelo
+        modelo.addColumn("Id");
+        modelo.addColumn("Nome");
+        modelo.addColumn("Login");
+        modelo.addColumn("Permissão");
+        
+        try {
+            UsuarioDAO dao = new UsuarioDAO();
+            ArrayList<Usuario> listaUsuarios = dao.listar();
+            String permissao = "Usuario";
+            
+            for(Usuario u : listaUsuarios) {
+                if (u.getPermissao().equals("A")) {
+                    permissao = "Administrador";
+                }
+                
+                if(permissao.equals("Administrador")) {
+                    modelo.insertRow(0, new Object[] {
+                        u.getId(),
+                        u.getApelido(),
+                        u.getLogin(),
+                        permissao  
+                    });
+                }
+                else {
+                    modelo.addRow(new Object[]{
+                        u.getId(),
+                        u.getApelido(),
+                        u.getLogin(),
+                        permissao
+                    });
+                }
+            }
+        } 
+        catch(Exception e) {
+            JOptionPane.showMessageDialog(this,"Erro: " + e.getMessage());
+        }
+        
+        // Seta o modelo na tabela
+        tabela.setModel(modelo);
+        RowSorter<TableModel> ordenador = new TableRowSorter<>(modelo);
+        tabela.setRowSorter(ordenador);
+    }
+    
+    private void excluirUsuario() {
+        int posicaoLinha = tabela.getSelectedRow();
+
+        if(posicaoLinha < 0) {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha!!", "Aviso!", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Pega a linha e converte o index pra um modelo
+        int posicaoModelo = tabela.convertRowIndexToModel(posicaoLinha);
+
+        // Depois, pega o modelo da tabela, o valor da posição do modelo 
+        // e na linha que tá a posição e transforma tudo em string
+        String login = tabela.getModel().getValueAt(posicaoModelo, 1).toString();
+
+        // Pega a resposta, se for sim (0), deleta aquela linha
+        int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente deletar a linha " + login + "?", 
+                "Confirmar Remoção...", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (resposta == JOptionPane.YES_OPTION) {
+            int id = Integer.parseInt(tabela.getModel().getValueAt(posicaoModelo, 0).toString());
+
+            try {
+                UsuarioDAO dao = new UsuarioDAO();                    
+                //dao.remover(id);
+                
+                DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
+                modelo.removeRow(posicaoModelo);
+
+
+                JOptionPane.showMessageDialog(this, "Login removido com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+            } 
+            catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    private void pesquisar() {
+        // Pega o modelo da tabela
+        DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
+        
+        //Pega e cria um filtro a partir do modelo
+        TableRowSorter filtro = new TableRowSorter(modelo);
+        
+        //Pega o texto do campo
+        String termoBusca = campoPesquisa.getText();
+        
+        // Se o texto for igual a zero, ele não passa o filtro, se não, pega e pesquisa nas tabelas se tem o texto
+        if (termoBusca.length() == 0) {
+            filtro.setRowFilter(null);
+        } 
+        else {
+            filtro.setRowFilter(RowFilter.regexFilter("(?i)" + termoBusca));
+        }
+        tabela.setRowSorter(filtro);
+    }
+
+    private void configurarCampoPesquisa() {
+        campoPesquisa.getDocument().addDocumentListener(
+                new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                pesquisar();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                pesquisar();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                pesquisar();
+            }
+        }
+        );
+    }
+    
     private void arrumarTabela() {
         // Cria os renderizadores (é nele que a gente coloca as cores de fundo da tabela)
         DefaultTableCellRenderer renderizador = new DefaultTableCellRenderer();
@@ -315,127 +453,6 @@ public class ListarUsuarios extends javax.swing.JDialog {
         // Força a aparecer as linhas do grid
         tabela.setGridColor(new Color(150, 150, 150));
         tabela.setShowGrid(true);
-    }
-    
-    private void inicializarTabela() {
-        // Força o modelo padrão de tabela a não deixar modificar o conteúdo da linha
-        DefaultTableModel modelo = new DefaultTableModel() {
-            @Override 
-            public boolean isCellEditable(int row, int col) {
-                return false;
-            }
-        };
-        
-        // Adiciona as colunas no modelo
-        modelo.addColumn("Id");
-        modelo.addColumn("Nome");
-        modelo.addColumn("Login");
-        modelo.addColumn("Permissão");
-        
-        // Linhas de teste, serão removidas após a criação do DAO do Usuário
-        modelo.addRow(new Object[] {
-            1,
-            "JOAO",
-            "rola",
-            "Administrador"
-        });
-        modelo.addRow(new Object[] {
-            1,
-            "Joao",
-            "rola",
-            "Usuário"
-        });
-        modelo.addRow(new Object[] {
-            1,
-            "jo3ao",
-            "rola"
-        });
-        
-        // Seta o modelo na tabela
-        tabela.setModel(modelo);
-        RowSorter<TableModel> ordenador = new TableRowSorter<>(modelo);
-        tabela.setRowSorter(ordenador);
-    }
-    
-    private void pesquisar() {
-        // Pega o modelo da tabela
-        DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
-        
-        //Pega e cria um filtro a partir do modelo
-        TableRowSorter filtro = new TableRowSorter(modelo);
-        
-        //Pega o texto do campo
-        String termoBusca = campoPesquisa.getText();
-        
-        // Se o texto for igual a zero, ele não passa o filtro, se não, pega e pesquisa nas tabelas se tem o texto
-        if (termoBusca.length() == 0) {
-            filtro.setRowFilter(null);
-        } 
-        else {
-            filtro.setRowFilter(RowFilter.regexFilter("(?i)" + termoBusca));
-        }
-        tabela.setRowSorter(filtro);
-    }
-
-    private void configurarCampoPesquisa() {
-        campoPesquisa.getDocument().addDocumentListener(
-                new DocumentListener() {
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                pesquisar();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                pesquisar();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                pesquisar();
-            }
-        }
-        );
-    }
-    
-    private void excluirUsuario() {
-        int posicaoLinha = tabela.getSelectedRow();
-
-        if (posicaoLinha >= 0) {
-            // Pega a linha e converte o index pra um modelo
-            int posicaoModelo = tabela.convertRowIndexToModel(posicaoLinha);
-            
-            // Depois, pega o modelo da tabela, o valor da posição do modelo 
-            // e na linha que tá a posição e transforma tudo em string
-            String login = tabela.getModel().getValueAt(posicaoModelo, 1).toString();
-            
-            // Pega a resposta, se for sim (0), deleta aquela linha
-            int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente deletar a linha " + login + "?", 
-                    "Confirmar Remoção...", 
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE);
-
-            if (resposta == JOptionPane.YES_OPTION) {
-                // int id = Integer.parseInt(tabela.getModel().getValueAt(posicaoModelo, 0).toString());
-
-                try {
-                    // UsuarioDAO dao = new UsuarioDAO();                    
-                    // dao.Remover(id);
-                    DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
-                    modelo.removeRow(posicaoModelo);
-                    
-                    
-                    JOptionPane.showMessageDialog(this, "Login removido com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
-                } 
-                catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } 
-        else {
-            JOptionPane.showMessageDialog(this, "Selecione uma linha!!");
-        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
