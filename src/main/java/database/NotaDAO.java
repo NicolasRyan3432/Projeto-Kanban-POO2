@@ -7,35 +7,50 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.time.LocalDateTime;
 
 
-/* 
-               ***------------------- MUDANÇA ----------------------***
-    Eu criei uma Procedure que entra com os dados da nota na tabela diretamente
-    Suas vantagens sobre como tava antes (SELECT/INSERT plano): 
-
-        1. Economia no Tráfego de Rede: 
-                O Java que "executa" todo o processo, caso fosse um SELECT mais complexo (usando CTE, loocd...) 
-                ele teria que pedir para o banco enviar os dados para ele, 
-                ele faria o que teria de ser feito e só assim o JDBC enviaria o resultado para o Banco.
-
-        2. Bloqueio de Permissões: 
-                O Java é permitido somente a usar aquela procedure, ou seja,   
-                ele não precisa de ter permissões de poder modificar 
-                todas as tabelas, e sim de somente chamar aquela procedure
-                
-        3. Centralização da lógica: 
-                Caso fosse adicionado mais uma coluna na tabela de Notas, 
-                o unico lugar que será modificado (caso precise) é na procedure chamada, 
-                evitando assim de que o programa pare de funcionar
-                
-        4. Pré-compilação e Cache: 
-                Ao criar a procedure, o MYSQL (ou qualquer SGDB usado) já analisa a sintaxe, 
-                analisa o plano de execução e guarda tudo isso na memória RAM.   
-               ***--------------------------------------------------------***
-        */
+/** =============================================================================
+*   ++========================== MUDANÇA ARQUITETURAL =========================++
+*   =============================================================================
+* Substituição do SELECT/INSERT tradicional (Raw SQL) por uma Stored Procedure 
+* para inserção direta dos dados da nota. 
+* 
+* Vantagens dessa abordagem:
+*   1. Economia no Tráfego de Rede: 
+*       O Java que "executa" todo o processo, caso fosse um SELECT mais complexo (usando CTE, loop...) 
+*       ele teria que pedir para o banco enviar os dados para ele, 
+*       ele faria o que teria de ser feito e só assim o JDBC enviaria o resultado para o Banco.
+*
+*   2. Bloqueio de Permissões: 
+*        O Java é permitido somente a usar aquela procedure, ou seja,   
+*        ele não precisa de ter permissões de poder modificar 
+*       todas as tabelas, e sim de somente chamar aquela procedure
+*                
+*   3. Centralização da lógica: 
+*       Caso fosse adicionado mais uma coluna na tabela de Notas, 
+*       o unico lugar que será modificado (caso precise) é na procedure chamada, 
+*       evitando assim de que o programa pare de funcionar
+*                
+*   4. Pré-compilação e Cache: 
+*       Ao criar a procedure, o MYSQL (ou qualquer SGDB usado) já analisa a sintaxe, 
+*       analisa o plano de execução e guarda tudo isso na memória RAM.   
+*
+*   =============================================================================
+*   ++==================== REFATORAÇÃO DE CONEXÕES (TRY) ======================++
+*   =============================================================================
+*
+* Substituição do padrão antigo de blocos try-catch-finally (Java 6) pelo 
+* moderno TRY-WITH-RESOURCES (Java 7+).
+* 
+* Como as classes Connection, PreparedStatement, CallableStatement e ResultSet 
+* implementam a interface AutoCloseable nativamente, o próprio Java se 
+* encarrega de fechar as conexões automaticamente ao fim da execução (ou em 
+* caso de erro). Isso evita vazamentos de memória (Connection Leaks) e deixa 
+* o código muito mais enxuto, limpo e seguro.
+*               
+* ++===========================================================================++
+*/
 
 public class NotaDAO {
     public void criar(Nota nota) throws Exception {
