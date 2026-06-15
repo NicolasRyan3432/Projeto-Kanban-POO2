@@ -51,7 +51,7 @@ import java.util.ArrayList;
 public class UsuarioDAO {
     public void cadastrar(Usuario user) throws Exception {
         if (user == null) {
-            throw new Exception("[CADASTRAR] Erro: Dados do usuário estão vazios!!");
+            throw new Exception("\n[CADASTRAR] Erro: Dados do usuário estão vazios!!");
         }
         
         Conexao conexao = new Conexao();
@@ -96,6 +96,24 @@ public class UsuarioDAO {
         } 
         catch (Exception e) {
             throw new Exception("[LISTAR] Erro: " + e.getMessage());
+        }
+    }
+    
+    public boolean verificarCadastro(String login) throws Exception {
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pVerificaCadastro(?)}";
+        
+        try (Connection con = conexao.abrirConexao();
+            CallableStatement cs = con.prepareCall(sql);
+            ResultSet rs = cs.executeQuery()) {
+            
+            cs.setString(1, login);
+            
+            // Se existir, retorna 1 = True, se não, false
+            return rs.next();
+        } 
+        catch (Exception e) {
+            throw new Exception("\n[VERIFICAR CADASTRO] Erro: " + e.getMessage());
         }
     }
 }
