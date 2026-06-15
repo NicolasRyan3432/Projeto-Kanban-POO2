@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.LocalDateTime;
 
 
 /* 
@@ -58,15 +59,10 @@ public class NotaDAO {
             cs.setString(2, nota.getDescricao());
             cs.setInt(3, nota.getPrioridade());
             
-            if(nota.getPrazo() != null) {
-                // Transforma o LocalDateTime para o formato Timestamp do Banco
-                cs.setTimestamp(4, Timestamp.valueOf(nota.getPrazo()));  
-            }
-            else {
-                // Prazo indefinido, manda um null do tipo Timestamp (já que o null não tem valor)
-                cs.setNull(4, Types.TIMESTAMP);
-            }
+            LocalDateTime prazo = nota.getPrazo();
+            Timestamp prazoB = (prazo != null) ? Timestamp.valueOf(prazo) : null;
             
+            cs.setTimestamp(4, prazoB);
             cs.setInt(5, nota.getIdUsuario());
             
             // Joga os dados no Banco
@@ -102,38 +98,39 @@ public class NotaDAO {
             rs = cs.executeQuery(sql);
 
             ArrayList<Nota> listaNotas = new ArrayList<>();
-
-            // Vai de linha a linha e verifica se tem login igual ao inserido
+            
+            
             while (rs.next()) {
-                Nota nota = new Nota();
-                nota.setId(rs.getInt("id_nota"));
-                nota.setNome(rs.getString("nome"));
-                nota.setDescricao(rs.getString("descricao"));
-                nota.setCategoria(rs.getString("categoria"));
-                nota.setPrioridade(rs.getInt("prioridade"));
+                /*
+                    Ao invés de passar pelos sets, a gente utiliza o construtor com parâmetros,
+                    o que deixa muito mais enxuto a função, além de utilizar o operador ternário.
                 
-                // Cria uma variável que vai receber o valor como timestamp do BD
-                Timestamp data = rs.getTimestamp("data_criacao");
-                if(data != null) {
-                    // Converte de volta para LocalDateTime se não for nulo
-                    nota.setData(data.toLocalDateTime());
-                }
-                else {
-                    nota.setData(null);
-                }
+                    Operador ternário: a data do banco não tá vazia?
+                    Não -> Insere o valor convertido para LocalDateTime e insere
+                    na data
+                    Sim -> Insere o valor nulo na data
+                    
+                    Sintaxe: valor = (condição) ? Verdadeiro : Falso
+                */
                 
-                // Mesma coisa aqui
-                Timestamp prazo = rs.getTimestamp("prazo");
-                if(prazo != null) {
-                    // Converte de volta para LocalDateTime se não for nulo
-                    nota.setPrazo(prazo.toLocalDateTime());
-                }
-                else {
-                    nota.setPrazo(null); 
-                }
+                Timestamp dataB = rs.getTimestamp("data_criacao");
+                Timestamp prazoB = rs.getTimestamp("prazo");
                 
-                nota.setIdUsuario(rs.getInt("id_usuario"));
-                nota.setNomeAutor(rs.getString("nome_autor"));
+                
+                LocalDateTime data = (dataB != null) ? dataB.toLocalDateTime() : null;
+                LocalDateTime prazo = (prazoB != null) ? prazoB.toLocalDateTime() : null;
+                
+                Nota nota = new Nota (
+                    rs.getInt("id_nota"),
+                    rs.getInt("prioridade"),
+                    rs.getString("nome"),
+                    rs.getString("nome_autor"),
+                    rs.getString("descricao"),
+                    rs.getString("categoria"),
+                    null,
+                    data,
+                    prazo     
+                );
                 
                 // Adiciona a nota na nossa lista
                 listaNotas.add(nota);
@@ -171,35 +168,23 @@ public class NotaDAO {
             
             // Vai de linha a linha e verifica se tem login igual ao inserido
             while (rs.next()) {
-                HistoricoNota nota = new HistoricoNota();
-                nota.setIdHistorico(rs.getInt("id_historico"));
-                nota.setIdUsuario(rs.getInt("id_usuario"));
-                nota.setIdNota(rs.getInt("id_nota"));
-  
-                // Pega direto pq aqui a data n é vazia
-                nota.setDataAlteracao(rs.getTimestamp("data_alteracao").toLocalDateTime());
+                Timestamp prazoB = rs.getTimestamp("prazo_antigo");
+                LocalDateTime prazo = (prazoB != null) ? prazoB.toLocalDateTime() : null;
                 
-                nota.setNomeAntigo(rs.getString("nome_antigo"));
-                nota.setDescricaoAntiga(rs.getString("descricao_antiga"));
-                nota.setCategoriaAntiga(rs.getString("categoria_antiga"));
-                nota.setCategoriaNova(rs.getString("categoria_nova"));
-                nota.setPrioridadeAntiga(rs.getInt("prioridade_antiga"));
-                
-                
-                // O prazo fica assim porque pode ser que esteja indefinido (null)
-                Timestamp prazo = rs.getTimestamp("prazo_antigo");
-                if(prazo != null) {
-                    // Converte de volta para LocalDateTime se não for nulo
-                    nota.setPrazoAntigo(prazo.toLocalDateTime());
-                }
-                else {
-                    nota.setPrazoAntigo(null); 
-                }
-                
-                // Pega o nome do autor (tinha esquecido kkk)
-                nota.setAutor(rs.getString("nome_autor"));
-                
-                // Adiciona a nota na nossa lista
+                HistoricoNota nota = new HistoricoNota (
+                        rs.getInt("id_historico"),
+                        rs.getInt("id_usuario"),
+                        rs.getInt("id_nota"),
+                        rs.getInt("prioridade_antiga"),
+                        rs.getString("nome_antigo"),
+                        rs.getString("nome_autor"),
+                        rs.getString("descricao_antiga"),
+                        rs.getString("categoria_antiga"),
+                        rs.getString("categoria_nova"),
+                        rs.getTimestamp("data_alteracao").toLocalDateTime(),
+                        prazo
+                );
+ 
                 listaNotas.add(nota);
             }
             return listaNotas;
@@ -226,15 +211,10 @@ public class NotaDAO {
             cs.setString(2, nota.getDescricao());
             cs.setInt(3, nota.getPrioridade());
             
-            if(nota.getPrazo() != null) {
-                // Transforma o LocalDateTime para o formato Timestamp do Banco
-                cs.setTimestamp(4, Timestamp.valueOf(nota.getPrazo()));  
-            }
-            else {
-                // Prazo indefinido, manda um null do tipo Timestamp (já que o null não tem valor)
-                cs.setNull(4, Types.TIMESTAMP);
-            }
-            
+            LocalDateTime prazo = nota.getPrazo();
+            Timestamp prazoB = (prazo != null) ? Timestamp.valueOf(prazo) : null;
+          
+            cs.setTimestamp(4, prazoB);
             cs.setInt(5, nota.getId());
             cs.executeUpdate();
         }
@@ -333,14 +313,11 @@ public class NotaDAO {
             cd.setString(2, nota.getDescricaoAntiga());
             cd.setInt(3, nota.getPrioridadeAntiga());
             
-            if(nota.getPrazoAntigo() != null) {
-                // Transforma o LocalDateTime para o formato Timestamp do Banco
-                cd.setTimestamp(4, Timestamp.valueOf(nota.getPrazoAntigo()));  
-            }
-            else {
-                // Prazo indefinido, manda um null do tipo Timestamp (já que o null não tem valor)
-                cd.setNull(4, Types.TIMESTAMP);
-            }
+            LocalDateTime prazo = nota.getPrazoAntigo();
+            Timestamp prazoB = (prazo != null) ? Timestamp.valueOf(prazo) : null;
+            
+            
+            cd.setTimestamp(4, prazoB);  
             cd.setString(5, nota.getCategoriaAntiga());
             
             cd.setInt(6, nota.getIdNota());
