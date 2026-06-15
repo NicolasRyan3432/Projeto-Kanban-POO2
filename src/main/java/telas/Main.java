@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import telas.usuarios.CriarUsuarios;
 import telas.usuarios.ListarUsuarios;
 import util.EstiloGlobal;
 
@@ -125,6 +126,7 @@ public class Main extends javax.swing.JFrame {
         itemCriar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         itemCriar.setForeground(java.awt.Color.lightGray);
         itemCriar.setText("Criar Usuários");
+        itemCriar.addActionListener(this::itemCriarActionPerformed);
         menuGerenciar.add(itemCriar);
 
         menuPopup.add(menuGerenciar);
@@ -397,17 +399,31 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_comboBoxOrdenacaoActionPerformed
 
     private void itemListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemListarActionPerformed
-        // Instancia a classe 
-        ListarUsuarios tela = new ListarUsuarios(this, true);
-        
-        // Coloca ela para aparecer no centro da tela atual
-        tela.setLocationRelativeTo(this);
-        
-        // Deixa visível
-        tela.setVisible(true);
-        
-        // Talvez terá que recarregar os usuários
+        try {
+            // Instancia a classe 
+            ListarUsuarios tela = new ListarUsuarios(this, true);
+
+            // Coloca ela para aparecer no centro da tela atual
+            tela.setLocationRelativeTo(this);
+
+            // Deixa visível
+            tela.setVisible(true);
+        }
+        catch(Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar a tela de ListarUsuarios: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_itemListarActionPerformed
+
+    private void itemCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCriarActionPerformed
+        try {
+            CriarUsuarios tela = new CriarUsuarios(this, true);
+            tela.setLocationRelativeTo(this);
+            tela.setVisible(true);
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this,"Erro ao carregar a tela de CriarUsuarios: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_itemCriarActionPerformed
 
     /**
      * @param args the command line arguments
