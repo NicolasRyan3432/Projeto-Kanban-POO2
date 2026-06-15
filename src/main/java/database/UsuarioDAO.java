@@ -74,7 +74,7 @@ public class UsuarioDAO {
     public ArrayList<Usuario> listar() throws Exception {
         Conexao conexao = new Conexao();
         
-        String sql = "{CALL pListaUsuarios}";
+        String sql = "{CALL pListaUsuarios()}";
         try (Connection con = conexao.abrirConexao();
              CallableStatement cs = con.prepareCall(sql);
              ResultSet rs = cs.executeQuery()) {
@@ -103,14 +103,16 @@ public class UsuarioDAO {
         Conexao conexao = new Conexao();
         String sql = "{CALL pVerificaCadastro(?)}";
         
-        try (Connection con = conexao.abrirConexao();
-            CallableStatement cs = con.prepareCall(sql);
-            ResultSet rs = cs.executeQuery()) {
+        // Como aqui a procedure precisa de parâmetros, a gente tem que
+        // dividir em dois try por conta q ele executa sem ter inserido 
+        // os parâmetros e ai dá erro
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cs = con.prepareCall(sql)) {
             
             cs.setString(1, login);
-            
-            // Se existir, retorna 1 = True, se não, false
-            return rs.next();
+            try(ResultSet rs = cs.executeQuery()) {
+                return rs.next();
+            }
         } 
         catch (Exception e) {
             throw new Exception("\n[VERIFICAR CADASTRO] Erro: " + e.getMessage());
