@@ -72,6 +72,36 @@ public class UsuarioDAO {
         }
     }
     
+    public void modificar(Usuario user) throws Exception {
+        if(user == null) {
+            throw new Exception("\n[MODIFICAR] Usuário inválido!");
+        }
+        
+           
+        // Se a senha tiver vazia (null), modo = 0 (não quer modificar)
+        int modo = (user.getSenha() == null) ? 0 : 1;
+        
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pModificaUsuario(?, ?, ?, ?, ?, ?)}";
+        
+        try(Connection con = conexao.abrirConexao();
+           CallableStatement cs = con.prepareCall(sql)) {
+            
+            // Insere as informações nos parâmetros
+            cs.setInt(1, modo);
+            cs.setInt(2, user.getId());
+            cs.setString(3, user.getLogin());
+            cs.setString(4, user.getSenha());
+            cs.setString(5, user.getApelido());
+            cs.setInt(6, user.getPermissao());
+            cs.executeUpdate();
+        } 
+        catch (Exception e) {
+            throw new Exception("\n[MODIFICAR] Erro: " + e.getMessage());
+        }
+ 
+    }
+    
     public ArrayList<Usuario> listar() throws Exception {
         Conexao conexao = new Conexao();
         
