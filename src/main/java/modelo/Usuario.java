@@ -4,18 +4,20 @@ package modelo;
 public class Usuario {
     private int id;
     private String login;
-    private String apelido;
-    private String permissao;
     private String senha;
+    private String apelido;
+    private int permissao;
+    private int ativo;
     
     public Usuario() {};
     
-    public Usuario(int id, String login, String apelido, String permissao, String senha) {
+    public Usuario(int id, String login, String senha, String apelido, int permissao, int ativo) {
         this.id = id;
         this.login = login;
+        this.senha = senha;
         this.apelido = apelido;
         this.permissao = permissao;
-        this.senha = senha;
+        this.ativo = ativo;
     }
 
     public int getId() {
@@ -24,6 +26,14 @@ public class Usuario {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(int ativo) {
+        this.ativo = ativo;
     }
 
     public String getLogin() {
@@ -42,11 +52,11 @@ public class Usuario {
         this.apelido = apelido;
     }
 
-    public String getPermissao() {
+    public int getPermissao() {
         return permissao;
     }
 
-    public void setPermissao(String permissao) {
+    public void setPermissao(int permissao) {
         this.permissao = permissao;
     }
 
