@@ -4,6 +4,7 @@ package telas.usuarios;
 import database.UsuarioDAO;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.awt.Frame;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 import modelo.Usuario;
@@ -14,16 +15,30 @@ import util.EstiloGlobal;
 public class CriarUsuarios extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CriarUsuarios.class.getName());
-
-    public CriarUsuarios(java.awt.Frame parent, boolean modal) {
+    
+    private Usuario usuarioEdicao = null;
+    private final int tipoFuncao; 
+            
+    public CriarUsuarios(Frame parent, boolean modal) {
         super(parent, modal);
         this.setTitle("Painel Kanban - Criar Usuários");
-
+        this.tipoFuncao = 0;
+        
         initComponents();
         arrumarComboBox();
 
     }
     
+    public CriarUsuarios(Frame parent, boolean modal, Usuario user) {
+        super(parent, modal);
+        this.setTitle("Painel Kanban - Modificar Usuários");
+        this.usuarioEdicao = user;
+        this.tipoFuncao = 1;
+        
+        initComponents();
+        arrumarComboBox();
+        arrumarTextoMod();
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -57,11 +72,11 @@ public class CriarUsuarios extends javax.swing.JDialog {
         painelTopo.setBackground(new java.awt.Color(130, 130, 130));
         painelTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        txtCriarUsuarios.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtCriarUsuarios.setText("Criar Usuários");
         txtCriarUsuarios.setBackground(new java.awt.Color(102, 102, 102));
         txtCriarUsuarios.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
         txtCriarUsuarios.setForeground(new java.awt.Color(230, 230, 230));
+        txtCriarUsuarios.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtCriarUsuarios.setText("Criar Usuários");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
         painelTopo.setLayout(painelTopoLayout);
@@ -85,25 +100,25 @@ public class CriarUsuarios extends javax.swing.JDialog {
         painelDados.setBackground(new java.awt.Color(51, 51, 51));
         painelDados.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        txtLogin.setText("Coloque o seu Login:");
         txtLogin.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtLogin.setForeground(new java.awt.Color(220, 220, 220));
+        txtLogin.setText("Coloque o seu Login:");
 
-        campoTextoLogin.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         campoTextoLogin.setBackground(java.awt.Color.gray);
+        campoTextoLogin.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         campoTextoLogin.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 campoTextoLoginKeyReleased(evt);
             }
         });
 
-        txtContadorLogin.setText("0/50");
         txtContadorLogin.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 14)); // NOI18N
         txtContadorLogin.setForeground(new java.awt.Color(200, 200, 200));
+        txtContadorLogin.setText("0/50");
 
-        txtApelido.setText("Coloque o seu apelido:");
         txtApelido.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtApelido.setForeground(new java.awt.Color(220, 220, 220));
+        txtApelido.setText("Coloque o seu apelido:");
 
         campoTextoApelido.setBackground(java.awt.Color.gray);
         campoTextoApelido.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -117,9 +132,9 @@ public class CriarUsuarios extends javax.swing.JDialog {
         txtContadorApelido.setForeground(new java.awt.Color(200, 200, 200));
         txtContadorApelido.setText("0/50");
 
-        txtSenha.setText("Coloque a sua senha:");
         txtSenha.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtSenha.setForeground(new java.awt.Color(220, 220, 220));
+        txtSenha.setText("Coloque a sua senha:");
 
         campoSenha.setBackground(java.awt.Color.gray);
         campoSenha.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -131,9 +146,9 @@ public class CriarUsuarios extends javax.swing.JDialog {
         campoConfirmarSenha.setBackground(java.awt.Color.gray);
         campoConfirmarSenha.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
 
-        txtPermissao.setText("Selecione a sua permissão:");
         txtPermissao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtPermissao.setForeground(new java.awt.Color(220, 220, 220));
+        txtPermissao.setText("Selecione a sua permissão:");
 
         comboBoxPermissao.setBackground(new java.awt.Color(60, 60, 60));
         comboBoxPermissao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
@@ -148,16 +163,16 @@ public class CriarUsuarios extends javax.swing.JDialog {
             }
         });
 
-        btnSalvar.setText("Salvar");
         btnSalvar.setBackground(new java.awt.Color(0, 110, 0));
         btnSalvar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnSalvar.setForeground(new java.awt.Color(240, 240, 240));
+        btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(this::btnSalvarActionPerformed);
 
-        btnCancelar.setText("Cancelar");
         btnCancelar.setBackground(new java.awt.Color(40, 40, 40));
         btnCancelar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnCancelar.setForeground(new java.awt.Color(230, 230, 230));
+        btnCancelar.setText("Cancelar");
         btnCancelar.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 btnCancelarFocusGained(evt);
@@ -293,7 +308,12 @@ public class CriarUsuarios extends javax.swing.JDialog {
     }//GEN-LAST:event_campoTextoLoginKeyReleased
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        cadastrar();
+        if(tipoFuncao == 1) {
+            modificar(usuarioEdicao);
+        }
+        else {
+            cadastrar();
+        }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -416,9 +436,9 @@ public class CriarUsuarios extends javax.swing.JDialog {
         });
     }
 
-    public void cadastrar() {
-        String txtLogin = campoTextoLogin.getText().trim();
-        String txtApelido = campoTextoApelido.getText().trim();
+    private void cadastrar() {
+        String strLogin = campoTextoLogin.getText().trim();
+        String strApelido = campoTextoApelido.getText().trim();
         
         int tamSenha = campoSenha.getPassword().length;
         boolean senhasDiferentes = !Arrays.equals(campoSenha.getPassword(), campoConfirmarSenha.getPassword());
@@ -426,13 +446,13 @@ public class CriarUsuarios extends javax.swing.JDialog {
         // Guard Clausures: Retorna logo o resultado para evitar aninhamento
         
         // Caso o login ou o apelido esteja vazio
-        if(txtLogin.equals("") || txtApelido.equals("")) {
+        if(strLogin.equals("") || strApelido.equals("")) {
             JOptionPane.showMessageDialog(this, "O login e/ou apelido não podem estar vazio!!", "Erro!", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
         // Caso o login ou o apelido seja menor do que 5 
-        if(txtLogin.length() < 5 || txtApelido.length() < 5) {
+        if(strLogin.length() < 5 || strApelido.length() < 5) {
             JOptionPane.showMessageDialog(this, "O login e/ou apelido precisam ter pelo menos 5 caracteres!!", "Erro!", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -477,14 +497,10 @@ public class CriarUsuarios extends javax.swing.JDialog {
             Criptografia crip = new Criptografia();
             String senha = crip.criptografar(campoSenha.getPassword());
 
-            if (senha == null) {
-                JOptionPane.showMessageDialog(this, "A senha não pode estar vazia!!", "Erro!", JOptionPane.ERROR_MESSAGE);
-            }
-
             user.setSenha(senha);
             
             // Index == 0? Sim, Usuario; Não, Adminstrador
-            String permissao = comboBoxPermissao.getSelectedIndex() == 0 ? "U" : "A";
+            int permissao = comboBoxPermissao.getSelectedIndex() == 0 ? 0 : 1;
 
             user.setPermissao(permissao);
 
@@ -504,7 +520,102 @@ public class CriarUsuarios extends javax.swing.JDialog {
         }
     }
     
+    private void modificar(Usuario u) {
+        int resposta = JOptionPane.showConfirmDialog(this, "Você deseja realmente modificar esse usuário?", 
+                "Confirmar Alteração...", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+        
+        
+        
+        if(resposta == JOptionPane.YES_OPTION) {
+            String strLogin = campoTextoLogin.getText().trim();
+            String strApelido = campoTextoApelido.getText().trim();
+            int tamSenha = campoSenha.getPassword().length;
+            int tamC = campoConfirmarSenha.getPassword().length;
+            boolean senhasDiferentes = !Arrays.equals(campoSenha.getPassword(), campoConfirmarSenha.getPassword());
+            
+             // Se o tamanho for maior do que cinco
+            if(strLogin.length() < 5) {
+                JOptionPane.showMessageDialog(this, "O login não pode estar vazio e nem ter menos do que cinco caracteres!!",
+                        "Aviso!",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Se o apelido tiver menos do que cinco caracteres ou estiver vazio
+            if(strApelido.length() < 5) {
+                JOptionPane.showMessageDialog(this, "O apelido não pode estar vazio e nem ter menos do que cinco caracteres!!",
+                        "Aviso!", 
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Se tiver coisa nos campos de senha, significa que quer trocar a senha
+            if(tamSenha != 0 || tamC != 0) {
+                if(tamSenha < 8) {
+                    JOptionPane.showMessageDialog(this, "Senha muito fraca, tem que ter oito caracteres ou mais!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if(senhasDiferentes) {
+                    JOptionPane.showMessageDialog(this, "As senhas não são iguais!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+                
+            try {
+                Usuario usuario = u;
+                UsuarioDAO dao = new UsuarioDAO();
+                
+                // Se não for igual o que ele digitou
+                if(!strLogin.equals(usuario.getLogin())) {
+                    usuario.setLogin(strLogin);
+                }
+                
+                // Se não for igual o que ele digitou
+                if(!strApelido.equals(usuario.getApelido())) {
+                    usuario.setApelido(strApelido);
+                }
+                
+                if(tamSenha != 0) {
+                    Criptografia crip = new Criptografia();
+                    String senha = crip.criptografar(campoSenha.getPassword());
+                    usuario.setSenha(senha);
+                }
+                
+                // Passa o index direto
+                usuario.setPermissao(comboBoxPermissao.getSelectedIndex());
+                
+                dao.modificar(usuario);
+ 
+            }
+            catch(Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
     
+    private void arrumarTextoMod() {
+        txtCriarUsuarios.setText("Modificar Usuários");
+        
+        txtLogin.setText("Coloque o novo login:");
+        campoTextoLogin.setText(usuarioEdicao.getLogin());
+        
+        txtApelido.setText("Coloque o novo apelido:");
+        campoTextoApelido.setText(usuarioEdicao.getApelido());
+        
+        txtSenha.setText("Coloque a nova senha (Vazia = Sem modificação):");
+        txtConfirmarSenha.setText("Confirme a nova senha:");
+        
+        txtPermissao.setText("Coloque a nova permissão:");
+         
+        switch(usuarioEdicao.getPermissao()) {
+            case 0 -> comboBoxPermissao.setSelectedIndex(0);
+            case 1 -> comboBoxPermissao.setSelectedIndex(1);
+        }
+        btnSalvar.setText("Modificar");
+    }
     
     private void arrumarComboBox() {
         // Pinta a "caixa" principal (quando ele está fechado)
