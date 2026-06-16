@@ -20,6 +20,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import modelo.Usuario;
+import util.EstiloGlobal;
 
 
 public class ListarUsuarios extends javax.swing.JDialog {
@@ -51,7 +52,7 @@ public class ListarUsuarios extends javax.swing.JDialog {
         btnModificar = new javax.swing.JButton();
         btnFechar = new javax.swing.JButton();
         btnCriar = new javax.swing.JButton();
-        btnExcluir = new javax.swing.JButton();
+        btnAlterarStatus = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1040, 1010));
@@ -62,7 +63,7 @@ public class ListarUsuarios extends javax.swing.JDialog {
         painelTopo.setBackground(new java.awt.Color(130, 130, 130));
         painelTopo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        txtListarUsuarios.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        txtListarUsuarios.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 20)); // NOI18N
         txtListarUsuarios.setForeground(new java.awt.Color(230, 230, 230));
         txtListarUsuarios.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtListarUsuarios.setText("Listar Usuários");
@@ -104,26 +105,32 @@ public class ListarUsuarios extends javax.swing.JDialog {
         tabela.setForeground(java.awt.Color.gray);
         tabela.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Id", "Nome", "Login"
+                "Id", "Login", "Nome", "Permissao", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelaMouseClicked(evt);
+            }
+        });
         painelScrollTabela.setViewportView(tabela);
 
-        btnModificar.setBackground(new java.awt.Color(0, 0, 110));
+        btnModificar.setBackground(new java.awt.Color(61, 61, 61));
         btnModificar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnModificar.setForeground(new java.awt.Color(230, 230, 230));
         btnModificar.setText("Modificar");
@@ -139,35 +146,36 @@ public class ListarUsuarios extends javax.swing.JDialog {
         btnCriar.setForeground(new java.awt.Color(230, 230, 230));
         btnCriar.setText("Criar");
 
-        btnExcluir.setBackground(new java.awt.Color(185, 0, 0));
-        btnExcluir.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        btnExcluir.setForeground(new java.awt.Color(230, 230, 230));
-        btnExcluir.setText("Excluir");
-        btnExcluir.addActionListener(this::btnExcluirActionPerformed);
+        btnAlterarStatus.setBackground(new java.awt.Color(41, 41, 41));
+        btnAlterarStatus.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        btnAlterarStatus.setForeground(new java.awt.Color(255, 77, 77));
+        btnAlterarStatus.setText("Desativar");
+        btnAlterarStatus.addActionListener(this::btnAlterarStatusActionPerformed);
 
         javax.swing.GroupLayout painelInfoLayout = new javax.swing.GroupLayout(painelInfo);
         painelInfo.setLayout(painelInfoLayout);
         painelInfoLayout.setHorizontalGroup(
             painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelInfoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnCriar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnFechar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(77, 77, 77))
             .addGroup(painelInfoLayout.createSequentialGroup()
                 .addGap(71, 71, 71)
                 .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(painelScrollTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 740, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(painelInfoLayout.createSequentialGroup()
+                        .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(painelScrollTabela, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(painelInfoLayout.createSequentialGroup()
+                                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnCriar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnAlterarStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnFechar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(77, 77, 77))
                     .addGroup(painelInfoLayout.createSequentialGroup()
                         .addComponent(txtPesquisar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(campoPesquisa)))
-                .addGap(225, 225, 225))
+                        .addComponent(campoPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 618, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(225, 225, 225))))
         );
         painelInfoLayout.setVerticalGroup(
             painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,7 +192,7 @@ public class ListarUsuarios extends javax.swing.JDialog {
                     .addComponent(btnCriar))
                 .addGap(18, 18, 18)
                 .addGroup(painelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnExcluir)
+                    .addComponent(btnAlterarStatus)
                     .addComponent(btnFechar))
                 .addGap(37, 37, 37))
         );
@@ -198,14 +206,40 @@ public class ListarUsuarios extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_btnFecharActionPerformed
 
-    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        excluirUsuario();
-    }//GEN-LAST:event_btnExcluirActionPerformed
+    private void btnAlterarStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarStatusActionPerformed
+        AlterarStatusUsuario();
+    }//GEN-LAST:event_btnAlterarStatusActionPerformed
+
+    private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
+        Color cor = new Color(41, 41, 41);
+        // 1. Descobre qual linha o usuário clicou
+        int linhaSelecionada = tabela.getSelectedRow();
+
+        // Se realmente tem uma linha selecionada...
+        if (linhaSelecionada != -1) {
+
+            // 2. Pega a palavra "Ativo" ou "Inativo" (Mude o 4 para o número da sua coluna de status)
+            String status = tabela.getValueAt(linhaSelecionada, 4).toString();
+
+            // 3. Pinta o botão e muda o texto na hora!
+            if (status.equals("Ativo")) {
+                btnAlterarStatus.setText("Desativar");
+                btnAlterarStatus.setBackground(cor);
+                btnAlterarStatus.setForeground(new Color(255, 77, 77));
+            } 
+            else {
+                btnAlterarStatus.setText("Reativar");
+                btnAlterarStatus.setBackground(cor);
+                btnAlterarStatus.setForeground(new Color(255, 193, 7));
+            }
+        }
+    }//GEN-LAST:event_tabelaMouseClicked
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        EstiloGlobal.aplicarTema();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -250,40 +284,42 @@ public class ListarUsuarios extends javax.swing.JDialog {
         
         // Adiciona as colunas no modelo
         modelo.addColumn("Id");
-        modelo.addColumn("Nome");
         modelo.addColumn("Login");
+        modelo.addColumn("Apelido");
         modelo.addColumn("Permissão");
+        modelo.addColumn("Status");
         
         try {
             UsuarioDAO dao = new UsuarioDAO();
             ArrayList<Usuario> listaUsuarios = dao.listar();
-            String permissao = "Usuario";
+            String permissao;
+            String ativo = "Ativo";
             
             for(Usuario u : listaUsuarios) {
-                if (u.getPermissao().equals("A")) {
+                if(u.getPermissao() == 1) {
                     permissao = "Administrador";
                 }
-                
-                if(permissao.equals("Administrador")) {
-                    modelo.insertRow(0, new Object[] {
-                        u.getId(),
-                        u.getApelido(),
-                        u.getLogin(),
-                        permissao  
-                    });
-                }
                 else {
-                    modelo.addRow(new Object[]{
-                        u.getId(),
-                        u.getApelido(),
-                        u.getLogin(),
-                        permissao
-                    });
+                    permissao = "Usuário";
                 }
+                
+                if(u.getAtivo() != 1) {
+                    ativo = "Inativo";
+                }
+                
+                // Já vem ordenadinho com ATIVOS primeiro e ADMINISTRADORES primeiro
+                modelo.addRow(new Object[]{
+                u.getId(),
+                u.getLogin(),
+                u.getApelido(),
+                permissao,
+                ativo
+                });
             }
-        } 
+            
+        }
         catch(Exception e) {
-            JOptionPane.showMessageDialog(this,"Erro: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
         
         // Seta o modelo na tabela
@@ -292,7 +328,7 @@ public class ListarUsuarios extends javax.swing.JDialog {
         tabela.setRowSorter(ordenador);
     }
     
-    private void excluirUsuario() {
+    private void AlterarStatusUsuario() {
         int posicaoLinha = tabela.getSelectedRow();
 
         if(posicaoLinha < 0) {
@@ -305,26 +341,50 @@ public class ListarUsuarios extends javax.swing.JDialog {
 
         // Depois, pega o modelo da tabela, o valor da posição do modelo 
         // e na linha que tá a posição e transforma tudo em string
-        String login = tabela.getModel().getValueAt(posicaoModelo, 1).toString();
-
-        // Pega a resposta, se for sim (0), deleta aquela linha
-        int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente deletar a linha " + login + "?", 
-                "Confirmar Remoção...", 
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+        String login = tabela.getModel().getValueAt(posicaoModelo, 2).toString();
+        String status = tabela.getModel().getValueAt(posicaoModelo, 4).toString();
+        int modo = -1;
+        int resposta = -1;
+        
+        switch(status) {
+            case "Ativo" -> {
+                // Pega a resposta, se for sim (0), deleta aquela linha
+                resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente desativar o usuário " + login + "?", 
+                    "Confirmar Desativação...", 
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+                modo = 0;
+            }
+            case "Inativo" -> {
+                resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente reativar o usuário " + login + "?", 
+                    "Confirmar Reativação...", 
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+                modo = 1;
+            }
+        }
+        
 
         if (resposta == JOptionPane.YES_OPTION) {
             int id = Integer.parseInt(tabela.getModel().getValueAt(posicaoModelo, 0).toString());
 
             try {
                 UsuarioDAO dao = new UsuarioDAO();                    
-                //dao.remover(id);
+                int resultado = dao.alterarStatus(id, modo);
                 
-                DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
-                modelo.removeRow(posicaoModelo);
-
-
-                JOptionPane.showMessageDialog(this, "Login removido com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                switch(resultado) {
+                    case 1 -> {
+                        if(modo == 0) {
+                            JOptionPane.showMessageDialog(this, "Usuário desativado com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(this, "Usuário reativado com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        
+                        inicializarTabela();
+                    }
+                    case 0 -> JOptionPane.showMessageDialog(this, "É proibido desativar todos os administradores!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                }
             } 
             catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -456,8 +516,8 @@ public class ListarUsuarios extends javax.swing.JDialog {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAlterarStatus;
     private javax.swing.JButton btnCriar;
-    private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFechar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JTextField campoPesquisa;
