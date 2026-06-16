@@ -5,12 +5,15 @@ import database.UsuarioDAO;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Window;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -134,6 +137,7 @@ public class ListarUsuarios extends javax.swing.JDialog {
         btnModificar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnModificar.setForeground(new java.awt.Color(230, 230, 230));
         btnModificar.setText("Modificar");
+        btnModificar.addActionListener(this::btnModificarActionPerformed);
 
         btnFechar.setBackground(new java.awt.Color(61, 61, 61));
         btnFechar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -145,6 +149,7 @@ public class ListarUsuarios extends javax.swing.JDialog {
         btnCriar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         btnCriar.setForeground(new java.awt.Color(230, 230, 230));
         btnCriar.setText("Criar");
+        btnCriar.addActionListener(this::btnCriarActionPerformed);
 
         btnAlterarStatus.setBackground(new java.awt.Color(41, 41, 41));
         btnAlterarStatus.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -234,6 +239,32 @@ public class ListarUsuarios extends javax.swing.JDialog {
             }
         }
     }//GEN-LAST:event_tabelaMouseClicked
+
+    private void btnCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarActionPerformed
+        try {
+            Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
+            CriarUsuarios tela = new CriarUsuarios((JFrame) telaPrincipal, true);
+            tela.setLocationRelativeTo(this);
+            tela.setVisible(true);
+            inicializarTabela();
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar a tela de criar usuarios:\n" + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnCriarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        try {
+            Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
+            CriarUsuarios tela = new CriarUsuarios((JFrame) telaPrincipal, true, null);
+            tela.setLocationRelativeTo(this);
+            tela.setVisible(true);
+            inicializarTabela();
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar a tela de modificar usuarios:\n" + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnModificarActionPerformed
 
     /**
      * @param args the command line arguments
