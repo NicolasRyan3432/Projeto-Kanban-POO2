@@ -4,6 +4,7 @@ import modelo.Usuario;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 
 /** =============================================================================
@@ -63,7 +64,7 @@ public class UsuarioDAO {
             cs.setString(1, user.getLogin());
             cs.setString(2, user.getSenha());
             cs.setString(3, user.getApelido());
-            cs.setString(4, user.getPermissao());
+            cs.setInt(4, user.getPermissao());
             cs.executeUpdate(); 
         }
         catch (Exception e) {
@@ -87,7 +88,8 @@ public class UsuarioDAO {
                         rs.getString("login"),
                         rs.getString("senha"),
                         rs.getString("nome"),
-                        rs.getString("permissao")
+                        rs.getInt("permissao"),
+                        rs.getInt("ativo")
                 );
                 
                 listaUsuario.add(user);
@@ -116,6 +118,45 @@ public class UsuarioDAO {
         } 
         catch (Exception e) {
             throw new Exception("\n[VERIFICAR CADASTRO] Erro: " + e.getMessage());
+        }
+    }
+    
+    public int alterarStatus(int id, int modo) throws Exception {
+        if(id < 1) {
+            throw new Exception("\n[DESATIVAR] Id inválido!!!");
+        }
+        
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pAlteraStatusUsuario(?, ?, ?)}";
+       
+        
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cs = con.prepareCall(sql)) {
+            
+            cs.setInt(1, id);
+            
+            // Modo de execução da função
+            if(modo == 0) {
+                // Desativa
+                cs.setInt(2, 0);
+            }
+            else {
+                // Reativa
+                cs.setInt(2, 1);
+            }
+            
+            // Fala pro Java que ele vai receber um número inteiro de volta
+            cs.registerOutParameter(3, Types.INTEGER);
+            
+            // Manda executar
+            cs.execute();
+            
+            // Passa o valor que o banco envidou para a variável
+            int resultado = cs.getInt(3);
+            return resultado;
+        }
+        catch(Exception e) {
+            throw new Exception("\n[DESATIVAR] Erro: " + e.getMessage());
         }
     }
 }
