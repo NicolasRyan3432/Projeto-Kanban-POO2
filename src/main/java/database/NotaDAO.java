@@ -7,6 +7,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 
 
@@ -343,6 +344,25 @@ public class NotaDAO {
         }
         finally {
             conexao.fecharConexao(con, cd, null);
+        }
+    }
+    
+    public int contar(int id) throws Exception {
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pContaNotas(?, ?)}";
+        
+        try(Connection con = conexao.abrirConexao();
+           CallableStatement cs = con.prepareCall(sql)) {
+            
+            cs.setInt(1, id);
+            cs.registerOutParameter(2, Types.INTEGER);
+            cs.execute();
+            
+            int total = cs.getInt(2);
+            return total; 
+        }
+        catch(Exception e) {
+            throw new Exception("\n[CONTAR] Erro: " + e.getMessage());
         }
     }
 }
