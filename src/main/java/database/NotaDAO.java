@@ -138,14 +138,14 @@ public class NotaDAO {
                 
                 Nota nota = new Nota (
                     rs.getInt("id_nota"),
-                    rs.getInt("prioridade"),
                     rs.getString("nome"),
-                    rs.getString("nome_autor"),
                     rs.getString("descricao"),
                     rs.getString("categoria"),
-                    null,
+                    rs.getInt("prioridade"),
                     data,
-                    prazo     
+                    rs.getInt("id_usuario"),
+                    prazo,     
+                    rs.getString("nome_autor")
                 );
                 
                 // Adiciona a nota na nossa lista
