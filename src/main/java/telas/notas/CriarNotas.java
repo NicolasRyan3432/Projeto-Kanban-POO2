@@ -6,6 +6,7 @@ import modelo.Nota;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +14,8 @@ import javax.swing.JOptionPane;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Locale;
+import telas.Main;
+import util.Sessao;
 
 
 public class CriarNotas extends javax.swing.JDialog {
@@ -20,15 +23,13 @@ public class CriarNotas extends javax.swing.JDialog {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CriarNotas.class.getName());
     
 
-    private int idUsuario = 0;
     private final int tipoFuncao;
     private Nota notaEdicao = null;
     
     // Constutor usado para criar a nota
-    public CriarNotas(java.awt.Frame parent, boolean modal, int id) {
+    public CriarNotas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.setTitle("Painel Kanban - Criar Nota");
-        this.idUsuario = id;
         this.tipoFuncao = 0;
         
         arrumarMenu();
@@ -351,17 +352,31 @@ public class CriarNotas extends javax.swing.JDialog {
         if(resposta == JOptionPane.YES_OPTION) {
             try {
                 NotaDAO dao = new NotaDAO();
-                dao.deletar(this.notaEdicao.getId()); 
+                dao.deletar(this.notaEdicao.getId());
                 
-                // Fecha a tela
-                this.dispose(); 
-                JOptionPane.showMessageDialog(this, "Nota removida com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                // Pega as janelas abertas
+                for (Window janela : Window.getWindows()) {
+                    
+                    // Se a janela é uma instância de Main, crie o objeto de Main chamado telaPrincipal
+                    if (janela instanceof Main telaPrincipal) { 
+                        
+                        // Chama o método de recarregar as notas lá no Main
+                        // E arruma os contadores para exibir as notas
+                        telaPrincipal.carregarNotas();
+                        telaPrincipal.arrumarTexto();
+                        
+                        return; // Achou a tela, pode parar de procurar
+                    }
+                
+                    JOptionPane.showMessageDialog(this, "Nota removida com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose(); 
             
-            } 
+                }   
+            }
             catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Erro ao excluir: " + e.getMessage());
             }
-        }      
+        }
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void areaDescricaoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_areaDescricaoFocusGained
@@ -411,7 +426,7 @@ public class CriarNotas extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                CriarNotas dialog = new CriarNotas(new javax.swing.JFrame(), true, 0);
+                CriarNotas dialog = new CriarNotas(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -433,7 +448,7 @@ public class CriarNotas extends javax.swing.JDialog {
             
             // Colocando os dados normais
             // --- Lembrar de trocar aqui quando o DAO Tiver Pronto
-            nota.setIdUsuario(idUsuario);
+            nota.setIdUsuario(Sessao.idUsuario);
             
             if(titulo.isEmpty()) {
                 // Isso cria uma tela com o icone de erro, a segunda string é o titulo do Pane

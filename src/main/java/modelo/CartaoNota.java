@@ -15,15 +15,13 @@ import javax.swing.SwingUtilities;
 public class CartaoNota extends javax.swing.JPanel {
     private final Nota notaAtual;
     private HistoricoNota notaHistorico;
-    private int idUsuario;
     private final int modoOperacao;
     
     // Construtor recebe uma nota inteira ao invés de pedaços separados da nota.
     // Construtor chamado no main
-    public CartaoNota(Nota n, int idUsuario, String prioridade) {
+    public CartaoNota(Nota n, String prioridade) {
         // A notaAtual recebe a nota que foi clicada
         this.notaAtual = n;
-        this.idUsuario = idUsuario;
         this.modoOperacao = 0;
         
         initComponents();
@@ -167,7 +165,7 @@ public class CartaoNota extends javax.swing.JPanel {
             // SE FOR NO MAIN, chama o VisualizarNotas, se não, chama o VisualizarHistorico
             if(modoOperacao == 0) {
                 // Cria a tela de informações passando como atributo a telaPrincipal (como JFrame) e essa nota atual (a clicada)
-                VisualizarNotas telaInfo = new VisualizarNotas((JFrame) telaPrincipal, true, this.notaAtual, idUsuario);
+                VisualizarNotas telaInfo = new VisualizarNotas((JFrame) telaPrincipal, true, this.notaAtual);
                 
                 // Fica no centro da telaPrincipal
                 telaInfo.setLocationRelativeTo(telaPrincipal);

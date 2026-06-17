@@ -19,16 +19,16 @@ public class Nota {
     public Nota() {}
     
     // Construtor passado na hora de INSERIR os dados, id é AUTOINCREMENT
-    public Nota(int id_usuario, int prioridade, String nome, String nomeAutor, String descricao, String categoria, String prioridadeFormatada, LocalDateTime data, LocalDateTime prazo) {
-        this.idUsuario = id_usuario;
-        this.prioridade = prioridade;
+    public Nota(int id, String nome, String descricao, String categoria, int prioridade, LocalDateTime data, int id_usuario, LocalDateTime prazo, String nomeAutor) {
+        this.id = id;
         this.nome = nome;
-        this.nomeAutor = nomeAutor;
         this.descricao = descricao;
         this.categoria = categoria;
-        this.prioridadeFormatada = prioridadeFormatada;
+        this.prioridade = prioridade;
         this.data = data;
+        this.idUsuario = id_usuario;
         this.prazo = prazo;
+        this.nomeAutor = nomeAutor;
     }
 
     public int getId() {

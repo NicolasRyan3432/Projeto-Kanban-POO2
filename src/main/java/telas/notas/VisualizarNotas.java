@@ -11,6 +11,8 @@ import java.awt.Window;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import telas.Main;
+import util.Sessao;
 
 
 public class VisualizarNotas extends javax.swing.JDialog {
@@ -20,7 +22,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
     // NotaAtual agora é final para não ter risco de ser trocada de Nota no decorrer do desinvolvimento
     private final Nota notaAtual;
     
-    public VisualizarNotas(java.awt.Frame parent, boolean modal, Nota n, int idUsuario) {
+    public VisualizarNotas(java.awt.Frame parent, boolean modal, Nota n) {
         super(parent, modal);
         this.notaAtual = n;
         this.setResizable(false);
@@ -34,7 +36,10 @@ public class VisualizarNotas extends javax.swing.JDialog {
         
         // Se o id do usuário que tá vendo a nota (idUsuario) 
         // for diferente do id que tá dentro da Nota o botão do Menu é escondido para ele
-        if(this.notaAtual.getIdUsuario() != idUsuario) {
+        if(this.notaAtual.getIdUsuario() == Sessao.idUsuario || Sessao.permissao == 1) {
+            btnMenu.setVisible(true);
+        }
+        else {
             btnMenu.setVisible(false);
         }
         
@@ -275,7 +280,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
     private void itemModificarNotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemModificarNotaActionPerformed
         try {
             Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
-
+            
             CriarNotas tela = new CriarNotas((JFrame) telaPrincipal, true, this.notaAtual);
             tela.setLocationRelativeTo(this);
             this.dispose();
@@ -373,7 +378,7 @@ public class VisualizarNotas extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                VisualizarNotas dialog = new VisualizarNotas(new javax.swing.JFrame(), true, null, 0);
+                VisualizarNotas dialog = new VisualizarNotas(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
