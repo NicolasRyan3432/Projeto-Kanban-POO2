@@ -131,6 +131,41 @@ public class UsuarioDAO {
         }
     }
     
+    public Usuario buscar(int id) throws Exception {
+        
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pBuscaUsuario(?)}";
+        
+        try (Connection con = conexao.abrirConexao();
+            CallableStatement cs = con.prepareCall(sql)) {
+            
+            cs.setInt(1, id);
+            Usuario user = new Usuario();
+            
+            try(ResultSet rs = cs.executeQuery()) {
+                while(rs.next()) {
+                    user = new Usuario (
+                        rs.getInt("id"),
+                        rs.getString("login"),
+                        rs.getString("senha"),
+                        rs.getString("nome"),
+                        rs.getInt("permissao"),
+                        rs.getInt("ativo")
+                    );
+            }
+                
+            return user;
+            
+            }
+            catch(Exception e) {
+                throw new Exception("\n[BUSCAR] Erro ao receber as informações do usuário: " + e.getMessage());
+            }
+        }
+        catch(Exception e) {
+            throw new Exception("\n[BUSCAR] Erro: " + e.getMessage());
+        }
+    }
+    
     public boolean verificarCadastro(String login) throws Exception {
         Conexao conexao = new Conexao();
         String sql = "{CALL pVerificaCadastro(?)}";
