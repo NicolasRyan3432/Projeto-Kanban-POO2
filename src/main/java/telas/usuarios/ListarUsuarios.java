@@ -217,27 +217,30 @@ public class ListarUsuarios extends javax.swing.JDialog {
 
     private void tabelaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelaMouseClicked
         Color cor = new Color(41, 41, 41);
+        
         // 1. Descobre qual linha o usuário clicou
         int linhaSelecionada = tabela.getSelectedRow();
-
+        
         // Se realmente tem uma linha selecionada...
-        if (linhaSelecionada != -1) {
-
-            // 2. Pega a palavra "Ativo" ou "Inativo" (Mude o 4 para o número da sua coluna de status)
-            String status = tabela.getValueAt(linhaSelecionada, 4).toString();
-
-            // 3. Pinta o botão e muda o texto na hora!
-            if (status.equals("Ativo")) {
-                btnAlterarStatus.setText("Desativar");
-                btnAlterarStatus.setBackground(cor);
-                btnAlterarStatus.setForeground(new Color(255, 77, 77));
-            } 
-            else {
-                btnAlterarStatus.setText("Reativar");
-                btnAlterarStatus.setBackground(cor);
-                btnAlterarStatus.setForeground(new Color(255, 193, 7));
-            }
+        if (linhaSelecionada == -1) {
+            JOptionPane.showConfirmDialog(this, "Selecione uma linha primeiro!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        
+        // 2. Pega a palavra "Ativo" ou "Inativo" (Mude o 4 para o número da sua coluna de status)
+        String status = tabela.getValueAt(linhaSelecionada, 4).toString();
+
+        // 3. Pinta o botão e muda o texto na hora!
+        if (status.equals("Ativo")) {
+            btnAlterarStatus.setText("Desativar");
+            btnAlterarStatus.setBackground(cor);
+            btnAlterarStatus.setForeground(new Color(255, 77, 77));
+        } 
+        else {
+            btnAlterarStatus.setText("Reativar");
+            btnAlterarStatus.setBackground(cor);
+            btnAlterarStatus.setForeground(new Color(255, 193, 7));
+        }    
     }//GEN-LAST:event_tabelaMouseClicked
 
     private void btnCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarActionPerformed
@@ -254,9 +257,25 @@ public class ListarUsuarios extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCriarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        int linhaSelecionada = tabela.getSelectedRow();
+        
+        // Se não tiver selecionado uma linha antes
+        if(linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione uma linha primeiro antes de tentar modificar!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         try {
+            int posicaoModelo = tabela.convertRowIndexToModel(linhaSelecionada);
+            int id = Integer.parseInt(tabela.getModel().getValueAt(posicaoModelo, 0).toString());
+            
+            UsuarioDAO dao = new UsuarioDAO();
+            Usuario usuario = dao.buscar(id);
+            
+
+      
             Window telaPrincipal = SwingUtilities.getWindowAncestor(this);
-            CriarUsuarios tela = new CriarUsuarios((JFrame) telaPrincipal, true, null);
+            CriarUsuarios tela = new CriarUsuarios((JFrame) telaPrincipal, true, usuario);
             tela.setLocationRelativeTo(this);
             tela.setVisible(true);
             inicializarTabela();
