@@ -240,7 +240,7 @@ public class UsuarioDAO {
         try(Connection con = conexao.abrirConexao();
             CallableStatement cs = con.prepareCall(sql)) {
             
-            Usuario usuario = new Usuario();
+            Usuario usuario = null;
             
             cs.setString(1, login);
             cs.setString(2, senha);
