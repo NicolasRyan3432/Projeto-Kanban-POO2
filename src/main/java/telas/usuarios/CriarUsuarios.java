@@ -5,11 +5,14 @@ import database.UsuarioDAO;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.Frame;
+import java.awt.Window;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 import modelo.Usuario;
+import telas.Login;
 import util.Criptografia;
 import util.EstiloGlobal;
+import util.Sessao;
 
 
 public class CriarUsuarios extends javax.swing.JDialog {
@@ -38,6 +41,22 @@ public class CriarUsuarios extends javax.swing.JDialog {
         initComponents();
         arrumarComboBox();
         arrumarTextoMod();
+        
+        // Tira qualquer tamanho herdado do initComponents do Criar
+        this.setPreferredSize(null);
+        this.setMinimumSize(null);
+        this.setMaximumSize(null);
+        
+        // Pega todos os elementos, empacota eles e calcula o espaço dele
+        this.pack();
+        
+        // Arruma a tela para ficar centralizada
+        this.setLocationRelativeTo(null);
+        
+        // Se a permissão da sessão do usuário não for de adminstrador, impede ele de modificar
+        if(Sessao.permissao != 1) {
+            comboBoxPermissao.setEnabled(false);
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -148,7 +167,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
 
         txtPermissao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
         txtPermissao.setForeground(new java.awt.Color(220, 220, 220));
-        txtPermissao.setText("Selecione a sua permissão:");
+        txtPermissao.setText("Selecione a permissão:");
 
         comboBoxPermissao.setBackground(new java.awt.Color(60, 60, 60));
         comboBoxPermissao.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 16)); // NOI18N
@@ -485,7 +504,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
 
             // Se não existir, cria o objeto de Usuario e insere o login
             if (dao.verificarCadastro(login)) {
-                JOptionPane.showMessageDialog(this, "Erro, esse usuário já está cadastrado!!");
+                JOptionPane.showMessageDialog(this, "Erro, esse usuário já está cadastrado!!", "Erro!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -521,11 +540,26 @@ public class CriarUsuarios extends javax.swing.JDialog {
     }
     
     private void modificar(Usuario u) {
-        int resposta = JOptionPane.showConfirmDialog(this, "Você deseja realmente modificar esse usuário?", 
+        int resposta;
+        int usuLogado = -1;
+        if(u.getId() == Sessao.idUsuario) {
+            resposta = JOptionPane.showConfirmDialog(this, "Você deseja realmente modificar o seu usuário?", 
                 "Confirmar Alteração...", 
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE);
-        
+            
+            // É o usuario logado
+            usuLogado = 1;
+        }
+        else {
+            resposta = JOptionPane.showConfirmDialog(this, "Você deseja realmente modificar esse usuário?", 
+                "Confirmar Alteração...", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+            
+            // Não é o usuario logado
+            usuLogado = 0;
+        }
         
         
         if(resposta == JOptionPane.YES_OPTION) {
@@ -588,7 +622,29 @@ public class CriarUsuarios extends javax.swing.JDialog {
                 usuario.setPermissao(comboBoxPermissao.getSelectedIndex());
                 
                 dao.modificar(usuario);
- 
+                
+                if(usuLogado == 1) {
+                    JOptionPane.showMessageDialog(this, "Você alterou os própios dados de acesso.\nPor segurança, faça o login novamente!!",
+                            "Sessão Expirada", 
+                            JOptionPane.INFORMATION_MESSAGE);
+                    
+                    // Limpa a sessão do usuário
+                    Sessao.limparSessao();
+                    
+                    // Percorre todas as telas abertas e fecha elas
+                    for (Window janela : Window.getWindows()) {
+                        janela.dispose();
+                    }
+
+                    // Instancia o login sem passar para uma variável.
+                    // Como não vamos passar mais propiedades para ela (setTitle, setLocation...)
+                    // podemos chamar assim
+                    new Login().setVisible(true);
+                    }
+                else {
+                    JOptionPane.showMessageDialog(this, "Usuário modificado com sucesso!!", "Sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                    this.dispose();
+                }
             }
             catch(Exception e) {
                 JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -609,7 +665,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
         txtConfirmarSenha.setText("Confirme a nova senha:");
         
         txtPermissao.setText("Coloque a nova permissão:");
-         
+        
         switch(usuarioEdicao.getPermissao()) {
             case 0 -> comboBoxPermissao.setSelectedIndex(0);
             case 1 -> comboBoxPermissao.setSelectedIndex(1);

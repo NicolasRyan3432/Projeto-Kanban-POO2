@@ -1,13 +1,14 @@
 
 package telas;
-import database.Conexao;
+import database.UsuarioDAO;
 import javax.swing.JOptionPane;
 import modelo.Usuario;
 import java.awt.FontFormatException;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.sql.Connection;
+import util.Criptografia;
 import util.EstiloGlobal;
+import util.Sessao;
 
 public class Login extends javax.swing.JFrame {
     
@@ -34,7 +35,7 @@ public class Login extends javax.swing.JFrame {
         
         initComponents();
         this.setLocationRelativeTo(null);
-        this.setTitle("Projeto Kanban");
+        this.setTitle("Projeto Kanban - Login");
         
         /*
             Seta o botãoEntrar como o botão padrão da tela, então, ao clicar no ENTER, o código
@@ -42,8 +43,9 @@ public class Login extends javax.swing.JFrame {
             Por convenção (o CheckBox ser marcado também com o enter), movi para caso o CheckBox esteja focalizado
             (com o focus em cima dele usando tabulação), o padrão pra ativar a função de logar não seja o enter
             mas caso não esteja focado, o padrão seja o enter
-            this.getRootPane().setDefaultButton(botaoEntrar);
         */ 
+            this.getRootPane().setDefaultButton(botaoEntrar);
+        
     }
   
     @SuppressWarnings("unchecked")
@@ -58,7 +60,7 @@ public class Login extends javax.swing.JFrame {
         txtSenha = new javax.swing.JLabel();
         botaoEntrar = new javax.swing.JButton();
         botaoSair = new javax.swing.JButton();
-        campoTexto = new javax.swing.JTextField();
+        campoLogin = new javax.swing.JTextField();
         campoSenha = new javax.swing.JPasswordField();
         chkBox = new javax.swing.JCheckBox();
 
@@ -140,8 +142,8 @@ public class Login extends javax.swing.JFrame {
         });
         botaoSair.addActionListener(this::botaoSairActionPerformed);
 
-        campoTexto.setBackground(java.awt.Color.gray);
-        campoTexto.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        campoLogin.setBackground(java.awt.Color.gray);
+        campoLogin.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
 
         campoSenha.setBackground(java.awt.Color.gray);
         campoSenha.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -175,7 +177,7 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLoginLayout.createSequentialGroup()
                         .addComponent(txtLogin)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(campoTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(campoLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLoginLayout.createSequentialGroup()
                         .addComponent(txtSenha)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -194,7 +196,7 @@ public class Login extends javax.swing.JFrame {
                 .addContainerGap(64, Short.MAX_VALUE)
                 .addGroup(painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtLogin)
-                    .addComponent(campoTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(campoLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(102, 102, 102)
                 .addGroup(painelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(campoSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -298,45 +300,80 @@ public class Login extends javax.swing.JFrame {
     }
     
     public void logar() {
-        // Teste de conexão, se der ruim não deixa o usuário logar
-        // As coisas vão dentro do try dps
-        try {
-            // Vai ser substituido pela parte de conexão do banco lá com o DAO do usuário
-            Conexao conexao = new Conexao();
-            Connection con = conexao.abrirConexao();
-            
-            String senha = new String(campoSenha.getPassword());
+        String strLogin = campoLogin.getText().trim();
+        int tamSenha = campoSenha.getPassword().length;
         
-            if(campoTexto.getText().equals("")) {
-                JOptionPane.showMessageDialog(this, "O login não pode estar vazio!!");
-            }
-            else if(campoSenha.getPassword().length < 3) {
-                JOptionPane.showMessageDialog(this, "A senha não pode ter menos do que três caracteres!!");
-            }
-            else if(!campoTexto.getText().equals("Nicolas")) {
-                JOptionPane.showMessageDialog(this, "Erro: O login está incorreto!!");
-            }
-            else if(!senha.equals("12345")) {
-                JOptionPane.showMessageDialog(this, "Erro: A senha está incorreta!!");
-            }
-            else {
-                Main tela = new Main(user); 
+        if(strLogin.length() < 5) {
+            JOptionPane.showMessageDialog(this, "O login não pode ter menos do que cinco caracteres!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(tamSenha < 8) {
+            JOptionPane.showMessageDialog(this, "A senha não pode ter menos do que oito caracteres!!", "Erro!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        try {
+            Criptografia c = new Criptografia();
+            String senha = c.criptografar(campoSenha.getPassword());
+            UsuarioDAO dao = new UsuarioDAO();
+            Usuario usuario = dao.validar(strLogin, senha);
+            
+            if(usuario != null) {
+                Sessao.idUsuario = usuario.getId();
+                Sessao.login = usuario.getLogin();
+                Sessao.apelido = usuario.getApelido();
+                Sessao.permissao = usuario.getPermissao();
+                Sessao.ativo = usuario.getAtivo();
+
+                Main tela = new Main(); 
                 tela.setVisible(true);
                 this.dispose();
+            } 
+            else {
+                JOptionPane.showMessageDialog(this, "Credenciais inválidas!! Tente novamente!!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            
         } 
         catch(Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao iniciar o sistema:\n" + e.getMessage(),
+            JOptionPane.showMessageDialog(this, "Erro ao iniciar o sistema:" + e.getMessage(),
                     "Erro de Conexão!",
                     JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void checarUsuarios() {
+        try {
+            UsuarioDAO dao = new UsuarioDAO();
+            
+            // Se o banco estiver zerado, cria o Super Admin de emergência
+            if(dao.listar().isEmpty()) {
+                Usuario adminPadrao = new Usuario();
+                adminPadrao.setLogin("Admin");
+                adminPadrao.setApelido("Admin");
+                adminPadrao.setPermissao(1);
+
+                Criptografia crip = new Criptografia();
+                adminPadrao.setSenha(crip.criptografar("admin123".toCharArray())); 
+
+                dao.cadastrar(adminPadrao);
+               JOptionPane.showMessageDialog(this, """
+                                                   Admin padrão gerado com sucesso!\n
+                                                   Por favor, mude as credenciais por questões de segurança\n
+                                                   Login: Admin\n
+                                                   Senha: admin123""", "Sucesso!!", JOptionPane.INFORMATION_MESSAGE); 
+            } 
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao criar o adminstrador padrão: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoEntrar;
     private javax.swing.JButton botaoSair;
+    private javax.swing.JTextField campoLogin;
     private javax.swing.JPasswordField campoSenha;
-    private javax.swing.JTextField campoTexto;
     private javax.swing.JCheckBox chkBox;
     private javax.swing.JPanel painelLogin;
     private javax.swing.JPanel painelTopo;

@@ -302,7 +302,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="dc" green="dc" red="dc" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Selecione a sua permiss&#xe3;o:"/>
+            <Property name="text" type="java.lang.String" value="Selecione a permiss&#xe3;o:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="comboBoxPermissao">

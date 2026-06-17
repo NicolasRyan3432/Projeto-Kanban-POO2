@@ -23,7 +23,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import modelo.Usuario;
+import telas.Main;
 import util.EstiloGlobal;
+import util.Sessao;
 
 
 public class ListarUsuarios extends javax.swing.JDialog {
@@ -102,6 +104,7 @@ public class ListarUsuarios extends javax.swing.JDialog {
 
         painelScrollTabela.setBackground(java.awt.Color.gray);
         painelScrollTabela.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        painelScrollTabela.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         tabela.setBackground(java.awt.Color.gray);
         tabela.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -222,25 +225,22 @@ public class ListarUsuarios extends javax.swing.JDialog {
         int linhaSelecionada = tabela.getSelectedRow();
         
         // Se realmente tem uma linha selecionada...
-        if (linhaSelecionada == -1) {
-            JOptionPane.showConfirmDialog(this, "Selecione uma linha primeiro!!", "Erro!", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        // 2. Pega a palavra "Ativo" ou "Inativo" (Mude o 4 para o número da sua coluna de status)
-        String status = tabela.getValueAt(linhaSelecionada, 4).toString();
+        if (linhaSelecionada != -1) {
+            // 2. Pega a palavra "Ativo" ou "Inativo" (Mude o 4 para o número da sua coluna de status)
+            String status = tabela.getValueAt(linhaSelecionada, 4).toString();
 
-        // 3. Pinta o botão e muda o texto na hora!
-        if (status.equals("Ativo")) {
-            btnAlterarStatus.setText("Desativar");
-            btnAlterarStatus.setBackground(cor);
-            btnAlterarStatus.setForeground(new Color(255, 77, 77));
-        } 
-        else {
-            btnAlterarStatus.setText("Reativar");
-            btnAlterarStatus.setBackground(cor);
-            btnAlterarStatus.setForeground(new Color(255, 193, 7));
-        }    
+            // 3. Pinta o botão e muda o texto na hora!
+            if (status.equals("Ativo")) {
+                btnAlterarStatus.setText("Desativar");
+                btnAlterarStatus.setBackground(cor);
+                btnAlterarStatus.setForeground(new Color(255, 77, 77));
+            } 
+            else {
+                btnAlterarStatus.setText("Reativar");
+                btnAlterarStatus.setBackground(cor);
+                btnAlterarStatus.setForeground(new Color(255, 193, 7));
+            }
+        }
     }//GEN-LAST:event_tabelaMouseClicked
 
     private void btnCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarActionPerformed
@@ -386,13 +386,21 @@ public class ListarUsuarios extends javax.swing.JDialog {
             return;
         }
         
+        
         // Pega a linha e converte o index pra um modelo
         int posicaoModelo = tabela.convertRowIndexToModel(posicaoLinha);
+        int id = Integer.parseInt(tabela.getModel().getValueAt(posicaoModelo, 0).toString());
+        
+        if(id == Sessao.idUsuario) {
+            JOptionPane.showMessageDialog(this, "ERRO GRAVISSÍMO!! Por que você deseja desativar o próprio usuário?", "ERRO!!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         // Depois, pega o modelo da tabela, o valor da posição do modelo 
         // e na linha que tá a posição e transforma tudo em string
         String login = tabela.getModel().getValueAt(posicaoModelo, 2).toString();
         String status = tabela.getModel().getValueAt(posicaoModelo, 4).toString();
+        
         int modo = -1;
         int resposta = -1;
         
@@ -416,8 +424,6 @@ public class ListarUsuarios extends javax.swing.JDialog {
         
 
         if (resposta == JOptionPane.YES_OPTION) {
-            int id = Integer.parseInt(tabela.getModel().getValueAt(posicaoModelo, 0).toString());
-
             try {
                 UsuarioDAO dao = new UsuarioDAO();                    
                 int resultado = dao.alterarStatus(id, modo);
