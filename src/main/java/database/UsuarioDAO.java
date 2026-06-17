@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /** =============================================================================
 *   ++========================== MUDANÇA ARQUITETURAL =========================++
@@ -222,6 +223,50 @@ public class UsuarioDAO {
         }
         catch(Exception e) {
             throw new Exception("\n[DESATIVAR] Erro: " + e.getMessage());
+        }
+    }
+    
+    public Usuario validar(String login, String senha) throws Exception {
+        if (senha == null) {
+            throw new Exception("\n[AUTENTICAR] Senha Vazia, insira a senha!!");
+        }
+        if (senha.length() != 128) {
+            throw new Exception("\n[AUTENTICAR] Senha inválida!!!");
+        }
+        
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pValidaUsuario(?, ?)}";
+        
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cs = con.prepareCall(sql)) {
+            
+            Usuario usuario = new Usuario();
+            
+            cs.setString(1, login);
+            cs.setString(2, senha);
+            
+            try(ResultSet rs = cs.executeQuery()) {
+                while(rs.next()) {
+                    usuario = new Usuario (
+                        rs.getInt("id"),
+                        rs.getString("login"),
+                        rs.getString("senha"),
+                        rs.getString("nome"),
+                        rs.getInt("permissao"),
+                        rs.getInt("ativo")
+
+                    );
+                }
+                
+            return usuario;    
+            
+            }
+            catch(Exception e) {
+                throw new Exception("\n[VALIDAR] Erro ao receber as informações do usuário: " + e.getMessage());
+            }
+        }
+        catch(Exception e) {
+            throw new Exception("\n[VALIDAR] Erro: " + e.getMessage());
         }
     }
 }
