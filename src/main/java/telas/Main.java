@@ -3,12 +3,16 @@ package telas;
 
 import telas.notas.CriarNotas;
 import database.NotaDAO;
+import database.UsuarioDAO;
 import modelo.Usuario;
 import modelo.CartaoNota;
 import modelo.Nota;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -16,6 +20,7 @@ import javax.swing.JOptionPane;
 import telas.usuarios.CriarUsuarios;
 import telas.usuarios.ListarUsuarios;
 import util.EstiloGlobal;
+import util.Sessao;
 
 
 
@@ -23,37 +28,36 @@ public class Main extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Main.class.getName());
     
-    private final Usuario user;
-    
     // Lista das notas para o ActionPerformed do CheckBox consiga filtrar
     ArrayList<Nota> listaAFNotas = new ArrayList<>();
     ArrayList<Nota> listaSFNotas = new ArrayList<>();
     ArrayList<Nota> listaCNotas = new ArrayList<>();
     
     /* 
-        A função Main recebe logo o usuario inteiro 
-        para poder enviar o id do usuario atual para as telas: CartaoNota, CriarNotas e VisualizarNotas 
-        (Que subdivide nas três funções que necessita que o id do usuário seja igual ao que fez a nota)
+        A função Main não recebe nada, quem faz o papel de enviar o id para as telas
+        CartaoNota, CriarNotas e VisualizarNotas é a Sessao.
     */
-    public Main(Usuario u) {
+    public Main() {
         // Configurações da janela
         setTitle("Painel Kanban"); // Titulo da aba
         this.setMinimumSize(new Dimension(1250, 960)); // Tamanho mínimo da tela (pra não quebrar)
         setResizable(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null); // Centraliza na tela
-        
-        // Recebe todo o usuário que tá logado atualmente.
-        this.user = u;
-        
-        initComponents();  //Inicia os componentes
+
+        initComponents();  // Inicia os componentes
         
         arrumarCoresMenuPopup();
         arrumarCoresComboBox();
         carregarNotas();
+        arrumarTexto();
         
-        
-        //jLabel1.setText("Seja Bem-Vindo " + user.nome);
+        // Faz com que se a sessao logada não for de administrador, deixa o menu de usuarios desabilitado.
+        // E habilita o item de Editar Informações
+        if(Sessao.permissao != 1) {
+            menuGerenciar.setVisible(false);
+            itemPerfil.setVisible(true);
+        }
         
         // ContentPane é o conteúdo invisível que o Swing adiciona no jFrame 
         getContentPane().setBackground(new java.awt.Color(102, 102, 102)); 
@@ -72,6 +76,7 @@ public class Main extends javax.swing.JFrame {
 
         menuPopup = new javax.swing.JPopupMenu();
         itemCriarNotas = new javax.swing.JMenuItem();
+        itemPerfil = new javax.swing.JMenuItem();
         menuGerenciar = new javax.swing.JMenu();
         itemListar = new javax.swing.JMenuItem();
         itemCriar = new javax.swing.JMenuItem();
@@ -82,7 +87,7 @@ public class Main extends javax.swing.JFrame {
         txtTarefasTotais = new javax.swing.JLabel();
         btnMenu = new javax.swing.JButton();
         comboBoxOrdenacao = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
+        txtOrdenar = new javax.swing.JLabel();
         painelColunas = new javax.swing.JPanel();
         painelAF = new javax.swing.JPanel();
         painelAFTopo = new javax.swing.JPanel();
@@ -113,6 +118,12 @@ public class Main extends javax.swing.JFrame {
         itemCriarNotas.addActionListener(this::itemCriarNotasActionPerformed);
         menuPopup.add(itemCriarNotas);
 
+        itemPerfil.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        itemPerfil.setForeground(java.awt.Color.lightGray);
+        itemPerfil.setText("Editar Informações");
+        itemPerfil.addActionListener(this::itemPerfilActionPerformed);
+        menuPopup.add(itemPerfil);
+
         menuGerenciar.setForeground(java.awt.Color.lightGray);
         menuGerenciar.setText("Gerenciar Usuários");
         menuGerenciar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
@@ -136,6 +147,7 @@ public class Main extends javax.swing.JFrame {
         itemLogout.setText("Logout");
         itemLogout.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         itemLogout.setOpaque(true);
+        itemLogout.addActionListener(this::itemLogoutActionPerformed);
         menuPopup.add(itemLogout);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -170,9 +182,9 @@ public class Main extends javax.swing.JFrame {
         comboBoxOrdenacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Maior Prioridade", "Menor Prioridade", "Prazo mais longo", "Prazo mais curto", "Nome (Ordem Alfabética)" }));
         comboBoxOrdenacao.addActionListener(this::comboBoxOrdenacaoActionPerformed);
 
-        jLabel1.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(220, 220, 220));
-        jLabel1.setText("Ordenar por:");
+        txtOrdenar.setFont(new java.awt.Font("FiraCode Nerd Font", 0, 18)); // NOI18N
+        txtOrdenar.setForeground(new java.awt.Color(220, 220, 220));
+        txtOrdenar.setText("Ordenar por:");
 
         javax.swing.GroupLayout painelTopoLayout = new javax.swing.GroupLayout(painelTopo);
         painelTopo.setLayout(painelTopoLayout);
@@ -187,7 +199,7 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(painelTopoLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(txtOrdenar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(comboBoxOrdenacao, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnMenu))
@@ -211,7 +223,7 @@ public class Main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(painelTopoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(comboBoxOrdenacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                            .addComponent(txtOrdenar))
                         .addContainerGap())))
         );
 
@@ -381,8 +393,8 @@ public class Main extends javax.swing.JFrame {
 
     private void itemCriarNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCriarNotasActionPerformed
         // Cria a tela de criação. 
-        // O zero é  o id do usuário que clicou para poder mandar para o DAO o id dele
-        CriarNotas tela = new CriarNotas(this, true, 1);
+        // O id vem da Sessao agora
+        CriarNotas tela = new CriarNotas(this, true);
         
         // Coloca ela no centro da tela
         tela.setLocationRelativeTo(this);
@@ -392,6 +404,7 @@ public class Main extends javax.swing.JFrame {
         
         // Terminou de criar a nota, recarrega para aparecer a nota
         carregarNotas();
+        arrumarTexto();
     }//GEN-LAST:event_itemCriarNotasActionPerformed
 
     private void comboBoxOrdenacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOrdenacaoActionPerformed
@@ -408,6 +421,8 @@ public class Main extends javax.swing.JFrame {
 
             // Deixa visível
             tela.setVisible(true);
+            carregarNotas();
+            arrumarTexto();
         }
         catch(Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar a tela de ListarUsuarios: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -424,6 +439,36 @@ public class Main extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Erro ao carregar a tela de CriarUsuarios: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_itemCriarActionPerformed
+
+    private void itemLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemLogoutActionPerformed
+        // Limpa as informações da sessao
+        Sessao.limparSessao();
+        
+        try {
+            // Percorre todas as telas abertas e fecha elas
+            for (Window janela : Window.getWindows()) {
+                janela.dispose();
+            }
+            new Login().setVisible(true);
+        }
+        catch(Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao tentar criar a tela de Login: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_itemLogoutActionPerformed
+
+    private void itemPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPerfilActionPerformed
+        try {
+            UsuarioDAO dao = new UsuarioDAO();
+            Usuario usuario = dao.buscar(Sessao.idUsuario);
+            
+            CriarUsuarios tela = new CriarUsuarios(this, true, usuario);
+            tela.setLocationRelativeTo(this);
+            tela.setVisible(true);
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao criar a tela de modificar usuário: " + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_itemPerfilActionPerformed
 
     /**
      * @param args the command line arguments
@@ -449,7 +494,7 @@ public class Main extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Main(null).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Main().setVisible(true));
     }
     
     private void arrumarCoresMenuPopup() {
@@ -479,7 +524,7 @@ public class Main extends javax.swing.JFrame {
         // Pega e cria uma listinha de componentes com os items do menuPopup e também do menuGerenciar
         JMenuItem[] todosOsItens = {
             itemCriar, menuGerenciar, itemCriarNotas, 
-            itemListar, itemLogout
+            itemListar, itemLogout, itemPerfil
         };  
         
         /* 
@@ -519,6 +564,21 @@ public class Main extends javax.swing.JFrame {
             }
         });
     }
+    
+    public final void arrumarTexto() {
+        int quantidadeNotas = listaAFNotas.size() + listaSFNotas.size() + listaCNotas.size();
+        
+        try {
+            NotaDAO dao = new NotaDAO();
+            int resultado = dao.contar(Sessao.idUsuario);
+            txtBoasVindas.setText("Seja Bem-Vindo, " + Sessao.apelido);
+            txtTarefasUser.setText("Suas Tarefas: " + resultado);
+            txtTarefasTotais.setText("Tarefas totais: " + quantidadeNotas);
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro: "+ e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+        }
+    } 
     
     private void ordenarLista(ArrayList<Nota> lista, int filtro) {
         switch(filtro) {
@@ -617,7 +677,7 @@ public class Main extends javax.swing.JFrame {
                     case 1 -> n.setPrioridadeFormatada("Baixa");
                     default -> n.setPrioridadeFormatada("Baixa");
                 }
-            } 
+            }
             
             // Manda ordenar
             ordenarNotas();
@@ -653,19 +713,19 @@ public class Main extends javax.swing.JFrame {
             
             // Foreach maroto pra instanciar as notas nas listas
             for(Nota n : listaAFNotas) {
-                CartaoNota cartao = new CartaoNota(n, 1, n.getPrioridadeFormatada());
+                CartaoNota cartao = new CartaoNota(n, n.getPrioridadeFormatada());
                 painelAFNotas.add(cartao);
                 painelAFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
             }
             
             for(Nota n : listaSFNotas) {
-                CartaoNota cartao = new CartaoNota(n, 1, n.getPrioridadeFormatada());
+                CartaoNota cartao = new CartaoNota(n, n.getPrioridadeFormatada());
                 painelSFNotas.add(cartao);
                 painelSFNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
             }
             
             for(Nota n : listaCNotas) {
-                CartaoNota cartao = new CartaoNota(n, 1, n.getPrioridadeFormatada());
+                CartaoNota cartao = new CartaoNota(n, n.getPrioridadeFormatada());
                 painelCNotas.add(cartao);
                 painelCNotas.add(javax.swing.Box.createRigidArea(new java.awt.Dimension(0, 5)));
             }
@@ -694,7 +754,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemCriarNotas;
     private javax.swing.JMenuItem itemListar;
     private javax.swing.JMenuItem itemLogout;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenuItem itemPerfil;
     private javax.swing.JMenu menuGerenciar;
     private javax.swing.JPopupMenu menuPopup;
     private javax.swing.JPanel painelAF;
@@ -714,6 +774,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel txtAFTopo;
     private javax.swing.JLabel txtBoasVindas;
     private javax.swing.JLabel txtCTopo;
+    private javax.swing.JLabel txtOrdenar;
     private javax.swing.JLabel txtSFTopo;
     private javax.swing.JLabel txtTarefasTotais;
     private javax.swing.JLabel txtTarefasUser;
