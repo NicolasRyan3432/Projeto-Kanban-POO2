@@ -1,4 +1,6 @@
-// Endereço de ip no Tail
-db.url=jdbc:mysql://100.x.x.x:3307/Kanban
+---> Coloque as suas credenciais dentro da pasta src/main/resources
+---> DDL do banco está na raiz da pasta
+---> Retire o .example.txt
+db.url=jdbc:mysql://localhost:3306/Kanban
 db.user=SEU_USUARIO_AQUI
 db.password=SUA_SENHA_AQUI

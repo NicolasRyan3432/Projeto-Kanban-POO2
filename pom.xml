@@ -3,14 +3,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mycompany</groupId>
     <artifactId>ProjetoKanban</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1-0</version>
     <packaging>jar</packaging>
+    <name>Projeto Kanban</name>
+    <description>Trabalho da disciplina de POO2</description>
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>25</maven.compiler.release>
-        <exec.mainClass>com.mycompany.projetokanban.ProjetoKanban</exec.mainClass>
+        <maven.compiler.release>21</maven.compiler.release>
+        <exec.mainClass>telas.Login</exec.mainClass> 
     </properties>
-    
+ 
     <!--Dependencia tirada la do maven-->
     <dependencies>
         <!-- Source: https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
@@ -28,4 +31,33 @@
             <version>11.2.1</version>
         </dependency>
     </dependencies>
+    
+     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>telas.Login</mainClass> 
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase> 
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
