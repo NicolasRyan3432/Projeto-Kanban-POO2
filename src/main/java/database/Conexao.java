@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Properties;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 
@@ -14,10 +14,14 @@ public class Conexao {
         // Importa a biblioteca Properties que lê as info (par chave valor) do arquivo config.properties
         Properties props = new Properties();
         
-        // Importa a biblioteca FileInputStream que procura esse arquivo
-        try(FileInputStream fs = new FileInputStream("config.properties")) {
+        // Importa a biblioteca InputStream que procura o arquivo diretamente na pasta Resources
+        try(InputStream input = Conexao.class.getResourceAsStream("/config.properties")) {
+            
+            if(input == null) {
+                throw new Exception("\n[ABRIR CONEXAO] Erro ao tentar procurar o arquivo config.properties na pasta Resources");
+            }
             // Carrega as informações
-            props.load(fs);
+            props.load(input);
             
             // Carrega as informações nas respectivas variáveis
             String url = props.getProperty("db.url");
@@ -48,7 +52,7 @@ public class Conexao {
         }
         catch (Exception e) {
             // Captura erro de drivers não encontrados...
-            throw new Exception("Erro interno de conexão: " + e.getMessage());
+            throw new Exception("\n[ABRIR CONEXAO] Erro interno de conexão: " + e.getMessage());
         }
         
     }
