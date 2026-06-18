@@ -13,7 +13,6 @@ import util.Sessao;
 public class Login extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Login.class.getName());
-    private Usuario user;
     
     public Login() {
         // Seta a FiraCode Nerd Font Regular como padrão do aplicativo
@@ -36,6 +35,7 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setTitle("Projeto Kanban - Login");
+        checarUsuarios();
         
         /*
             Seta o botãoEntrar como o botão padrão da tela, então, ao clicar no ENTER, o código
