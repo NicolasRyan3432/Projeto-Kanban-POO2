@@ -29,3 +29,7 @@ config.properties
 
 # Arquivo de mensagem
 mensagem.txt
+
+# Arquivos de configuração do NetBeans
+nbactions.xml
+nb-configuration.xml
