@@ -318,25 +318,28 @@ public class Login extends javax.swing.JFrame {
             UsuarioDAO dao = new UsuarioDAO();
             Usuario usuario = dao.validar(strLogin, senha);
             
-            if(usuario != null) {
-                Sessao.idUsuario = usuario.getId();
-                Sessao.login = usuario.getLogin();
-                Sessao.apelido = usuario.getApelido();
-                Sessao.permissao = usuario.getPermissao();
-                Sessao.ativo = usuario.getAtivo();
-
-                Main tela = new Main(); 
-                tela.setVisible(true);
-                this.dispose();
-            } 
-            else {
+            if(usuario == null) {
                 JOptionPane.showMessageDialog(this, "Credenciais inválidas!! Tente novamente!!", "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
-        } 
+            if(usuario.getAtivo() == 0) {
+                JOptionPane.showMessageDialog(this, "Aviso, o seu usuário foi desativado!\nEntre em contato com o seu administrador para reativar a sua conta!", "Aviso!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            Sessao.idUsuario = usuario.getId();
+            Sessao.login = usuario.getLogin();
+            Sessao.apelido = usuario.getApelido();
+            Sessao.permissao = usuario.getPermissao();
+            Sessao.ativo = usuario.getAtivo();
+
+            Main tela = new Main(); 
+            tela.setVisible(true);
+            this.dispose();
+        }
         catch(Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao iniciar o sistema:" + e.getMessage(),
+            JOptionPane.showMessageDialog(this, "Erro ao iniciar o sistema: " + e.getMessage(),
                     "Erro de Conexão!",
                     JOptionPane.ERROR_MESSAGE);
         }
