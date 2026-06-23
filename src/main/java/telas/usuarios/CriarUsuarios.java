@@ -56,7 +56,7 @@ public class CriarUsuarios extends javax.swing.JDialog {
         // Se a permissão da sessão do usuário não for de adminstrador, impede ele de modificar
         if(Sessao.permissao != 1) {
             comboBoxPermissao.setEnabled(false);
-        }
+        }   
     }
     
     @SuppressWarnings("unchecked")
@@ -601,6 +601,11 @@ public class CriarUsuarios extends javax.swing.JDialog {
             try {
                 Usuario usuario = u;
                 UsuarioDAO dao = new UsuarioDAO();
+                
+                if(dao.verificarAdmins() && comboBoxPermissao.getSelectedIndex() == 0) {
+                    JOptionPane.showMessageDialog(this, "Erro!!\nVocê não pode modificar a sua permissão enquanto não haver mais de um administrador ativo!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 
                 // Se não for igual o que ele digitou
                 if(!strLogin.equals(usuario.getLogin())) {
