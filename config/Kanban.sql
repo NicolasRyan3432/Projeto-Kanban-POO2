@@ -33,16 +33,7 @@ CREATE TABLE `historico_notas` (
   CONSTRAINT `historico_notas_ibfk_2` FOREIGN KEY (`id_nota`) REFERENCES `notas` (`id_nota`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `historico_notas`
---
-
-LOCK TABLES `historico_notas` WRITE;
-/*!40000 ALTER TABLE `historico_notas` DISABLE KEYS */;
-INSERT INTO `historico_notas` VALUES (1,2,2,'2026-06-18 12:03:01','Nota do Joao','nota do joao criada pelo arquivo jar	','AF','C',3,NULL);
-/*!40000 ALTER TABLE `historico_notas` ENABLE KEYS */;
-UNLOCK TABLES;
+;
 
 --
 -- Table structure for table `notas`
@@ -67,15 +58,6 @@ CREATE TABLE `notas` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `notas`
---
-
-LOCK TABLES `notas` WRITE;
-/*!40000 ALTER TABLE `notas` DISABLE KEYS */;
-INSERT INTO `notas` VALUES (1,'Nota criada com arquivo Jar','Nota criada com arquivo jar\n','AF',3,'2026-06-18 12:00:59',1,NULL),(2,'Nota do Joao','nota do joao criada pelo arquivo jar	','C',3,'2026-06-18 12:02:54',2,NULL);
-/*!40000 ALTER TABLE `notas` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `usuarios`
@@ -96,16 +78,6 @@ CREATE TABLE `usuarios` (
   UNIQUE KEY `login_2` (`login`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `usuarios`
---
-
-LOCK TABLES `usuarios` WRITE;
-/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'NicolasA','77E7B95118CFA7904139B868FD5971A042B781B5099B730C93F9BB9AEBCBC70E58305EDD965ABFCB058C62F1A7E063877CA7A7FB68B55A09A5E2C9585CD0B1DF','NicolasADM',1,1),(2,'Joao123','3CE927DDC4C2606CE7988C20E173C9E06380D13A83B9E9955980F9330120392269967C6E05734F528CB35F1B7BEE6747B406476AF1059B88FA61C98B7BAA8A95','Joaozitos',0,1);
-/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'Kanban'
@@ -232,6 +204,36 @@ CREATE  PROCEDURE `pCadastraUsuario`(IN p_login VARCHAR(50), IN p_senha VARCHAR(
 BEGIN
 	INSERT INTO usuarios(login, senha, nome, permissao)
 	VALUES (p_login, p_senha, p_nome, p_permissao);
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `pContaAdmin` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE PROCEDURE `pContaAdmin`()
+BEGIN 
+	DECLARE admins INT;
+	
+	SELECT COUNT(*) INTO admins
+	FROM usuarios
+	WHERE permissao = 1 AND ativo = 1;
+	
+	-- Se tiver só um admin ativo, ele não deixa o próprio admin modificar a sua permissão
+	IF admins = 1 THEN
+		SELECT 0;
+	ELSE
+		SELECT 1;
+	END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
