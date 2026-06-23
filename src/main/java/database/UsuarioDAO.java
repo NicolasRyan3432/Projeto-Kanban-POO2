@@ -258,7 +258,7 @@ public class UsuarioDAO {
                     );
                 }
                 
-            return usuario;    
+                return usuario;
             
             }
             catch(Exception e) {
@@ -267,6 +267,21 @@ public class UsuarioDAO {
         }
         catch(Exception e) {
             throw new Exception("\n[VALIDAR] Erro: " + e.getMessage());
+        }
+    }
+    
+    public boolean verificarAdmins() throws Exception {
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pContaAdmin()}";
+        
+        try(Connection con = conexao.abrirConexao();
+           CallableStatement cs = con.prepareCall(sql);
+           ResultSet rs = cs.executeQuery()) {
+            
+            return rs.next();
+        }
+        catch(Exception e) {
+            throw  new Exception("\n[VERIFICAR ADMINS] Erro: " + e.getMessage());
         }
     }
 }
