@@ -59,18 +59,13 @@ public class NotaDAO {
             throw new Exception("Erro: Dados da nota estão vazios!!");
         }
         
-        Connection con = null;
-        CallableStatement cs = null;
         Conexao conexao = new Conexao();
+        String sql = "{CALL pAdicionaNota(?, ?, ?, ?, ?)}";
 
-        try {
-            // Conexao sem parametros por conta de passarmos direto dentro da função
-            con = conexao.abrirConexao();
-            
-            String sql = "{CALL pAdicionaNota(?, ?, ?, ?, ?)}";
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cs = con.prepareCall(sql)) {
             
             // Prepara para inserir os valores ? pelas variaveis
-            cs = con.prepareCall(sql);
             cs.setString(1, nota.getNome());
             cs.setString(2, nota.getDescricao());
             cs.setInt(3, nota.getPrioridade());
@@ -82,147 +77,130 @@ public class NotaDAO {
             cs.setInt(5, nota.getIdUsuario());
             
             // Joga os dados no Banco
-            cs.executeUpdate(); 
+            cs.executeUpdate();
         }
         catch (Exception e) {
             throw new Exception("\n[CRIAR] Erro: " + e.getMessage());
-        }
-        finally {
-            // Executa independente se executou o try ou o catch
-            conexao.fecharConexao(con, cs, null);
         }
     }
     
     // Listar chamado lá no Main, para puxar os cartões
     public ArrayList<Nota> listar() throws Exception {
 
-        Connection con = null;
-        CallableStatement cs = null;
-        ResultSet rs = null;
         Conexao conexao = new Conexao();
+        String sql = "{CALL pListaNotas()}";
 
-        try {
-            con = conexao.abrirConexao();
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cs = con.prepareCall(sql)) {
             
-            // Pega tudo da tabela notas e junta com a tabela usuarios para pegar o nome
-            String sql = "{CALL pListaNotas()}";
+           try(ResultSet rs = cs.executeQuery(sql)) {
+                ArrayList<Nota> listaNotas = new ArrayList<>();
+               
            
-            // Cria o statement pra passar o comando pro banco
-            cs = con.prepareCall(sql);
-            
-            // Executa os comandos SQL
-            rs = cs.executeQuery(sql);
+                while (rs.next()) {
+                    /*
+                        Ao invés de passar pelos sets, a gente utiliza o construtor com parâmetros,
+                        o que deixa muito mais enxuto a função, além de utilizar o operador ternário.
 
-            ArrayList<Nota> listaNotas = new ArrayList<>();
+                        Operador ternário: a data do banco não tá vazia?
+                        Não -> Insere o valor convertido para LocalDateTime e insere
+                        na data
+                        Sim -> Insere o valor nulo na data
+
+                        Sintaxe: valor = (condição) ? Verdadeiro : Falso
+                    */
+
+                    Timestamp dataB = rs.getTimestamp("data_criacao");
+                    Timestamp prazoB = rs.getTimestamp("prazo");
+
+
+                    LocalDateTime data = (dataB != null) ? dataB.toLocalDateTime() : null;
+                    LocalDateTime prazo = (prazoB != null) ? prazoB.toLocalDateTime() : null;
+
+                    Nota nota = new Nota (
+                        rs.getInt("id_nota"),
+                        rs.getString("nome"),
+                        rs.getString("descricao"),
+                        rs.getString("categoria"),
+                        rs.getInt("prioridade"),
+                        data,
+                        rs.getInt("id_usuario"),
+                        prazo,     
+                        rs.getString("nome_autor")
+                    );
+
+                    // Adiciona a nota na nossa lista
+                    listaNotas.add(nota);
+                }
+                return listaNotas;
             
-            
-            while (rs.next()) {
-                /*
-                    Ao invés de passar pelos sets, a gente utiliza o construtor com parâmetros,
-                    o que deixa muito mais enxuto a função, além de utilizar o operador ternário.
-                
-                    Operador ternário: a data do banco não tá vazia?
-                    Não -> Insere o valor convertido para LocalDateTime e insere
-                    na data
-                    Sim -> Insere o valor nulo na data
-                    
-                    Sintaxe: valor = (condição) ? Verdadeiro : Falso
-                */
-                
-                Timestamp dataB = rs.getTimestamp("data_criacao");
-                Timestamp prazoB = rs.getTimestamp("prazo");
-                
-                
-                LocalDateTime data = (dataB != null) ? dataB.toLocalDateTime() : null;
-                LocalDateTime prazo = (prazoB != null) ? prazoB.toLocalDateTime() : null;
-                
-                Nota nota = new Nota (
-                    rs.getInt("id_nota"),
-                    rs.getString("nome"),
-                    rs.getString("descricao"),
-                    rs.getString("categoria"),
-                    rs.getInt("prioridade"),
-                    data,
-                    rs.getInt("id_usuario"),
-                    prazo,     
-                    rs.getString("nome_autor")
-                );
-                
-                // Adiciona a nota na nossa lista
-                listaNotas.add(nota);
-            }
-            return listaNotas;
+           }
+           catch(Exception e) {
+               throw new Exception("\n[LISTAR - ResultSet] Erro ao receber dados da nota: " + e.getMessage());
+           }
         } 
-        catch (Exception e) {
+        catch(Exception e) {
             throw new Exception("\n[LISTAR] Erro: " + e.getMessage());
         } 
-        finally {
-            conexao.fecharConexao(con, cs, rs);
-        }
     }
     
     // Listar chamado lá na TelaHistorico
     public ArrayList<HistoricoNota> listarHistorico(int idNota) throws Exception {
 
-        Connection con = null;
-        CallableStatement cs = null;
-        ResultSet rs = null;
         Conexao conexao = new Conexao();
+        
+        // Pega só o histórico daquela nota e ordena pela alteração mais nova
+        String sql = "{CALL pListaHistorico(?)}";
 
-        try {
-            con = conexao.abrirConexao();
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cs = con.prepareCall(sql)) {
             
-            // Pega só o histórico daquela nota e ordena pela alteração mais nova
-            String sql = "{CALL pListaHistorico(?)}";
-           
-            
-            cs = con.prepareCall(sql);
             cs.setInt(1, idNota);
-            rs = cs.executeQuery();
-
-            ArrayList<HistoricoNota> listaNotas = new ArrayList<>();
             
-            // Vai de linha a linha e verifica se tem login igual ao inserido
-            while (rs.next()) {
-                Timestamp prazoB = rs.getTimestamp("prazo_antigo");
-                LocalDateTime prazo = (prazoB != null) ? prazoB.toLocalDateTime() : null;
+            try(ResultSet rs = cs.executeQuery()) {
                 
-                HistoricoNota nota = new HistoricoNota (
-                        rs.getInt("id_historico"),
-                        rs.getInt("id_usuario"),
-                        rs.getInt("id_nota"),
-                        rs.getInt("prioridade_antiga"),
-                        rs.getString("nome_antigo"),
-                        rs.getString("nome_autor"),
-                        rs.getString("descricao_antiga"),
-                        rs.getString("categoria_antiga"),
-                        rs.getString("categoria_nova"),
-                        rs.getTimestamp("data_alteracao").toLocalDateTime(),
-                        prazo
-                );
- 
-                listaNotas.add(nota);
+                ArrayList<HistoricoNota> listaNotas = new ArrayList<>();
+
+                // Vai de linha a linha e verifica se tem login igual ao inserido
+                while (rs.next()) {
+                    Timestamp prazoB = rs.getTimestamp("prazo_antigo");
+                    LocalDateTime prazo = (prazoB != null) ? prazoB.toLocalDateTime() : null;
+
+                    HistoricoNota nota = new HistoricoNota (
+                            rs.getInt("id_historico"),
+                            rs.getInt("id_usuario"),
+                            rs.getInt("id_nota"),
+                            rs.getInt("prioridade_antiga"),
+                            rs.getString("nome_antigo"),
+                            rs.getString("nome_autor"),
+                            rs.getString("descricao_antiga"),
+                            rs.getString("categoria_antiga"),
+                            rs.getString("categoria_nova"),
+                            rs.getTimestamp("data_alteracao").toLocalDateTime(),
+                            prazo
+                    );
+
+                    listaNotas.add(nota);
+                }
+                return listaNotas;
             }
-            return listaNotas;
-        } 
+            catch(Exception e) {
+                throw new Exception("\n[LISTAR HISTÓRICO - ResultSet] Erro ao tentar obter informações do histórico da nota: " + e.getMessage());
+            }
+        }
         catch (Exception e) {
             throw new Exception("\n[LISTAR HISTORICO] Erro: " + e.getMessage());
         } 
-        finally {
-            conexao.fecharConexao(con, cs, rs);
-        }
     }
    
     public void modificar(Nota nota) throws Exception {
-        Connection con = null;
-        CallableStatement cs = null;
-        Conexao conexao = new Conexao();
-        
-        try {
-            con = conexao.abrirConexao();
-            String sql = "{CALL pModificaNota(?, ?, ?, ?, ?)}";
 
-            cs = con.prepareCall(sql);
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pModificaNota(?, ?, ?, ?, ?)}";
+        
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cs = con.prepareCall(sql)) {
+            
             cs.setString(1, nota.getNome());
             cs.setString(2, nota.getDescricao());
             cs.setInt(3, nota.getPrioridade());
@@ -237,43 +215,32 @@ public class NotaDAO {
         catch (Exception e) {
             throw new Exception("\n[MODIFICAR] Erro: " + e.getMessage());
         }
-        finally {
-            conexao.fecharConexao(con, cs, null);
-        }
     }
     
     public void deletar(int id) throws Exception {
-        Connection con = null;
-        CallableStatement cd = null;
-        Conexao conexao = new Conexao();
         
-        try {
-            con = conexao.abrirConexao();
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pDeletaNota(?)}";
+        
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cd = con.prepareCall(sql)) {
             
-            String sql = "{CALL pDeletaNota(?)}";
-            cd = con.prepareCall(sql);
             cd.setInt(1, id);
             cd.executeUpdate();  
         } 
         catch(Exception e) {
             throw new Exception("\n[DELETAR] Erro:" + e.getMessage());
         }
-        finally {
-            conexao.fecharConexao(con, cd, null);
-        }
     }
     
     public void mover(int idNota, String novaCategoria) throws Exception {
-        Connection con = null;
-        CallableStatement cd = null;
+      
         Conexao conexao = new Conexao();
+        String sql = "{CALL pMoveNota(?, ?)}";
         
-        try {
-            con = conexao.abrirConexao();
-
-            String sql = "{CALL pMoveNota(?, ?)}";
-
-            cd = con.prepareCall(sql);
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cd = con.prepareCall(sql)) {
+            
             cd.setInt(1, idNota);
             cd.setString(2, novaCategoria);
             cd.executeUpdate();
@@ -281,23 +248,15 @@ public class NotaDAO {
         catch (Exception e) {
             throw new Exception("\n[MOVER] Erro: " + e.getMessage());
         }
-        finally {
-            conexao.fecharConexao(con, cd, null);
-        }
     }
     
     public void adicionarHistorico(int id, String categoriaNova) throws Exception {
-        Connection con = null;
-        CallableStatement cd = null;
+
         Conexao conexao = new Conexao();
+        String sql = "{CALL pAdicionaHistorico(?, ?)}";
         
-        try {
-            con = conexao.abrirConexao();
-
-            // Ele insere no histórico copiando direto a nota selecionada
-            String sql = "{CALL pAdicionaHistorico(?, ?)}";
-
-            cd = con.prepareCall(sql);
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cd = con.prepareCall(sql)) {
 
             // Passa a categoria nova (se for só edição, passa a mesma que já tava)
             cd.setString(1, categoriaNova); 
@@ -309,22 +268,17 @@ public class NotaDAO {
         catch (Exception e) {
             throw new Exception("\n[ADICIONAR HISTORICO] Erro: " + e.getMessage());
         } 
-        finally {
-            conexao.fecharConexao(con, cd, null);
-        }
     }
     
     public void restaurar(HistoricoNota nota) throws Exception {
-        Connection con = null;
-        CallableStatement cd = null;
-        Conexao conexao = new Conexao();
-        
-        try {
-            con = conexao.abrirConexao();
-            
-            String sql = "{CALL pRestauraNota(?, ?, ?, ?, ?, ?)}";
 
-            cd = con.prepareCall(sql);
+        Conexao conexao = new Conexao();
+        String sql = "{CALL pRestauraNota(?, ?, ?, ?, ?, ?)}";
+        
+        try(Connection con = conexao.abrirConexao();
+            CallableStatement cd = con.prepareCall(sql)) {
+            
+
             cd.setString(1, nota.getNomeAntigo());
             cd.setString(2, nota.getDescricaoAntiga());
             cd.setInt(3, nota.getPrioridadeAntiga());
@@ -341,9 +295,6 @@ public class NotaDAO {
         }
         catch (Exception e) {
             throw new Exception("\n[RESTAURAR] Erro: " + e.getMessage());
-        }
-        finally {
-            conexao.fecharConexao(con, cd, null);
         }
     }
     

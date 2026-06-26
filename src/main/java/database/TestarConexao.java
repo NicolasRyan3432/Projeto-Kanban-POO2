@@ -6,12 +6,10 @@ public class TestarConexao {
     public void main(String[] args) {
         Conexao con = new Conexao();
         
-        try {
-            Connection c = con.abrirConexao();
+        try(Connection c = con.abrirConexao()) {
             System.out.println("Conectado!!!");
-            con.fecharConexao(c, null, null);
-            
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             System.out.println("Erro: "+ e.getMessage());
         }
     }

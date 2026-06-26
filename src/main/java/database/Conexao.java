@@ -2,8 +2,6 @@
 package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.Properties;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -55,23 +53,5 @@ public class Conexao {
             throw new Exception("\n[ABRIR CONEXAO] Erro interno de conexão: " + e.getMessage());
         }
         
-    }
-    
-    // TODO: Deletar esse método após refatorar o DAO da Nota que ainda tem o finally
-    public void fecharConexao(Connection con, Statement stmt, ResultSet rs) throws Exception {
-        try {
-            if(rs != null) {
-                rs.close();
-            }
-            if(stmt != null) {
-                stmt.close();
-            }
-            if(con != null) {
-                con.close();
-            }
-        } 
-        catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
     }
 }
